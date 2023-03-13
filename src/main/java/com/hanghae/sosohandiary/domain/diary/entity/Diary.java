@@ -1,8 +1,10 @@
 package com.hanghae.sosohandiary.domain.diary.entity;
 
+import com.hanghae.sosohandiary.domain.diary.dto.DiaryRequestDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.utils.entity.Timestamp;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,5 +28,19 @@ public class Diary extends Timestamp {
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
+
+    @Builder
+    private Diary(DiaryRequestDto diaryRequestDto, Member member) {
+        img = diaryRequestDto.getImg();
+        content = diaryRequestDto.getContent();
+        this.member = member;
+    }
+
+    public static Diary of(DiaryRequestDto diaryRequestDto, Member member) {
+        return Diary.builder()
+                .diaryRequestDto(diaryRequestDto)
+                .member(member)
+                .build();
+    }
 
 }
