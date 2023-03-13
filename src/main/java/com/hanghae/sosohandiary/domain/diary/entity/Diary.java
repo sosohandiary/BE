@@ -29,17 +29,19 @@ public class Diary extends Timestamp {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    // TODO: 2023-03-13 entity 회원 로직 완성 후 member 추가
     @Builder
-    private Diary(DiaryRequestDto diaryRequestDto, Member member) {
+    private Diary(DiaryRequestDto diaryRequestDto) {
         img = diaryRequestDto.getImg();
         content = diaryRequestDto.getContent();
-        this.member = member;
+//        this.member = member;
     }
 
-    public static Diary of(DiaryRequestDto diaryRequestDto, Member member) {
+    // TODO: 2023-03-13 entity 회원 로직 완성 후 member 추가
+    public static Diary of(DiaryRequestDto diaryRequestDto) {
         return Diary.builder()
                 .diaryRequestDto(diaryRequestDto)
-                .member(member)
+//                .member(member)
                 .build();
     }
 

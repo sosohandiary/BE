@@ -21,19 +21,18 @@ public class DiaryResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private DiaryResponseDto(Diary diary, Member member) {
+    private DiaryResponseDto(Diary diary) {
         id = diary.getId();
         img = diary.getImg();
         content = diary.getContent();
-        this.member = member;
+//        this.member = member;
         createdAt = diary.getCreatedAt();
         modifiedAt = diary.getModifiedAt();
     }
 
-    public static DiaryResponseDto from(Diary diary, Member member) {
+    public static DiaryResponseDto from(Diary diary) {
         return DiaryResponseDto.builder()
                 .diary(diary)
-                .member(member)
                 .build();
     }
 
