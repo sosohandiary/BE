@@ -1,6 +1,7 @@
 package com.hanghae.sosohandiary.security;
 
 import com.hanghae.sosohandiary.domain.member.entity.Member;
+import com.hanghae.sosohandiary.domain.member.entity.MemberRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +25,8 @@ public class MemberDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String authority = "user";
+        MemberRoleEnum role = member.getRole();
+        String authority = role.getAuthority();
 
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
