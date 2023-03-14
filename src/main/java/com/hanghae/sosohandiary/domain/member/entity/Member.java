@@ -19,26 +19,41 @@ public class Member {
     @Column(length = 30, nullable = false)
     private String email;
 
-    @Column(length = 30, nullable = false)
+    @Column(nullable = false)
     private String password;
 
     @Column(length = 20, nullable = false)
     private String name;
 
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private MemberRoleEnum role;
+
     @Builder
-    public Member(String email, Long kakaoId, String password, String name) {
+    public Member(String email, Long kakaoId, String password, String name, MemberRoleEnum role) {
         this.email = email;
         this.kakaoId = kakaoId;
         this.password = password;
         this.name = name;
+        this.role = role;
     }
 
-    public static Member of(String email, Long kakaoId, String password, String name) {
+    public static Member of(String email, Long kakaoId, String password, String name, MemberRoleEnum role) {
         return Member.builder()
                 .email(email)
                 .kakaoId(kakaoId)
                 .password(password)
                 .name(name)
+                .role(role)
+                .build();
+    }
+
+    public static Member of(String email, String password, String name, MemberRoleEnum role) {
+        return Member.builder()
+                .email(email)
+                .password(password)
+                .name(name)
+                .role(role)
                 .build();
     }
 

@@ -2,6 +2,7 @@ package com.hanghae.sosohandiary.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae.sosohandiary.utils.MessageDto;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,16 +24,38 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String token = jwtUtil.resolveToken(request);
 
-        if (token != null && jwtUtil.validateToken(token)) {   // token 검증
-            Authentication auth = jwtUtil.getAuthentication(token);    // 인증 객체 생성
-            SecurityContextHolder.getContext().setAuthentication(auth); // SecurityContextHolder에 인증 객체 저장
+        if(token != null) {
+            if(!jwtUtil.validateToken(token)){
+                jwtExceptionHandler(response, "Token Error", HttpStatus.UNAUTHORIZED);
+                return;
+            }
+            Claims info = jwtUtil.getUserInfoFromToken(token);
+            setAuthentication(info.getSubject());
         }
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(request,response);
+    }
+
+    public void setAuthentication(String username) {
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        Authentication authentication = jwtUtil.createAuthentication(username);
+        context.setAuthentication(authentication);
+
+        SecurityContextHolder.setContext(context);
+    }
+
+    public void jwtExceptionHandler(HttpServletResponse response, String msg, HttpStatus statusCode) {
+        response.setStatus(statusCode.value());
+        response.setContentType("application/json");
+        try {
+            String json = new ObjectMapper().writeValueAsString(new MessageDto(msg, statusCode));
+            response.getWriter().write(json);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
 }
