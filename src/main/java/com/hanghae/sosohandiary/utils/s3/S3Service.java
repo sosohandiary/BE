@@ -4,9 +4,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
-import com.hanghae.sosohandiary.domain.image.entity.Image;
-import com.hanghae.sosohandiary.domain.image.repository.ImageRepository;
+import com.hanghae.sosohandiary.domain.diary.entity.Diary;
+import com.hanghae.sosohandiary.domain.image.entity.DiaryImage;
+import com.hanghae.sosohandiary.domain.image.repository.DiaryImageRepository;
+import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,17 +32,17 @@ public class S3Service {
     private String bucketName;
 
     private final AmazonS3 S3Client;
-    private final ImageRepository imageRepository;
+    private final DiaryImageRepository diaryImageRepository;
 
-    public void upload(List<MultipartFile> multipartFilelist, String dirName, DiaryDetail diary) throws IOException { // User user
+    public void uploadDiary(List<MultipartFile> multipartFilelist, String dirName, Diary diary, Member member) throws IOException { // User user
 
         for (MultipartFile multipartFile : multipartFilelist){
             if (multipartFile != null){
                 File uploadFile = convert(multipartFile).orElseThrow(
                         () -> new IllegalArgumentException("파일 전환 실패")
                 );
-                Image image = Image.of(upload(uploadFile, dirName), diary); //, user
-                imageRepository.save(image);
+                DiaryImage image = DiaryImage.of(upload(uploadFile, dirName), diary, member); //, user
+                diaryImageRepository.save(image);
             }
         }
     }
