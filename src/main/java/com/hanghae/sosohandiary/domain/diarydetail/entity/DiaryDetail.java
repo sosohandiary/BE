@@ -1,6 +1,6 @@
-package com.hanghae.sosohandiary.domain.diary.entity;
+package com.hanghae.sosohandiary.domain.diarydetail.entity;
 
-import com.hanghae.sosohandiary.domain.diary.dto.DiaryRequestDto;
+import com.hanghae.sosohandiary.domain.diarydetail.dto.DiaryDetailRequestDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.utils.entity.Timestamp;
 import lombok.AccessLevel;
@@ -13,14 +13,11 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Diary extends Timestamp {
+public class DiaryDetail extends Timestamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(length = 50)
-    private String img;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
@@ -31,16 +28,15 @@ public class Diary extends Timestamp {
 
     // TODO: 2023-03-13 entity 회원 로직 완성 후 member 추가
     @Builder
-    private Diary(DiaryRequestDto diaryRequestDto) {
-        img = diaryRequestDto.getImg();
-        content = diaryRequestDto.getContent();
+    private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto) {
+        content = diaryDetailRequestDto.getContent();
 //        this.member = member;
     }
 
     // TODO: 2023-03-13 entity 회원 로직 완성 후 member 추가
-    public static Diary of(DiaryRequestDto diaryRequestDto) {
-        return Diary.builder()
-                .diaryRequestDto(diaryRequestDto)
+    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto) {
+        return DiaryDetail.builder()
+                .diaryDetailRequestDto(diaryDetailRequestDto)
 //                .member(member)
                 .build();
     }
