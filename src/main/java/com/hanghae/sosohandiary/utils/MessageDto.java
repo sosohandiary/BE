@@ -11,7 +11,7 @@ public class MessageDto {
     private int statusCode;
 
     @Builder
-    private MessageDto(String msg, HttpStatus statusCode) {
+    public MessageDto(String msg, HttpStatus statusCode) {
         this.msg = msg;
         this.statusCode = statusCode.value();
     }
