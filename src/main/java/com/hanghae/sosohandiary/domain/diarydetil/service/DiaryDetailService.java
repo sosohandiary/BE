@@ -92,4 +92,41 @@ public class DiaryDetailService {
         List<String> imgList = imgPathList(diaryDetail);
         return DiaryDetailResponseDto.from(diaryDetail, imgList, diary, diaryDetail.getMember());
     }
+
+    @Transactional
+    public DiaryDetailResponseDto modifyDetail(Long diaryId,
+                                               Long detailId,
+                                               DiaryDetailRequestDto diaryDetailRequestDto,
+                                               List<MultipartFile> multipartFileList,
+                                               Member member) throws IOException {
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+        );
+
+        DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+        );
+
+        if (!diaryDetail.getMember().getId().equals(member.getId())) {
+            throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
+        }
+
+        List<DiaryDetailImage> diaryDetailImageList = diaryDetailImageRepository.findAllByDiaryDetail(diaryDetail);
+        for (DiaryDetailImage diaryImage : diaryDetailImageList) {
+            String uploadPath = diaryImage.getUploadPath();
+            String filename = uploadPath.substring(50);
+            s3Service.deleteFile(filename);
+        }
+        diaryDetailImageRepository.deleteAllByDiaryDetailId(detailId);
+
+        diaryDetail.update(diaryDetailRequestDto);
+
+        List<String> imagePathList = imgPathList(diaryDetail);
+        if (multipartFileList != null) {
+            s3Service.uploadDiaryDetail(multipartFileList, diaryDetail, member);
+        }
+
+        return DiaryDetailResponseDto.from(diaryDetail, imagePathList, member);
+    }
+
 }

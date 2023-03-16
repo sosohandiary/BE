@@ -39,4 +39,13 @@ public class DiaryDetailController {
         return diaryDetailService.findDetail(diaryId, detailId);
     }
 
-}
+    @PatchMapping("/detail/{detail-id}")
+    public DiaryDetailResponseDto detailModify(@PathVariable(name = "diary-id") Long diaryId,
+                                               @PathVariable(name = "detail-id") Long detailId,
+                                               @RequestPart(value = "content") DiaryDetailRequestDto diaryDetailRequestDto,
+                                               @RequestPart(value = "img") List<MultipartFile> multipartFileList,
+                                               @AuthenticationPrincipal MemberDetailsImpl memberDetails) throws IOException {
+        return diaryDetailService.modifyDetail(diaryId, detailId, diaryDetailRequestDto, multipartFileList, memberDetails.getMember());
+    }
+
+    }
