@@ -5,6 +5,7 @@ import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailRequestDto;
 import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailResponseDto;
 import com.hanghae.sosohandiary.domain.diarydetil.service.DiaryDetailService;
 import com.hanghae.sosohandiary.security.MemberDetailsImpl;
+import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -48,4 +49,10 @@ public class DiaryDetailController {
         return diaryDetailService.modifyDetail(diaryId, detailId, diaryDetailRequestDto, multipartFileList, memberDetails.getMember());
     }
 
+    @DeleteMapping("/detail/{detail-id}")
+    public MessageDto detailRemove(@PathVariable(name = "diary-id") Long diaryId,
+                                   @PathVariable(name = "detail-id") Long detailId,
+                                   @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return diaryDetailService.removeDetail(diaryId, detailId, memberDetails.getMember());
     }
+}

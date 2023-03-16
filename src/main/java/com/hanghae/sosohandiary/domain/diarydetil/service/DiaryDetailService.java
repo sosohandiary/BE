@@ -1,6 +1,5 @@
 package com.hanghae.sosohandiary.domain.diarydetil.service;
 
-import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailRequestDto;
@@ -8,14 +7,14 @@ import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailResponseDto;
 import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.diarydetil.repository.DiaryDetailRepository;
 import com.hanghae.sosohandiary.domain.image.entity.DiaryDetailImage;
-import com.hanghae.sosohandiary.domain.image.entity.DiaryImage;
 import com.hanghae.sosohandiary.domain.image.repository.DiaryDetailImageRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
 import com.hanghae.sosohandiary.exception.ErrorHandling;
-import com.hanghae.sosohandiary.security.MemberDetailsImpl;
+import com.hanghae.sosohandiary.utils.MessageDto;
 import com.hanghae.sosohandiary.utils.s3.S3Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -117,7 +116,7 @@ public class DiaryDetailService {
             String filename = uploadPath.substring(50);
             s3Service.deleteFile(filename);
         }
-        diaryDetailImageRepository.deleteAllByDiaryDetailId(detailId);
+        diaryDetailImageRepository.deleteAllByDiaryDetailId(diaryDetail.getId());
 
         diaryDetail.update(diaryDetailRequestDto);
 
@@ -126,7 +125,32 @@ public class DiaryDetailService {
             s3Service.uploadDiaryDetail(multipartFileList, diaryDetail, member);
         }
 
-        return DiaryDetailResponseDto.from(diaryDetail, imagePathList, member);
+        return DiaryDetailResponseDto.from(diaryDetail, imagePathList, diary, member);
+    }
+
+    public MessageDto removeDetail(Long diaryId, Long detailId, Member member) {
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+        );
+
+        DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+        );
+
+        if (!diaryDetail.getMember().getId().equals(member.getId())) {
+            throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
+        }
+
+        List<DiaryDetailImage> diaryDetailImageList = diaryDetailImageRepository.findAllByDiaryDetail(diaryDetail);
+        for (DiaryDetailImage diaryImage : diaryDetailImageList) {
+            String uploadPath = diaryImage.getUploadPath();
+            String filename = uploadPath.substring(50);
+            s3Service.deleteFile(filename);
+        }
+        diaryDetailImageRepository.deleteAllByDiaryDetailId(detailId);
+        diaryDetailRepository.deleteById(detailId);
+
+        return MessageDto.of("다이어리 삭제 완료", HttpStatus.OK);
     }
 
 }
