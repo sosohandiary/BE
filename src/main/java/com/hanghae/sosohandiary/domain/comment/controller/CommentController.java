@@ -7,10 +7,7 @@ import com.hanghae.sosohandiary.domain.comment.entity.Comment;
 import com.hanghae.sosohandiary.security.MemberDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +19,14 @@ public class CommentController {
                                  @RequestBody CommentRequestDto requestDto,
                                  @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return commentService.createComment(id, requestDto, memberDetails.getMember());
+    }
+
+    @PatchMapping("/detail/{detail-id}/comment/{comment-id}")
+    public CommentResponseDto updateComment(@PathVariable(name = "detail-id") Long detailId,
+                                            @PathVariable(name = "comment-id") Long commentId,
+                                            @RequestBody CommentRequestDto requestDto,
+                                            @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return commentService.updateComment(detailId, commentId, requestDto, memberDetails.getMember());
     }
 
 
