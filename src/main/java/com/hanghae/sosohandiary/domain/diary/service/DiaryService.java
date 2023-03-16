@@ -30,7 +30,6 @@ public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final S3Service s3Service;
 
-    // TODO: 2023-03-13 service 회원 로직 완료 후 member 추가
     @Transactional
     public DiaryResponseDto saveDiary(DiaryRequestDto diaryRequestDto,
                                       List<MultipartFile> multipartFileList,
@@ -46,12 +45,12 @@ public class DiaryService {
     }
 
     public List<DiaryResponseDto> findDiaryList() {
-        List<Diary> diaryDetailList = diaryRepository.findAllByOrderByModifiedAtDesc().orElseThrow(
+        List<Diary> diaryList = diaryRepository.findAllByOrderByModifiedAtDesc().orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
         List<DiaryResponseDto> diaryResponseDtoList = new ArrayList<>();
 
-        for (Diary diary : diaryDetailList) {
+        for (Diary diary : diaryList) {
             List<String> imgList = imgPathList(diary);
             diaryResponseDtoList.add(DiaryResponseDto.from(diary, imgList, diary.getMember()));
         }
@@ -59,8 +58,8 @@ public class DiaryService {
         return diaryResponseDtoList;
     }
 
-    private List<String> imgPathList(Diary diaryDetail) {
-        List<DiaryImage> diaryImageList = diaryImageRepository.findAllByDiary(diaryDetail);
+    private List<String> imgPathList(Diary diary) {
+        List<DiaryImage> diaryImageList = diaryImageRepository.findAllByDiary(diary);
         List<String> imgPathList = new ArrayList<>();
 
         for (DiaryImage image : diaryImageList) {
