@@ -33,4 +33,10 @@ public class DiaryDetailController {
         return diaryDetailService.findListDetail(id);
     }
 
+    @GetMapping("/detail/{detail-id}")
+    public DiaryDetailResponseDto detailFind(@PathVariable(name = "diary-id") Long diaryId,
+                                             @PathVariable(name = "detail-id") Long detailId) {
+        return diaryDetailService.findDetail(diaryId, detailId);
+    }
+
 }

@@ -79,4 +79,17 @@ public class DiaryDetailService {
         }
         return imgPathList;
     }
+
+    public DiaryDetailResponseDto findDetail(Long diaryId, Long detailId) {
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+        );
+
+        DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+        );
+
+        List<String> imgList = imgPathList(diaryDetail);
+        return DiaryDetailResponseDto.from(diaryDetail, imgList, diary, diaryDetail.getMember());
+    }
 }
