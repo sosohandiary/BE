@@ -36,12 +36,12 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto updateComment(Long detailId, Long id, CommentRequestDto requestDto, Member member) {
-        Optional<Comment> comment = commentRepository.findById(member.getId());
+        Optional<Comment> comment = commentRepository.findById(id);
         DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
         );
 
-        diaryDetailRepository.findById(id).orElseThrow(
+        commentRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL_COMMENT)
         );
 
