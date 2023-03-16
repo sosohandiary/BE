@@ -5,6 +5,7 @@ import com.hanghae.sosohandiary.domain.comment.service.CommentService;
 import com.hanghae.sosohandiary.domain.comment.dto.CommentRequestDto;
 import com.hanghae.sosohandiary.domain.comment.entity.Comment;
 import com.hanghae.sosohandiary.security.MemberDetailsImpl;
+import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,13 @@ public class CommentController {
                                             @RequestBody CommentRequestDto requestDto,
                                             @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return commentService.updateComment(detailId, commentId, requestDto, memberDetails.getMember());
+    }
+
+    @DeleteMapping("/detail/{detail-id}/comment/{comment-id}")
+    public MessageDto deleteComment(@PathVariable(name = "detail-id") Long detailId,
+                                    @PathVariable(name = "comment-id") Long commentId,
+                                    @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return commentService.deleteComment(detailId, commentId, memberDetails.getMember());
     }
 
 

@@ -18,7 +18,6 @@ public enum ErrorHandling {
     JWT_EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "다시 로그인 해주세요"),
     NOT_FOUND_DIARY_DETAIL(HttpStatus.BAD_REQUEST, "해당 하는 diary 속지를 찾을 수 없습니다"),
     NOT_FOUND_DIARY_DETAIL_COMMENT(HttpStatus.BAD_REQUEST, "해당 하는 diary 속지의 댓글을 찾을 수 없습니다"),
-    JWT_EXPIRED_TOKEN(HttpStatus.BAD_REQUEST,"다시 로그인 해주세요"),
     NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "댓글을 찾을 수 없습니다"),
     NOT_MATCH_AUTHORIZATION(HttpStatus.BAD_REQUEST, "작성자만 삭제/수정할 수 있습니다");
 
