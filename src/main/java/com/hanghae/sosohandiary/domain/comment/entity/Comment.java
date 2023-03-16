@@ -48,10 +48,8 @@ public class Comment extends Timestamp {
                 .build();
     }
 
-//    public void update(CommentsRequestDto requestDto){
-//        //this.username=requestDto.getUsername();
-//        this.contents=requestDto.getContents();
-//        //this.userpassword=requestDto.getUserpassword();
-//    }
+    public void update(String commentRequestDto){
+        this.contents=commentRequestDto;
+    }
 
 }

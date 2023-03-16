@@ -14,6 +14,7 @@ import com.hanghae.sosohandiary.exception.ErrorHandling;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -31,5 +32,21 @@ public class CommentService {
         commentRepository.save(Comment.of(diaryDetail, member, comment));
 
         return CommentResponseDto.from(diaryDetail, member, comment);
+    }
+
+    @Transactional
+    public CommentResponseDto updateComment(Long detailId, Long id, CommentRequestDto requestDto, Member member) {
+        Optional<Comment> comment = commentRepository.findById(member.getId());
+        DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
+        );
+
+        diaryDetailRepository.findById(id).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL_COMMENT)
+        );
+
+        comment.get().update(requestDto.getComment());
+
+        return CommentResponseDto.from(diaryDetail, member, requestDto.getComment());
     }
 }
