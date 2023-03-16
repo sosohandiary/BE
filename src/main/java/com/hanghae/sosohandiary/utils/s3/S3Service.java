@@ -1,5 +1,6 @@
 package com.hanghae.sosohandiary.utils.s3;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -8,6 +9,8 @@ import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.image.entity.DiaryImage;
 import com.hanghae.sosohandiary.domain.image.repository.DiaryImageRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
+import com.hanghae.sosohandiary.exception.ApiException;
+import com.hanghae.sosohandiary.exception.ErrorHandling;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,21 +37,22 @@ public class S3Service {
     private final AmazonS3 S3Client;
     private final DiaryImageRepository diaryImageRepository;
 
-    public void uploadDiary(List<MultipartFile> multipartFilelist, String dirName, Diary diary, Member member) throws IOException { // User user
+    public void uploadDiary(List<MultipartFile> multipartFilelist, Diary diary, Member member) throws IOException {
 
         for (MultipartFile multipartFile : multipartFilelist){
             if (multipartFile != null){
                 File uploadFile = convert(multipartFile).orElseThrow(
                         () -> new IllegalArgumentException("파일 전환 실패")
                 );
-                DiaryImage image = DiaryImage.of(upload(uploadFile, dirName), diary, member); //, user
+                DiaryImage image = DiaryImage.of(upload(uploadFile), diary, member);
                 diaryImageRepository.save(image);
             }
         }
     }
+
     // S3에 파일이름 저장 후 업로드
-    private String upload(File uploadFile, String dirName) {
-        String fileName = dirName + "/" + UUID.randomUUID();
+    private String upload(File uploadFile) {
+        String fileName = "" + UUID.randomUUID();
         String uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;
@@ -88,7 +92,5 @@ public class S3Service {
         DeleteObjectRequest request = new DeleteObjectRequest(bucketName, fileName);
         S3Client.deleteObject(request);
     }
-
-
 
 }
