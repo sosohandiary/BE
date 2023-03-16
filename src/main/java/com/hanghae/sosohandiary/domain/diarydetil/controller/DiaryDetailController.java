@@ -1,6 +1,5 @@
 package com.hanghae.sosohandiary.domain.diarydetil.controller;
 
-import com.hanghae.sosohandiary.domain.diary.dto.DiaryRequestDto;
 import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailRequestDto;
 import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailResponseDto;
 import com.hanghae.sosohandiary.domain.diarydetil.service.DiaryDetailService;

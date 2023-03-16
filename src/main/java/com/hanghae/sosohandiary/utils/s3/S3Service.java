@@ -1,6 +1,5 @@
 package com.hanghae.sosohandiary.utils.s3;
 
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -12,8 +11,6 @@ import com.hanghae.sosohandiary.domain.image.entity.DiaryImage;
 import com.hanghae.sosohandiary.domain.image.repository.DiaryDetailImageRepository;
 import com.hanghae.sosohandiary.domain.image.repository.DiaryImageRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
-import com.hanghae.sosohandiary.exception.ApiException;
-import com.hanghae.sosohandiary.exception.ErrorHandling;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,8 +40,8 @@ public class S3Service {
 
     public void uploadDiary(List<MultipartFile> multipartFilelist, Diary diary, Member member) throws IOException {
 
-        for (MultipartFile multipartFile : multipartFilelist){
-            if (multipartFile != null){
+        for (MultipartFile multipartFile : multipartFilelist) {
+            if (multipartFile != null) {
                 File uploadFile = convert(multipartFile).orElseThrow(
                         () -> new IllegalArgumentException("파일 전환 실패")
                 );
@@ -56,8 +53,8 @@ public class S3Service {
 
     public void uploadDiaryDetail(List<MultipartFile> multipartFilelist, DiaryDetail diaryDetail, Member member) throws IOException {
 
-        for (MultipartFile multipartFile : multipartFilelist){
-            if (multipartFile != null){
+        for (MultipartFile multipartFile : multipartFilelist) {
+            if (multipartFile != null) {
                 File uploadFile = convert(multipartFile).orElseThrow(
                         () -> new IllegalArgumentException("파일 전환 실패")
                 );
@@ -105,7 +102,7 @@ public class S3Service {
         return S3Client.getUrl(bucketName, path).toString();
     }
 
-    public void deleteFile(String fileName){
+    public void deleteFile(String fileName) {
         DeleteObjectRequest request = new DeleteObjectRequest(bucketName, fileName);
         S3Client.deleteObject(request);
     }

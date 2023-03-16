@@ -10,7 +10,6 @@ import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
 import com.hanghae.sosohandiary.exception.ApiException;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
