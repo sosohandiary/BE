@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DiaryDetailRepository extends JpaRepository<DiaryDetail, Long> {
+
     Optional<List<DiaryDetail>> findAllByOrderByModifiedAtDesc();
 
     Optional<List<DiaryDetail>> findAllByDiaryId(Long id);
