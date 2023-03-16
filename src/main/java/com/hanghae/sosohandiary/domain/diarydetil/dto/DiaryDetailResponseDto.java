@@ -51,9 +51,10 @@ public class DiaryDetailResponseDto {
                 .build();
     }
 
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Member member) {
+    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, List<String> imgList, Member member) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
+                .imgList(imgList)
                 .member(member)
                 .build();
     }

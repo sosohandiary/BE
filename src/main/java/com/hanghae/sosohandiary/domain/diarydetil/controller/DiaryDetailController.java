@@ -27,4 +27,10 @@ public class DiaryDetailController {
                                              @AuthenticationPrincipal MemberDetailsImpl memberDetails) throws IOException {
         return diaryDetailService.saveDetail(id, diaryDetailRequestDto, multipartFileList, memberDetails.getMember());
     }
+
+    @GetMapping("/detail")
+    public List<DiaryDetailResponseDto> detailFindList(@PathVariable(name = "diary-id") Long id) {
+        return diaryDetailService.findListDetail(id);
+    }
+
 }
