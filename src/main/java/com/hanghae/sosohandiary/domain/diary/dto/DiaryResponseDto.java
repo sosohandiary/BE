@@ -22,18 +22,18 @@ public class DiaryResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private DiaryResponseDto(Diary diary, List<String> imgLIst, Member member) {
+    private DiaryResponseDto(Diary diary, List<String> imgList, Member member) {
         id = diary.getId();
-        this.imgList = imgLIst;
+        this.imgList = imgList;
         title = diary.getTitle();
         name = member.getName();
         createdAt = diary.getCreatedAt();
         modifiedAt = diary.getModifiedAt();
     }
 
-    public static DiaryResponseDto from(Diary diary, List<String> imgLIst, Member member) {
+    public static DiaryResponseDto from(Diary diary, List<String> imgList, Member member) {
         return DiaryResponseDto.builder()
-                .imgLIst(imgLIst)
+                .imgList(imgList)
                 .diary(diary)
                 .member(member)
                 .build();
