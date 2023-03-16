@@ -8,6 +8,8 @@ import com.hanghae.sosohandiary.domain.member.dto.KakaoMemberInfoDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.entity.MemberRoleEnum;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
+import com.hanghae.sosohandiary.exception.ApiException;
+import com.hanghae.sosohandiary.exception.ErrorHandling;
 import com.hanghae.sosohandiary.security.MemberDetailsServiceImpl;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
@@ -48,11 +50,12 @@ public class KakaoMemberService {
 
         forceLoginUser(kakaoMember);
         // 4. JWT 토큰 반환
-        response.addHeader(jwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(kakaoMember.getEmail(), MemberRoleEnum.MEMBER));
+//        response.addHeader(jwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(kakaoMember.getEmail(), MemberRoleEnum.MEMBER));
         String createToken = jwtUtil.createToken(kakaoMember.getEmail(), MemberRoleEnum.MEMBER);
+
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
 
-        return new MessageDto("회원가입 성공", HttpStatus.OK);
+        return new MessageDto("로그인 성공", HttpStatus.ACCEPTED);
     }
 
     private void forceLoginUser(Member member) {
@@ -72,9 +75,9 @@ public class KakaoMemberService {
         //rest api key 넣어주세요!
         body.add("client_id", "b47175c20956cf2b54129db2d3886d94");
         // 돌아가는 주소
-        body.add("redirect_uri", "http://localhost:8080/oauth");
-//        body.add("redirect_uri", "http://localhost:3000/login/oauth2/kakao1");
-//        body.add("redirect_uri", "https://gitssum/login/oauth2/kakao1");
+//        body.add("redirect_uri", "http://localhost:8080/oauth");
+        body.add("redirect_uri", "http://localhost:3000/oauth");
+//        body.add("redirect_uri", "https://sosohandiary.shop/login/kakao");
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -134,7 +137,7 @@ public class KakaoMemberService {
                 .orElse(null);
         if (kakaoMember == null) {
             // 카카오 사용자 email 동일한 email 가진 회원이 있는지 확인
-            String kakaoEmail = kakaoMember.getEmail();
+            String kakaoEmail = kakaoMemberInfo.getEmail();
             Member sameEmailMember = memberRepository.findByEmail(kakaoEmail).orElse(null);
             if (sameEmailMember != null) {
                 kakaoMember = sameEmailMember;
@@ -152,7 +155,6 @@ public class KakaoMemberService {
 
                 kakaoMember = Member.of(email, kakaoId, encodedPassword, name, MemberRoleEnum.MEMBER);
             }
-
             memberRepository.save(kakaoMember);
         }
         return kakaoMember;

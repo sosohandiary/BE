@@ -1,19 +1,21 @@
 package com.hanghae.sosohandiary.domain.member.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.hanghae.sosohandiary.auth.JwtUtil;
 import com.hanghae.sosohandiary.domain.member.dto.JoinRequestDto;
 import com.hanghae.sosohandiary.domain.member.dto.LoginRequestDto;
 import com.hanghae.sosohandiary.domain.member.service.KakaoMemberService;
 import com.hanghae.sosohandiary.domain.member.service.MemberService;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/")
 public class MemberController {
@@ -26,11 +28,13 @@ public class MemberController {
         return kakaoMemberService.kakaoLogin(code, response);
     }
 
+    @ResponseBody
     @PostMapping("/join")
     public MessageDto join(@Valid @RequestBody JoinRequestDto joinRequestDto) {
         return memberService.join(joinRequestDto);
     }
 
+    @ResponseBody
     @PostMapping("/login")
     public MessageDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         return memberService.login(loginRequestDto, response);
