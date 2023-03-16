@@ -39,7 +39,7 @@ public class DiaryService {
         Diary diary = diaryRepository.save(Diary.of(diaryRequestDto, member));
 
         if (multipartFileList != null) {
-            s3Service.uploadDiary(multipartFileList, "static", diary, member);
+            s3Service.uploadDiary(multipartFileList, diary, member);
         }
 
         return DiaryResponseDto.from(diary, member);
@@ -79,13 +79,22 @@ public class DiaryService {
             throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
         }
 
+        List<DiaryImage> diaryImageList = diaryImageRepository.findAllByDiary(diary);
+        for (DiaryImage diaryImage : diaryImageList) {
+            String uploadPath = diaryImage.getUploadPath();
+            String filename = uploadPath.substring(50);
+            s3Service.deleteFile(filename);
+        }
+        diaryImageRepository.deleteAllByDiaryId(diary.getId());
+
         diary.update(diaryRequestDto);
 
+        List<String> imagePathList = imgPathList(diary);
         if (multipartFileList != null) {
-            s3Service.uploadDiary(multipartFileList, "static", diary, member);
+            s3Service.uploadDiary(multipartFileList, diary, member);
         }
 
-        return DiaryResponseDto.from(diary, member);
+        return DiaryResponseDto.from(diary, imagePathList, member);
     }
 
     @Transactional
@@ -99,15 +108,14 @@ public class DiaryService {
             throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
         }
 
-        List<DiaryImage> imagePathList = diaryImageRepository.findAllByDiary(diary);
-        for (DiaryImage diaryImage : imagePathList) {
+        List<DiaryImage> diaryImageList = diaryImageRepository.findAllByDiary(diary);
+        for (DiaryImage diaryImage : diaryImageList) {
             String uploadPath = diaryImage.getUploadPath();
-            String filename = uploadPath.substring(57);
+            String filename = uploadPath.substring(50);
             s3Service.deleteFile(filename);
         }
-
         diaryImageRepository.deleteAllByDiaryId(diary.getId());
-        diaryRepository.deleteById(diary.getId());
+        diaryRepository.deleteById(id);
 
         return MessageDto.of("다이어리 삭제 완료", HttpStatus.OK);
     }

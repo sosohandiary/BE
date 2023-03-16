@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.FetchType.*;
 
 @Entity
@@ -30,14 +31,12 @@ public class Diary extends Timestamp {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    // TODO: 2023-03-13 entity 회원 로직 완성 후 member 추가
     @Builder
     private Diary(DiaryRequestDto diaryRequestDto, Member member) {
         title = diaryRequestDto.getTitle();
         this.member = member;
     }
 
-    // TODO: 2023-03-13 entity 회원 로직 완성 후 member 추가
     public static Diary of(DiaryRequestDto diaryRequestDto, Member member) {
         return Diary.builder()
                 .diaryRequestDto(diaryRequestDto)

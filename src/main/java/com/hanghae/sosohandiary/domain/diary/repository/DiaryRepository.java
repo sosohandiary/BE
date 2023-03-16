@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<List<Diary>> findAllByOrderByModifiedAtDesc();
+
+    void deleteById(Long id);
 }

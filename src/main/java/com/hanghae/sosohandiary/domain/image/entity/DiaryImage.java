@@ -20,14 +20,14 @@ public class DiaryImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @Column
     private String uploadPath;
 
-    @ManyToOne(fetch = LAZY, cascade = REMOVE)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "diary_id", nullable = false)
     private Diary diary;
 
-    @ManyToOne(fetch = LAZY, cascade = REMOVE)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
@@ -45,4 +45,5 @@ public class DiaryImage {
                 .member(member)
                 .build();
     }
+
 }
