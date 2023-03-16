@@ -15,6 +15,7 @@ public enum ErrorHandling {
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다"),
     INVALID_ADMIN_TOKEN(HttpStatus.FORBIDDEN, "유효하지 않은 ADMIN 토큰입니다."),
     NOT_FOUND_DIARY(HttpStatus.BAD_REQUEST, "해당 하는 diary를 찾을 수 없습니다"),
+    JWT_EXPIRED_TOKEN(HttpStatus.BAD_REQUEST, "다시 로그인 해주세요"),
     NOT_FOUND_DIARY_DETAIL(HttpStatus.BAD_REQUEST, "해당 하는 diary 속지를 찾을 수 없습니다"),
     NOT_FOUND_DIARY_DETAIL_COMMENT(HttpStatus.BAD_REQUEST, "해당 하는 diary 속지의 댓글을 찾을 수 없습니다"),
     JWT_EXPIRED_TOKEN(HttpStatus.BAD_REQUEST,"다시 로그인 해주세요"),

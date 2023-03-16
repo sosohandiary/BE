@@ -60,6 +60,7 @@ public class KakaoMemberService {
         Authentication createAuthentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(createAuthentication);
     }
+
     // 1. "인가 코드"로 "액세스 토큰" 요청
     private String getToken(String code) throws JsonProcessingException {
         // HTTP Header 생성
@@ -157,7 +158,6 @@ public class KakaoMemberService {
         }
         return kakaoMember;
     }
-
 
 
 }

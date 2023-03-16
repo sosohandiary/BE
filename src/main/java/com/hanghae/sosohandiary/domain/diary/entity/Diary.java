@@ -1,7 +1,6 @@
 package com.hanghae.sosohandiary.domain.diary.entity;
 
 import com.hanghae.sosohandiary.domain.diary.dto.DiaryRequestDto;
-import com.hanghae.sosohandiary.domain.image.entity.DiaryImage;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.utils.entity.Timestamp;
 import lombok.AccessLevel;
@@ -10,10 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
-import static javax.persistence.CascadeType.*;
-import static javax.persistence.FetchType.*;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter

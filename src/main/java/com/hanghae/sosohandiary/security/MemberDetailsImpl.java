@@ -19,7 +19,7 @@ public class MemberDetailsImpl implements UserDetails {
         this.name = name;
     }
 
-    public Member getMember(){
+    public Member getMember() {
         return member;
     }
 

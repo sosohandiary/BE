@@ -11,5 +11,6 @@ public interface DiaryDetailImageRepository extends JpaRepository<DiaryDetailIma
     List<DiaryDetailImage> findAllByDiaryDetail(DiaryDetail diaryDetail);
 
     void deleteAllByDiaryDetailId(Long id);
+
     void deleteById(Long id);
 }

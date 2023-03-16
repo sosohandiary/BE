@@ -1,6 +1,5 @@
 package com.hanghae.sosohandiary.domain.image.entity;
 
-import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.AccessLevel;

@@ -7,7 +7,6 @@ import com.hanghae.sosohandiary.domain.member.service.KakaoMemberService;
 import com.hanghae.sosohandiary.domain.member.service.MemberService;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +34,6 @@ public class MemberController {
     public MessageDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         return memberService.login(loginRequestDto, response);
     }
-
 
 
 }

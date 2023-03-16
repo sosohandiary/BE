@@ -28,15 +28,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = jwtUtil.resolveToken(request);
 
-        if(token != null) {
-            if(!jwtUtil.validateToken(token)){
+        if (token != null) {
+            if (!jwtUtil.validateToken(token)) {
                 jwtExceptionHandler(response, "Token Error", HttpStatus.UNAUTHORIZED);
                 return;
             }
             Claims info = jwtUtil.getUserInfoFromToken(token);
             setAuthentication(info.getSubject());
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 
     public void setAuthentication(String username) {
