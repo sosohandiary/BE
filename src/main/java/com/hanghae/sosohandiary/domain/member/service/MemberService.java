@@ -35,6 +35,9 @@ public class MemberService {
         String email = joinRequestDto.getEmail();
         String password = passwordEncoder.encode(joinRequestDto.getPassword());
         String name = joinRequestDto.getName();
+        String nickname = joinRequestDto.getNickname();
+        String birthday = joinRequestDto.getBirthday();
+        String gender = joinRequestDto.getGender();
 
         Optional<Member> foundEmail = memberRepository.findByEmail(email);
         if (foundEmail.isPresent()) {
@@ -49,7 +52,7 @@ public class MemberService {
             role = MemberRoleEnum.ADMIN;
         }
 
-        Member member = Member.of(email, password, name, role);
+        Member member = Member.of(email, password, name, nickname, birthday, gender, role);
         memberRepository.save(member);
 
         return MessageDto.of("회원가입 성공", HttpStatus.ACCEPTED);
