@@ -1,11 +1,14 @@
 package com.hanghae.sosohandiary.domain.myfriendsList.controller;
 
+import com.hanghae.sosohandiary.domain.myfriendsList.dto.MyFriendResponseDto;
 import com.hanghae.sosohandiary.domain.myfriendsList.service.MyFriendsListService;
 import com.hanghae.sosohandiary.security.MemberDetailsImpl;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/friend")
@@ -16,6 +19,11 @@ public class MyFriendsListController {
     @PostMapping("/request/add/{id}")
     public MessageDto createFriendRequest(@PathVariable Long id, @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return myFriendsListService.createFriendRequest(id, memberDetails.getMember());
+    }
+
+    @GetMapping("/request/add")
+    public List<MyFriendResponseDto> getFriendRequest(@AuthenticationPrincipal MemberDetailsImpl memberDetails){
+        return myFriendsListService.getFriendRequest(memberDetails.getMember());
     }
 
     @PostMapping("/add/{id}")
