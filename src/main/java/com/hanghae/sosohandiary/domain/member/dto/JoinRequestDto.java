@@ -18,10 +18,19 @@ public class JoinRequestDto {
     private String password;
 
     @NotNull(message = "이름을 입력 하세요")
-    @Size(min = 2, max = 10, message = "이름을 2-20자 이내 입니다.")
+    @Size(min = 2, max = 20, message = "이름을 2-20자 이내 입니다.")
     private String name;
 
+    @NotNull(message = "닉네임을 입력 하세요")
+    @Size(min = 2, max = 10, message = "닉네임은 2-20자 이내 입니다.")
+    private String nickname;
+
+    private String birthday;
+
+    private String gender;
+
     private boolean admin = false;
+
     private String adminToken = "";
 
 }
