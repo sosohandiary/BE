@@ -2,18 +2,19 @@ package com.hanghae.sosohandiary.domain.myfriendsList.service;
 
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
+import com.hanghae.sosohandiary.domain.myfriendsList.dto.MyFriendResponseDto;
 import com.hanghae.sosohandiary.domain.myfriendsList.entity.FriendRequest;
 import com.hanghae.sosohandiary.domain.myfriendsList.entity.MyFriendsList;
 import com.hanghae.sosohandiary.domain.myfriendsList.repository.FriendRequestRepository;
 import com.hanghae.sosohandiary.domain.myfriendsList.repository.MyFriendsListRepository;
-import com.hanghae.sosohandiary.exception.ApiException;
-import com.hanghae.sosohandiary.exception.ErrorHandling;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,7 +28,6 @@ public class MyFriendsListService {
     public MessageDto createFriendRequest(Long id, Member member) {
 
 
-
         if (member.getId().equals(id)) {
             return new MessageDto("자기 자신을 추가할 수 없습니다.", HttpStatus.BAD_REQUEST);
         }
@@ -38,10 +38,10 @@ public class MyFriendsListService {
         Optional<FriendRequest> findUserId = friendRequestRepository.findById(userId.get().getId());
 
 
-        if (findUserId.isPresent()) {
-            if(findUserId.get().getFriend().getId().equals(id)){
-                return new MessageDto("아직 친구가 수락하지 않았습니다.", HttpStatus.BAD_REQUEST);
-            }
+        // 친구 요청 중복 체크
+        boolean isDuplicated = friendRequestRepository.existsByFriend_IdAndMember_Id(id, userId.get().getId());
+        if (isDuplicated) {
+            return new MessageDto("이미 친구 요청이 존재합니다.", HttpStatus.BAD_REQUEST);
         }
 
         FriendRequest friendRequest = FriendRequest.builder()
@@ -52,6 +52,17 @@ public class MyFriendsListService {
         friendRequestRepository.save(friendRequest);
         return new MessageDto("친구요청 성공", HttpStatus.CREATED);
     }
+
+    public List<MyFriendResponseDto> getFriendRequest(Member member) {
+        List<FriendRequest> friendRequestList = friendRequestRepository.findAllByFriendIdOrderByCreatedAtDesc(member.getId());
+        List<MyFriendResponseDto> myFriendResponseDtoList = new ArrayList<>();
+
+        for (FriendRequest friendRequest : friendRequestList) {
+            myFriendResponseDtoList.add(MyFriendResponseDto.from(friendRequest.getId(),friendRequest.getMember().getEmail()));
+        }
+        return myFriendResponseDtoList;
+    }
+
     @Transactional
     public MessageDto createFriendAccept(Long id, Member member) {
         Optional<Member> userId = memberRepository.findById(member.getId());
@@ -74,7 +85,6 @@ public class MyFriendsListService {
         //todo : delete friendRequest 삭제로직
         return new MessageDto("친구추가 성공", HttpStatus.CREATED);
     }
-
 
 
 }
