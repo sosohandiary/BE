@@ -10,4 +10,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<List<Diary>> findAllByOrderByModifiedAtDesc();
 
     void deleteById(Long id);
+
+    Optional<Diary> findByMemberId(Long id);
 }

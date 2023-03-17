@@ -1,5 +1,6 @@
 package com.hanghae.sosohandiary.domain.member.entity;
 
+import com.hanghae.sosohandiary.domain.mypage.dto.ProfileEditRequestDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -86,4 +87,10 @@ public class Member {
         this.kakaoId = kakaoId;
         return this;
     }
+
+    public void updateProfile(String nickname, String statusMessage) {
+        this.nickname = nickname;
+        this.statusMessage = statusMessage;
+    }
+
 }
