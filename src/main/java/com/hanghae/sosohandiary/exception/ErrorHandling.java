@@ -11,6 +11,7 @@ public enum ErrorHandling {
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, "토큰이 유효하지 않습니다"),
     NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND, "토큰을 찾을 수 없습니다"),
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "해당하는 유저가 존재하지 않습니다"),
+    NOT_FOUND_EMAIL(HttpStatus.NOT_FOUND, "해당하는 이메일이 존재하지 않습니다"),
     DUPLICATED_EMAIL(HttpStatus.CONFLICT, "중복된 이메일 입니다"),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다"),
     INVALID_ADMIN_TOKEN(HttpStatus.FORBIDDEN, "유효하지 않은 ADMIN 토큰입니다."),
