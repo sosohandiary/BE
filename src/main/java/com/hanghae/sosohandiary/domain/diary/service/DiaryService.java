@@ -4,7 +4,11 @@ import com.hanghae.sosohandiary.domain.diary.dto.DiaryRequestDto;
 import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
+import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
+import com.hanghae.sosohandiary.domain.diarydetil.repository.DiaryDetailRepository;
+import com.hanghae.sosohandiary.domain.image.entity.DiaryDetailImage;
 import com.hanghae.sosohandiary.domain.image.entity.DiaryImage;
+import com.hanghae.sosohandiary.domain.image.repository.DiaryDetailImageRepository;
 import com.hanghae.sosohandiary.domain.image.repository.DiaryImageRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
@@ -26,11 +30,12 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class DiaryService {
 
+    private final DiaryDetailImageRepository diaryDetailImageRepository;
     private final DiaryImageRepository diaryImageRepository;
+    private final DiaryDetailRepository diaryDetailRepository;
     private final DiaryRepository diaryRepository;
     private final S3Service s3Service;
 
-    // TODO: 2023-03-13 service 회원 로직 완료 후 member 추가
     @Transactional
     public DiaryResponseDto saveDiary(DiaryRequestDto diaryRequestDto,
                                       List<MultipartFile> multipartFileList,
@@ -46,12 +51,12 @@ public class DiaryService {
     }
 
     public List<DiaryResponseDto> findDiaryList() {
-        List<Diary> diaryDetailList = diaryRepository.findAllByOrderByModifiedAtDesc().orElseThrow(
+        List<Diary> diaryList = diaryRepository.findAllByOrderByModifiedAtDesc().orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
         List<DiaryResponseDto> diaryResponseDtoList = new ArrayList<>();
 
-        for (Diary diary : diaryDetailList) {
+        for (Diary diary : diaryList) {
             List<String> imgList = imgPathList(diary);
             diaryResponseDtoList.add(DiaryResponseDto.from(diary, imgList, diary.getMember()));
         }
@@ -59,8 +64,8 @@ public class DiaryService {
         return diaryResponseDtoList;
     }
 
-    private List<String> imgPathList(Diary diaryDetail) {
-        List<DiaryImage> diaryImageList = diaryImageRepository.findAllByDiary(diaryDetail);
+    private List<String> imgPathList(Diary diary) {
+        List<DiaryImage> diaryImageList = diaryImageRepository.findAllByDiary(diary);
         List<String> imgPathList = new ArrayList<>();
 
         for (DiaryImage image : diaryImageList) {
@@ -114,7 +119,21 @@ public class DiaryService {
             String filename = uploadPath.substring(50);
             s3Service.deleteFile(filename);
         }
-        diaryImageRepository.deleteAllByDiaryId(diary.getId());
+        List<DiaryDetail> diaryDetailList = diaryDetailRepository.findAllByDiaryId(id).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+        );
+        for (DiaryDetail diaryDetail : diaryDetailList) {
+            List<DiaryDetailImage> diaryDetailImageList = diaryDetailImageRepository.findAllByDiaryDetail(diaryDetail);
+            for (DiaryDetailImage diaryImage : diaryDetailImageList) {
+                String uploadPath = diaryImage.getUploadPath();
+                String filename = uploadPath.substring(50);
+                s3Service.deleteFile(filename);
+            }
+            diaryDetailImageRepository.deleteAllByDiaryDetailId(diaryDetail.getId());
+        }
+
+        diaryImageRepository.deleteAllByDiaryId(id);
+        diaryDetailRepository.deleteAllByDiaryId(id);
         diaryRepository.deleteById(id);
 
         return MessageDto.of("다이어리 삭제 완료", HttpStatus.OK);
