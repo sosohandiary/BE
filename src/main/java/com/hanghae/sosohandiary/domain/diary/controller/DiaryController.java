@@ -20,7 +20,6 @@ public class DiaryController {
 
     private final DiaryService diaryService;
 
-    // TODO: 2023-03-13 controller 회원 로직 완료 후 member 추가
     @PostMapping("/diary")
     public DiaryResponseDto diarySave(@RequestPart(value = "title") DiaryRequestDto diaryDetailRequestDto,
                                       @RequestPart(value = "img") List<MultipartFile> multipartFileList,
@@ -28,8 +27,7 @@ public class DiaryController {
         return diaryService.saveDiary(diaryDetailRequestDto, multipartFileList, memberDetails.getMember());
     }
 
-    // TODO: 2023-03-13 controller 회원 로직 완료 후 member 추가
-    @GetMapping("/diary")
+    @GetMapping("/")
     public List<DiaryResponseDto> diaryList() {
         return diaryService.findDiaryList();
     }
