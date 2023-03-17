@@ -119,13 +119,22 @@ public class KakaoMemberService {
         JsonNode jsonNode = objectMapper.readTree(responseBody);
         System.out.print(jsonNode);
         Long id = jsonNode.get("id").asLong();
+
         String name = jsonNode.get("properties")
                 .get("nickname").asText();
         String email = jsonNode.get("kakao_account")
                 .get("email").asText();
+        String nickname = jsonNode.get("properties")
+                        .get("nickname").asText();
+        String birthday = jsonNode.get("kakao_account")
+                .get("birthday").asText();
+        String gender = jsonNode.get("kakao_account")
+                .get("gender").asText();
 
-        log.info("카카오 사용자 정보: " + id + ", " + email + ", " + name);
-        return new KakaoMemberInfoDto(id, email, name);
+        log.info("카카오 사용자 정보: " + id + ", " + email + ", " + name + ", " + nickname + ", " + birthday + ", " + gender);
+
+        return KakaoMemberInfoDto.of(id, email, name, nickname, birthday, gender);
+
     }
 
     // 3. 필요시에 회원가입
@@ -151,8 +160,11 @@ public class KakaoMemberService {
                 // email: kakao email
                 String email = kakaoMemberInfo.getEmail();
                 String name = kakaoMemberInfo.getName();
+                String nickname = kakaoMemberInfo.getNickname();
+                String birthday = kakaoMemberInfo.getBirthday();
+                String gender = kakaoMemberInfo.getGender();
 
-                kakaoMember = Member.of(email, kakaoId, encodedPassword, name, MemberRoleEnum.MEMBER);
+                kakaoMember = Member.of(email, kakaoId, encodedPassword, name, nickname, birthday, gender, MemberRoleEnum.MEMBER);
             }
             memberRepository.save(kakaoMember);
         }
