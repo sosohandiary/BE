@@ -93,7 +93,7 @@ public class MyFriendsListService {
 
 
     public List<FriendListResponseDto> getFriendList(Member member) {
-        List<MyFriendsList> myFriendsLists = myFriendsListRepository.findAllById(member.getId());
+        List<MyFriendsList> myFriendsLists = myFriendsListRepository.findAllByMemberId(member.getId());
         List<FriendListResponseDto> friendListResponseDtoList = new ArrayList<>();
 
         for (MyFriendsList myFriendsList : myFriendsLists) {
