@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface MyFriendsListRepository extends JpaRepository<MyFriendsList, Long> {
-    List<MyFriendsList> findAllById(Long id);
+    List<MyFriendsList> findAllByMemberId(Long id);
 }
