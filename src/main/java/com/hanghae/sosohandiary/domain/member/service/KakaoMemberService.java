@@ -8,8 +8,6 @@ import com.hanghae.sosohandiary.domain.member.dto.KakaoMemberInfoDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.entity.MemberRoleEnum;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
-import com.hanghae.sosohandiary.exception.ApiException;
-import com.hanghae.sosohandiary.exception.ErrorHandling;
 import com.hanghae.sosohandiary.security.MemberDetailsServiceImpl;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +36,7 @@ public class KakaoMemberService {
     private final JwtUtil jwtUtil;
     private final MemberDetailsServiceImpl memberDetailsService;
 
-    public MessageDto kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
+    public MessageDto loginKakao(String code, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(code);
 
@@ -63,6 +61,7 @@ public class KakaoMemberService {
         Authentication createAuthentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(createAuthentication);
     }
+
     // 1. "인가 코드"로 "액세스 토큰" 요청
     private String getToken(String code) throws JsonProcessingException {
         // HTTP Header 생성

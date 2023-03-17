@@ -1,7 +1,6 @@
 package com.hanghae.sosohandiary.domain.member.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.hanghae.sosohandiary.auth.JwtUtil;
 import com.hanghae.sosohandiary.domain.member.dto.JoinRequestDto;
 import com.hanghae.sosohandiary.domain.member.dto.LoginRequestDto;
 import com.hanghae.sosohandiary.domain.member.service.KakaoMemberService;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -24,8 +22,8 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/login/kakao")
-    public MessageDto kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-        return kakaoMemberService.kakaoLogin(code, response);
+    public MessageDto LoginKakao(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+        return kakaoMemberService.loginKakao(code, response);
     }
 
     @ResponseBody
