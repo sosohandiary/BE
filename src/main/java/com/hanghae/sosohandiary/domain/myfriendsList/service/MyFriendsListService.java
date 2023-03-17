@@ -10,6 +10,7 @@ import com.hanghae.sosohandiary.domain.myfriendsList.repository.FriendRequestRep
 import com.hanghae.sosohandiary.domain.myfriendsList.repository.MyFriendsListRepository;
 import com.hanghae.sosohandiary.exception.ApiException;
 import com.hanghae.sosohandiary.exception.ErrorHandling;
+import com.hanghae.sosohandiary.security.MemberDetailsImpl;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -100,5 +101,20 @@ public class MyFriendsListService {
             friendListResponseDtoList.add(FriendListResponseDto.from(myFriendsList.getId(),myFriendsList.getFriend().getEmail()));
         }
         return friendListResponseDtoList;
+    }
+
+    @Transactional
+    public MessageDto deleteFriendList(Long id, Member member) {
+        MyFriendsList myFriendsList = myFriendsListRepository.findById(id).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_USER)
+        );
+
+        if (!myFriendsList.getMember().getId().equals(member.getId())) {
+            throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
+        }
+
+        myFriendsListRepository.deleteByMemberIdAndFriendId(myFriendsList.getMember().getId(), myFriendsList.getFriend().getId());
+        myFriendsListRepository.deleteByFriendIdAndMemberId(myFriendsList.getMember().getId(), myFriendsList.getFriend().getId());
+        return MessageDto.of("친구 삭제 완료", HttpStatus.OK);
     }
 }

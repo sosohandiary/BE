@@ -23,7 +23,7 @@ public class MyFriendsListController {
     }
 
     @GetMapping("/request/add")
-    public List<MyFriendResponseDto> getFriendRequest(@AuthenticationPrincipal MemberDetailsImpl memberDetails){
+    public List<MyFriendResponseDto> getFriendRequest(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return myFriendsListService.getFriendRequest(memberDetails.getMember());
     }
 
@@ -35,5 +35,11 @@ public class MyFriendsListController {
     @GetMapping("/friendlist")
     public List<FriendListResponseDto> getFriendList(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return myFriendsListService.getFriendList(memberDetails.getMember());
+    }
+
+    @DeleteMapping("/firendlist/{friendlist-id}")
+    public MessageDto deleteFriendList(@PathVariable(name = "friendlist-id") Long id,
+                                       @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return myFriendsListService.deleteFriendList(id, memberDetails.getMember());
     }
 }
