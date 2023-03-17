@@ -2,6 +2,7 @@ package com.hanghae.sosohandiary.domain.myfriendsList.service;
 
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
+import com.hanghae.sosohandiary.domain.myfriendsList.dto.FriendListResponseDto;
 import com.hanghae.sosohandiary.domain.myfriendsList.dto.MyFriendResponseDto;
 import com.hanghae.sosohandiary.domain.myfriendsList.entity.FriendRequest;
 import com.hanghae.sosohandiary.domain.myfriendsList.entity.MyFriendsList;
@@ -13,23 +14,23 @@ import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MyFriendsListService {
     private final MyFriendsListRepository myFriendsListRepository;
     private final FriendRequestRepository friendRequestRepository;
     private final MemberRepository memberRepository;
 
 
+    @Transactional
     public MessageDto createFriendRequest(Long id, Member member) {
-
-
         if (member.getId().equals(id)) {
             return new MessageDto("자기 자신을 추가할 수 없습니다.", HttpStatus.BAD_REQUEST);
         }
@@ -91,4 +92,13 @@ public class MyFriendsListService {
     }
 
 
+    public List<FriendListResponseDto> getFriendList(Member member) {
+        List<MyFriendsList> myFriendsLists = myFriendsListRepository.findAllById(member.getId());
+        List<FriendListResponseDto> friendListResponseDtoList = new ArrayList<>();
+
+        for (MyFriendsList myFriendsList : myFriendsLists) {
+            friendListResponseDtoList.add(FriendListResponseDto.from(myFriendsList.getId(),myFriendsList.getFriend().getEmail()));
+        }
+        return friendListResponseDtoList;
+    }
 }
