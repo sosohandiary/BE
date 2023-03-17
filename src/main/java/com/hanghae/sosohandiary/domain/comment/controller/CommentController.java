@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class CommentController {
@@ -20,6 +22,12 @@ public class CommentController {
                                  @RequestBody CommentRequestDto requestDto,
                                  @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return commentService.createComment(id, requestDto, memberDetails.getMember());
+    }
+
+    @GetMapping("/detail/{detail-id}/comment")
+    public List<CommentResponseDto> getComment(@PathVariable(name = "detail-id")Long id,
+                                               @AuthenticationPrincipal MemberDetailsImpl memberDetails){
+        return commentService.getComment(id, memberDetails.getMember());
     }
 
     @PatchMapping("/detail/{detail-id}/comment/{comment-id}")
