@@ -31,16 +31,16 @@ public class Comment extends Timestamp {
     private Member member;
 
     @Column(nullable = false)
-    private String contents;
+    private String comment;
 
     @Builder
-    private Comment(DiaryDetail diaryDetail, Member member, String commentRequestDto) {
+    private Comment(DiaryDetail diaryDetail, Member member, CommentRequestDto commentRequestDto) {
         this.diaryDetail = diaryDetail;
-        this.contents = commentRequestDto;
+        this.comment = commentRequestDto.getComment();
         this.member = member;
     }
 
-    public static Comment of(DiaryDetail diaryDetail, Member member, String commentRequestDto) {
+    public static Comment of(DiaryDetail diaryDetail, Member member, CommentRequestDto commentRequestDto) {
         return Comment.builder()
                 .diaryDetail(diaryDetail)
                 .member(member)
@@ -49,7 +49,7 @@ public class Comment extends Timestamp {
     }
 
     public void update(String commentRequestDto){
-        this.contents=commentRequestDto;
+        this.comment=commentRequestDto;
     }
 
 }

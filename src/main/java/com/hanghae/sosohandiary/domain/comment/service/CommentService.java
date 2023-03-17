@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,30 +29,47 @@ public class CommentService {
     private final DiaryDetailRepository diaryDetailRepository;
 
     public CommentResponseDto createComment(Long id, CommentRequestDto requestDto, Member member) {
-        String comment = requestDto.getComment();
+
         DiaryDetail diaryDetail = diaryDetailRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
         );
 
-        commentRepository.save(Comment.of(diaryDetail, member, comment));
+        Comment comment = commentRepository.save(Comment.of(diaryDetail, member, requestDto));
 
         return CommentResponseDto.from(diaryDetail, member, comment);
     }
 
+    public List<CommentResponseDto> getComment(Long id, Member member) {
+
+        DiaryDetail diaryDetail = diaryDetailRepository.findById(id).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
+        );
+
+        List<Comment> commentList = commentRepository.findAllByOrderByCreatedAtDesc();
+        List<CommentResponseDto> commentResponseList = new ArrayList<>();
+
+        for (Comment comment : commentList) {
+            commentResponseList.add(CommentResponseDto.from(diaryDetail, member, comment));
+        }
+        return commentResponseList;
+    }
+
     @Transactional
     public CommentResponseDto updateComment(Long detailId, Long id, CommentRequestDto requestDto, Member member) {
-        Optional<Comment> comment = commentRepository.findById(id);
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL_COMMENT)
+        );
         DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
         );
 
-        commentRepository.findById(id).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL_COMMENT)
-        );
+        if (!comment.getMember().getId().equals(member.getId())) {
+            throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
+        }
 
-        comment.get().update(requestDto.getComment());
+        comment.update(requestDto.getComment());
 
-        return CommentResponseDto.from(diaryDetail, member, requestDto.getComment());
+        return CommentResponseDto.from(diaryDetail, member, comment);
     }
 
     public MessageDto deleteComment(Long detailId, Long id, Member member) {
@@ -59,9 +78,9 @@ public class CommentService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
         );
 
-        if(comment.isPresent()){
-            if(!comment.get().getMember().getId().equals(member.getId())){
-                return new MessageDto("작성자만 삭제 가능합니다",HttpStatus.BAD_REQUEST);
+        if (comment.isPresent()) {
+            if (!comment.get().getMember().getId().equals(member.getId())) {
+                return new MessageDto("작성자만 삭제 가능합니다", HttpStatus.BAD_REQUEST);
             }
         }
 
@@ -72,4 +91,6 @@ public class CommentService {
         commentRepository.deleteById(id);
         return new MessageDto("댓글삭제 완료", HttpStatus.OK);
     }
+
+
 }
