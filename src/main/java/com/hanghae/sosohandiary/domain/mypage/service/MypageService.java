@@ -5,7 +5,9 @@ import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diary.service.DiaryService;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
+import com.hanghae.sosohandiary.domain.myfriendsList.repository.MyFriendsListRepository;
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageDiaryResponseDto;
+import com.hanghae.sosohandiary.domain.mypage.dto.MypageFriendResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageProfileResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.ProfileEditRequestDto;
 import com.hanghae.sosohandiary.exception.ApiException;
@@ -26,6 +28,7 @@ public class MypageService {
     private final MemberRepository memberRepository;
     private final DiaryService diaryService;
     private final DiaryRepository diaryRepository;
+    private final MyFriendsListRepository friendsRepository;
 
     @Transactional(readOnly = true)
     public MypageProfileResponseDto getProfile(Member member) {
@@ -82,5 +85,17 @@ public class MypageService {
         Long diaryCount = diaryRepository.countByMemberId(member.getId());
 
         return MypageDiaryResponseDto.from(diaryCount);
+    }
+
+    @Transactional(readOnly = true)
+    public MypageFriendResponseDto getMyFriendCount(Member member) {
+
+        member = memberRepository.findById(member.getId()).orElseThrow(
+                () -> new ApiException(NOT_FOUND_USER)
+        );
+
+        Long friendCount = friendsRepository.countAllByMemberId(member.getId());
+
+        return MypageFriendResponseDto.from(friendCount);
     }
 }

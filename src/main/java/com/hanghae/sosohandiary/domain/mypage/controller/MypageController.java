@@ -1,6 +1,7 @@
 package com.hanghae.sosohandiary.domain.mypage.controller;
 
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageDiaryResponseDto;
+import com.hanghae.sosohandiary.domain.mypage.dto.MypageFriendResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageProfileResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.ProfileEditRequestDto;
 import com.hanghae.sosohandiary.domain.mypage.service.MypageService;
@@ -38,5 +39,9 @@ public class MypageController {
         return mypageService.getMyDiaryCount(memberDetails.getMember());
     }
 
+    @GetMapping("/friend/count")
+    public MypageFriendResponseDto getMyFriendCount(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return mypageService.getMyFriendCount(memberDetails.getMember());
+    }
 
 }
