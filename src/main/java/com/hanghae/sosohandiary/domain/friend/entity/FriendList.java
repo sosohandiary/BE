@@ -1,4 +1,4 @@
-package com.hanghae.sosohandiary.domain.myfriendsList.entity;
+package com.hanghae.sosohandiary.domain.friend.entity;
 
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.utils.entity.Timestamp;
@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MyFriendsList extends Timestamp {
+public class FriendList extends Timestamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +27,16 @@ public class MyFriendsList extends Timestamp {
     private Member friend;
 
     @Builder
-    public MyFriendsList(Member member, Member friend) {
+    private FriendList(Member member, Member friend) {
         this.member = member;
         this.friend = friend;
+    }
+
+    public static FriendList of(Member member, Member friend) {
+        return FriendList.builder()
+                .member(member)
+                .friend(friend)
+                .build();
     }
 
 }

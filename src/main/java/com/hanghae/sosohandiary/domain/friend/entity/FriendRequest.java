@@ -1,4 +1,4 @@
-package com.hanghae.sosohandiary.domain.myfriendsList.entity;
+package com.hanghae.sosohandiary.domain.friend.entity;
 
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.utils.entity.Timestamp;
@@ -27,10 +27,16 @@ public class FriendRequest extends Timestamp {
     private Member friend;
 
     @Builder
-    public FriendRequest(Member member, Member friend) {
+    private FriendRequest(Member member, Member friend) {
         this.member = member;
         this.friend = friend;
     }
-    
+
+    public static FriendRequest of(Member member, Member friend) {
+        return FriendRequest.builder()
+                .member(member)
+                .friend(friend)
+                .build();
+    }
     
 }
