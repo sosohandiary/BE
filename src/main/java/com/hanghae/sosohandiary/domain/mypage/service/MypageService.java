@@ -5,7 +5,8 @@ import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diary.service.DiaryService;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
-import com.hanghae.sosohandiary.domain.mypage.dto.MypageResponseDto;
+import com.hanghae.sosohandiary.domain.mypage.dto.MypageDiaryResponseDto;
+import com.hanghae.sosohandiary.domain.mypage.dto.MypageProfileResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.ProfileEditRequestDto;
 import com.hanghae.sosohandiary.exception.ApiException;
 import com.hanghae.sosohandiary.utils.MessageDto;
@@ -27,7 +28,7 @@ public class MypageService {
     private final DiaryRepository diaryRepository;
 
     @Transactional(readOnly = true)
-    public MypageResponseDto getProfile(Member member) {
+    public MypageProfileResponseDto getProfile(Member member) {
 
         member = memberRepository.findById(member.getId()).orElseThrow(
                 () -> new ApiException(NOT_FOUND_USER)
@@ -36,7 +37,7 @@ public class MypageService {
         String nickname = member.getNickname();
         String statusMessage = member.getStatusMessage();
 
-        return MypageResponseDto.of(nickname, statusMessage);
+        return MypageProfileResponseDto.of(nickname, statusMessage);
     }
 
     @Transactional
@@ -71,4 +72,15 @@ public class MypageService {
         return MessageDto.of("회원 탈퇴 성공", HttpStatus.ACCEPTED);
     }
 
+    @Transactional(readOnly = true)
+    public MypageDiaryResponseDto getMyDiaryCount(Member member) {
+
+        member = memberRepository.findById(member.getId()).orElseThrow(
+                () -> new ApiException(NOT_FOUND_USER)
+        );
+
+        Long diaryCount = diaryRepository.countByMemberId(member.getId());
+
+        return MypageDiaryResponseDto.from(diaryCount);
+    }
 }

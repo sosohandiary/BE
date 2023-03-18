@@ -1,6 +1,7 @@
 package com.hanghae.sosohandiary.domain.mypage.controller;
 
-import com.hanghae.sosohandiary.domain.mypage.dto.MypageResponseDto;
+import com.hanghae.sosohandiary.domain.mypage.dto.MypageDiaryResponseDto;
+import com.hanghae.sosohandiary.domain.mypage.dto.MypageProfileResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.ProfileEditRequestDto;
 import com.hanghae.sosohandiary.domain.mypage.service.MypageService;
 import com.hanghae.sosohandiary.security.MemberDetailsImpl;
@@ -17,7 +18,7 @@ public class MypageController {
     private final MypageService mypageService;
 
     @GetMapping("/profile")
-    public MypageResponseDto getMypageProfile(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+    public MypageProfileResponseDto getMypageProfile(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return mypageService.getProfile(memberDetails.getMember());
     }
 
@@ -30,6 +31,11 @@ public class MypageController {
     @DeleteMapping("/out")
     public MessageDto deleteMember(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return mypageService.deleteMember(memberDetails.getMember());
+    }
+
+    @GetMapping("/diary/count")
+    public MypageDiaryResponseDto getMyDiaryCount(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return mypageService.getMyDiaryCount(memberDetails.getMember());
     }
 
 
