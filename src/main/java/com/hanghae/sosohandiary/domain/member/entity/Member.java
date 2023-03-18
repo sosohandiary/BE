@@ -1,6 +1,5 @@
 package com.hanghae.sosohandiary.domain.member.entity;
 
-import com.hanghae.sosohandiary.domain.mypage.dto.ProfileEditRequestDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +20,7 @@ public class Member {
     @Column(length = 30, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String password;
 
     @Column(length = 20, nullable = false)
@@ -30,11 +29,9 @@ public class Member {
     @Column(length = 10, nullable = false)
     private String nickname;
 
-    @Column(length = 20)
-    private String birthday;
-
-    @Column(length = 10)
-    private String gender;
+    @Column(length = 10, nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private Gender gender;
 
     @Column(length = 100)
     private String statusMessage;
@@ -44,40 +41,37 @@ public class Member {
     private MemberRoleEnum role;
 
     @Builder
-    public Member(Long kakaoId, String email, String password, String name, String nickname, String birthday, String gender, String statusMessage, MemberRoleEnum role) {
+    public Member(Long kakaoId, String email, String password, String name, String nickname, Gender gender, String statusMessage, MemberRoleEnum role) {
         this.kakaoId = kakaoId;
         this.email = email;
         this.password = password;
         this.name = name;
         this.nickname = nickname;
-        this.birthday = birthday;
         this.gender = gender;
         this.statusMessage = statusMessage;
         this.role = role;
     }
 
     // 카카오 로그인
-    public static Member of(String email, Long kakaoId, String password, String name, String nickname, String birthday, String gender, MemberRoleEnum role) {
+    public static Member of(String email, Long kakaoId, String password, String name, String nickname, Gender gender, MemberRoleEnum role) {
         return Member.builder()
                 .email(email)
                 .kakaoId(kakaoId)
                 .password(password)
                 .name(name)
                 .nickname(nickname)
-                .birthday(birthday)
                 .gender(gender)
                 .role(role)
                 .build();
     }
 
     // 로그인
-    public static Member of(String email, String password, String name, String nickname, String birthday, String gender, MemberRoleEnum role) {
+    public static Member of(String email, String password, String name, String nickname, Gender gender, MemberRoleEnum role) {
         return Member.builder()
                 .email(email)
                 .password(password)
                 .name(name)
                 .nickname(nickname)
-                .birthday(birthday)
                 .gender(gender)
                 .role(role)
                 .build();
