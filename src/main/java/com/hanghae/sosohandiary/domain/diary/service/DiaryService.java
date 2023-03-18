@@ -34,7 +34,12 @@ public class DiaryService {
     public DiaryResponseDto saveDiary(DiaryRequestDto diaryRequestDto,
                                       List<MultipartFile> multipartFileList,
                                       Member member) throws IOException {
-
+        for (MultipartFile multipartFile : multipartFileList) {
+            if (multipartFile.getOriginalFilename().equals("")) {
+                Diary diary = diaryRepository.save(Diary.of(diaryRequestDto, null, member));
+                return DiaryResponseDto.from(diary, null, member);
+            }
+        }
         if (multipartFileList != null) {
             s3Service.uploadDiary(multipartFileList, diaryRequestDto, member);
         }
@@ -70,10 +75,19 @@ public class DiaryService {
             throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
         }
 
-        String uploadPath = diary.getUploadPath();
-        String filename = uploadPath.substring(50);
-        s3Service.deleteFile(filename);
+        if (diary.getUploadPath() != null) {
+            String uploadPath = diary.getUploadPath();
+            String filename = uploadPath.substring(50);
+            s3Service.deleteFile(filename);
+        }
 
+        for (MultipartFile multipartFile : multipartFileList) {
+            if (multipartFile.getOriginalFilename().equals("")) {
+                String uploadImageUrl = diary.getUploadPath();
+                diary.update(diaryRequestDto, uploadImageUrl);
+                return DiaryResponseDto.from(diary, uploadImageUrl, member);
+            }
+        }
 
         if (multipartFileList != null) {
             s3Service.uploadDiary(multipartFileList, diaryRequestDto, member);
@@ -96,18 +110,23 @@ public class DiaryService {
             throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
         }
 
-        String uploadPath = diary.getUploadPath();
-        String filename = uploadPath.substring(50);
-        s3Service.deleteFile(filename);
+        if (diary.getUploadPath() != null) {
+            String uploadPath = diary.getUploadPath();
+            String filename = uploadPath.substring(50);
+            s3Service.deleteFile(filename);
+        }
 
         List<DiaryDetail> diaryDetailList = diaryDetailRepository.findAllByDiaryId(id).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
+
         for (DiaryDetail diaryDetail : diaryDetailList) {
-            String detailUploadPath = diaryDetail.getDetailUploadPath();
-            String detailFilename = detailUploadPath.substring(50);
-            s3Service.deleteFile(detailFilename);
+            if (diaryDetail.getDetailUploadPath() != null) {
+                String detailUploadPath = diaryDetail.getDetailUploadPath();
+                String detailFilename = detailUploadPath.substring(50);
+                s3Service.deleteFile(detailFilename);
+            }
         }
 
         diaryDetailRepository.deleteAllByDiaryId(id);

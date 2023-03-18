@@ -22,7 +22,7 @@ public class DiaryController {
 
     @PostMapping("/diary")
     public DiaryResponseDto diarySave(@RequestPart(value = "title") DiaryRequestDto diaryDetailRequestDto,
-                                      @RequestPart(value = "img") List<MultipartFile> multipartFileList,
+                                      @RequestPart(value = "img", required = false) List<MultipartFile> multipartFileList,
                                       @AuthenticationPrincipal MemberDetailsImpl memberDetails) throws IOException {
         return diaryService.saveDiary(diaryDetailRequestDto, multipartFileList, memberDetails.getMember());
     }

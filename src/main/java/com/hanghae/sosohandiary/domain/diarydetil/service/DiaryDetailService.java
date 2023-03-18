@@ -1,5 +1,6 @@
 package com.hanghae.sosohandiary.domain.diarydetil.service;
 
+import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailRequestDto;
@@ -39,6 +40,13 @@ public class DiaryDetailService {
         Diary diary = diaryRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
+
+        for (MultipartFile multipartFile : multipartFileList) {
+            if (multipartFile.getOriginalFilename().equals("")) {
+                DiaryDetail diaryDetail = diaryDetailRepository.save(DiaryDetail.of(diaryDetailRequestDto, null, diary, member));
+                return DiaryDetailResponseDto.from(diaryDetail, null, diary, member);
+            }
+        }
 
         if (multipartFileList != null) {
             s3Service.uploadDiaryDetail(multipartFileList, diaryDetailRequestDto, member);
@@ -99,10 +107,19 @@ public class DiaryDetailService {
             throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
         }
 
+        if (diaryDetail.getDetailUploadPath() != null) {
+            String uploadPath = diaryDetail.getDetailUploadPath();
+            String filename = uploadPath.substring(50);
+            s3Service.deleteFile(filename);
+        }
 
-        String uploadPath = diaryDetail.getDetailUploadPath();
-        String filename = uploadPath.substring(50);
-        s3Service.deleteFile(filename);
+        for (MultipartFile multipartFile : multipartFileList) {
+            if (multipartFile.getOriginalFilename().equals("")) {
+                String uploadImageUrl = diaryDetail.getDetailUploadPath();
+                        diaryDetail.update(diaryDetailRequestDto, uploadImageUrl);
+                return DiaryDetailResponseDto.from(diaryDetail, uploadImageUrl, diary, member);
+            }
+        }
 
         if (multipartFileList != null) {
             s3Service.uploadDiaryDetail(multipartFileList, diaryDetailRequestDto, member);
@@ -133,9 +150,11 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
         );
         for (DiaryDetail diaryImage : diaryDetailList) {
-            String uploadPath = diaryImage.getDetailUploadPath();
-            String filename = uploadPath.substring(50);
-            s3Service.deleteFile(filename);
+            if (diaryImage.getDetailUploadPath() != null) {
+                String uploadPath = diaryImage.getDetailUploadPath();
+                String filename = uploadPath.substring(50);
+                s3Service.deleteFile(filename);
+            }
         }
 
         diaryDetailRepository.deleteById(detailId);
