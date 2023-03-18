@@ -11,4 +11,8 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
     Optional<List<Diary>> findAllById(Long id);
     void deleteById(Long id);
+
+    Optional<Diary> findByMemberId(Long id);
+
+    Long countByMemberId(Long id);
 }
