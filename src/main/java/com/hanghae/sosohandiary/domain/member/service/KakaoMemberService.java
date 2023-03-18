@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae.sosohandiary.auth.JwtUtil;
 import com.hanghae.sosohandiary.domain.member.dto.KakaoMemberInfoDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
+import com.hanghae.sosohandiary.domain.member.entity.Gender;
 import com.hanghae.sosohandiary.domain.member.entity.MemberRoleEnum;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
 import com.hanghae.sosohandiary.security.MemberDetailsServiceImpl;
@@ -126,14 +127,12 @@ public class KakaoMemberService {
                 .get("email").asText();
         String nickname = jsonNode.get("properties")
                         .get("nickname").asText();
-        String birthday = jsonNode.get("kakao_account")
-                .get("birthday").asText();
         String gender = jsonNode.get("kakao_account")
                 .get("gender").asText();
 
-        log.info("카카오 사용자 정보: " + id + ", " + email + ", " + name + ", " + nickname + ", " + birthday + ", " + gender);
+        log.info("카카오 사용자 정보: " + id + ", " + email + ", " + name + ", " + nickname + ", " + ", " + gender);
 
-        return KakaoMemberInfoDto.of(id, email, name, nickname, birthday, gender);
+        return KakaoMemberInfoDto.of(id, email, name, nickname, gender);
 
     }
 
@@ -161,10 +160,9 @@ public class KakaoMemberService {
                 String email = kakaoMemberInfo.getEmail();
                 String name = kakaoMemberInfo.getName();
                 String nickname = kakaoMemberInfo.getNickname();
-                String birthday = kakaoMemberInfo.getBirthday();
-                String gender = kakaoMemberInfo.getGender();
+                Gender gender = Gender.valueOf(kakaoMemberInfo.getGender());
 
-                kakaoMember = Member.of(email, kakaoId, encodedPassword, name, nickname, birthday, gender, MemberRoleEnum.MEMBER);
+                kakaoMember = Member.of(email, kakaoId, encodedPassword, name, nickname, gender, MemberRoleEnum.MEMBER);
             }
             memberRepository.save(kakaoMember);
         }

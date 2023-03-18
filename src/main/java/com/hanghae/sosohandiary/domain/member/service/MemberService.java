@@ -5,6 +5,7 @@ import com.hanghae.sosohandiary.auth.JwtUtil;
 import com.hanghae.sosohandiary.domain.member.dto.JoinRequestDto;
 import com.hanghae.sosohandiary.domain.member.dto.LoginRequestDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
+import com.hanghae.sosohandiary.domain.member.entity.Gender;
 import com.hanghae.sosohandiary.domain.member.entity.MemberRoleEnum;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
 import com.hanghae.sosohandiary.exception.ApiException;
@@ -36,8 +37,7 @@ public class MemberService {
         String password = passwordEncoder.encode(joinRequestDto.getPassword());
         String name = joinRequestDto.getName();
         String nickname = joinRequestDto.getNickname();
-        String birthday = joinRequestDto.getBirthday();
-        String gender = joinRequestDto.getGender();
+        Gender gender = joinRequestDto.getGender();
 
         Optional<Member> foundEmail = memberRepository.findByEmail(email);
         if (foundEmail.isPresent()) {
@@ -52,7 +52,7 @@ public class MemberService {
             role = MemberRoleEnum.ADMIN;
         }
 
-        Member member = Member.of(email, password, name, nickname, birthday, gender, role);
+        Member member = Member.of(email, password, name, nickname, gender, role);
         memberRepository.save(member);
 
         return MessageDto.of("회원가입 성공", HttpStatus.ACCEPTED);
