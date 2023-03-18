@@ -24,6 +24,8 @@ public class DiaryDetail extends Timestamp {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    private String detailUploadPath;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "diary_id")
     private Diary diary;
@@ -33,22 +35,33 @@ public class DiaryDetail extends Timestamp {
     private Member member;
 
     @Builder
-    private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary, Member member) {
+    private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto, String detailUploadPath, Diary diary, Member member) {
         content = diaryDetailRequestDto.getContent();
+        this.detailUploadPath = detailUploadPath;
         this.diary = diary;
         this.member = member;
     }
 
-    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary, Member member) {
+    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, String detailUploadPath, Diary diary, Member member) {
         return DiaryDetail.builder()
                 .diaryDetailRequestDto(diaryDetailRequestDto)
+                .detailUploadPath(detailUploadPath)
                 .diary(diary)
                 .member(member)
                 .build();
     }
 
-    public void update(DiaryDetailRequestDto diaryDetailRequestDto) {
+    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, String detailUploadPath, Member member) {
+        return DiaryDetail.builder()
+                .diaryDetailRequestDto(diaryDetailRequestDto)
+                .detailUploadPath(detailUploadPath)
+                .member(member)
+                .build();
+    }
+
+    public void update(DiaryDetailRequestDto diaryDetailRequestDto, String detailUploadPath) {
         content = diaryDetailRequestDto.getContent();
+        this.detailUploadPath = detailUploadPath;
     }
 
 }

@@ -13,7 +13,7 @@ import java.util.List;
 public class DiaryResponseDto {
 
     private Long id;
-    private List<String> imgList;
+    private String img;
     private String title;
     private String name;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
@@ -22,18 +22,18 @@ public class DiaryResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private DiaryResponseDto(Diary diary, List<String> imgList, Member member) {
+    private DiaryResponseDto(Diary diary, String img, Member member) {
         id = diary.getId();
-        this.imgList = imgList;
+        this.img = img;
         title = diary.getTitle();
         name = member.getName();
         createdAt = diary.getCreatedAt();
         modifiedAt = diary.getModifiedAt();
     }
 
-    public static DiaryResponseDto from(Diary diary, List<String> imgList, Member member) {
+    public static DiaryResponseDto from(Diary diary, String img, Member member) {
         return DiaryResponseDto.builder()
-                .imgList(imgList)
+                .img(img)
                 .diary(diary)
                 .member(member)
                 .build();
