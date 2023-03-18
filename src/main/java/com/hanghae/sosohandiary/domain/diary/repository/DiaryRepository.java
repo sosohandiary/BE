@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<List<Diary>> findAllByOrderByModifiedAtDesc();
 
+    Optional<List<Diary>> findAllById(Long id);
     void deleteById(Long id);
 }

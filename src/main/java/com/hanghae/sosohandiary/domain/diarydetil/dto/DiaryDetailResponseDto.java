@@ -14,7 +14,7 @@ import java.util.List;
 public class DiaryDetailResponseDto {
 
     private Long id;
-    private List<String> imgList;
+    private String img;
     private String content;
     private String name;
     private String diaryTitle;
@@ -24,9 +24,9 @@ public class DiaryDetailResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private DiaryDetailResponseDto(DiaryDetail diaryDetail, List<String> imgList, Diary diary, Member member) {
+    private DiaryDetailResponseDto(DiaryDetail diaryDetail, String img, Diary diary, Member member) {
         id = diaryDetail.getId();
-        this.imgList = imgList;
+        this.img = img;
         content = diaryDetail.getContent();
         name = member.getName();
         diaryTitle = diary.getTitle();
@@ -34,9 +34,9 @@ public class DiaryDetailResponseDto {
         modifiedAt = diaryDetail.getModifiedAt();
     }
 
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, List<String> imgList, Diary diary, Member member) {
+    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, String img, Diary diary, Member member) {
         return DiaryDetailResponseDto.builder()
-                .imgList(imgList)
+                .img(img)
                 .diaryDetail(diaryDetail)
                 .diary(diary)
                 .member(member)
@@ -51,10 +51,10 @@ public class DiaryDetailResponseDto {
                 .build();
     }
 
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, List<String> imgList, Member member) {
+    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, String img, Member member) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
-                .imgList(imgList)
+                .img(img)
                 .member(member)
                 .build();
     }
