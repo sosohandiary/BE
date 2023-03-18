@@ -24,14 +24,25 @@ public class Diary extends Timestamp {
     @Column(length = 30, nullable = false)
     private String title;
 
+    private String uploadPath;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
     @Builder
-    private Diary(DiaryRequestDto diaryRequestDto, Member member) {
+    private Diary(DiaryRequestDto diaryRequestDto, String uploadPath, Member member) {
         title = diaryRequestDto.getTitle();
+        this.uploadPath = uploadPath;
         this.member = member;
+    }
+
+    public static Diary of(DiaryRequestDto diaryRequestDto, String uploadPath, Member member) {
+        return Diary.builder()
+                .diaryRequestDto(diaryRequestDto)
+                .uploadPath(uploadPath)
+                .member(member)
+                .build();
     }
 
     public static Diary of(DiaryRequestDto diaryRequestDto, Member member) {
@@ -41,7 +52,8 @@ public class Diary extends Timestamp {
                 .build();
     }
 
-    public void update(DiaryRequestDto diaryRequestDto) {
+    public void update(DiaryRequestDto diaryRequestDto, String uploadPath) {
         title = diaryRequestDto.getTitle();
+        this.uploadPath = uploadPath;
     }
 }

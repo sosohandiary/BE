@@ -4,12 +4,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.hanghae.sosohandiary.domain.diary.dto.DiaryRequestDto;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
+import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailRequestDto;
 import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
-import com.hanghae.sosohandiary.domain.image.entity.DiaryDetailImage;
-import com.hanghae.sosohandiary.domain.image.entity.DiaryImage;
-import com.hanghae.sosohandiary.domain.image.repository.DiaryDetailImageRepository;
-import com.hanghae.sosohandiary.domain.image.repository.DiaryImageRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,33 +31,30 @@ public class S3Service {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
+    private String uploadImageUrl;
 
     private final AmazonS3 S3Client;
-    private final DiaryImageRepository diaryImageRepository;
-    private final DiaryDetailImageRepository diaryDetailImageRepository;
 
-    public void uploadDiary(List<MultipartFile> multipartFilelist, Diary diary, Member member) throws IOException {
+    public void uploadDiary(List<MultipartFile> multipartFilelist, DiaryRequestDto diaryRequestDto, Member member) throws IOException {
 
         for (MultipartFile multipartFile : multipartFilelist) {
             if (multipartFile != null) {
                 File uploadFile = convert(multipartFile).orElseThrow(
                         () -> new IllegalArgumentException("파일 전환 실패")
                 );
-                DiaryImage image = DiaryImage.of(upload(uploadFile), diary, member);
-                diaryImageRepository.save(image);
+                Diary.of(diaryRequestDto, upload(uploadFile), member);
             }
         }
     }
 
-    public void uploadDiaryDetail(List<MultipartFile> multipartFilelist, DiaryDetail diaryDetail, Member member) throws IOException {
+    public void uploadDiaryDetail(List<MultipartFile> multipartFilelist, DiaryDetailRequestDto diaryDetailRequestDto, Member member) throws IOException {
 
         for (MultipartFile multipartFile : multipartFilelist) {
             if (multipartFile != null) {
                 File uploadFile = convert(multipartFile).orElseThrow(
                         () -> new IllegalArgumentException("파일 전환 실패")
                 );
-                DiaryDetailImage image = DiaryDetailImage.of(upload(uploadFile), diaryDetail, member);
-                diaryDetailImageRepository.save(image);
+                DiaryDetail.of(diaryDetailRequestDto, upload(uploadFile), member);
             }
         }
     }
@@ -67,7 +62,7 @@ public class S3Service {
     // S3에 파일이름 저장 후 업로드
     private String upload(File uploadFile) {
         String fileName = "" + UUID.randomUUID();
-        String uploadImageUrl = putS3(uploadFile, fileName);
+        uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;
     }
@@ -100,6 +95,10 @@ public class S3Service {
 
     public String getThumbnailPath(String path) {
         return S3Client.getUrl(bucketName, path).toString();
+    }
+
+    public String getUploadImageUrl() {
+        return uploadImageUrl;
     }
 
     public void deleteFile(String fileName) {
