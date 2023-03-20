@@ -6,6 +6,7 @@ import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diary.service.DiaryService;
 import com.hanghae.sosohandiary.domain.friend.entity.FriendList;
 import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
+import com.hanghae.sosohandiary.domain.member.entity.Gender;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
 import com.hanghae.sosohandiary.domain.friend.repository.FriendListRepository;
@@ -43,9 +44,10 @@ public class MypageService {
         );
 
         String nickname = member.getNickname();
+        Gender gender = member.getGender();
         String statusMessage = member.getStatusMessage();
 
-        return MypageProfileResponseDto.of(nickname, statusMessage);
+        return MypageProfileResponseDto.of(nickname, gender, statusMessage);
     }
 
     @Transactional
