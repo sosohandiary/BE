@@ -4,6 +4,8 @@ import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diary.service.DiaryService;
+import com.hanghae.sosohandiary.domain.friend.entity.FriendList;
+import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
 import com.hanghae.sosohandiary.domain.friend.repository.FriendListRepository;
@@ -117,4 +119,20 @@ public class MypageService {
         return diaryResponseDtoList;
     }
 
+    public List<MemberResponseDto> getMyFriends(Member member) {
+
+        member = memberRepository.findById(member.getId()).orElseThrow(
+                () -> new ApiException(NOT_FOUND_USER)
+        );
+
+        List<FriendList> friendList = friendsRepository.findAllByMemberId(member.getId());
+
+        List<MemberResponseDto> getMyFriends = new ArrayList<>();
+
+        for(FriendList friend : friendList) {
+            getMyFriends.add(MemberResponseDto.from(friend));
+        }
+
+        return getMyFriends;
+    }
 }
