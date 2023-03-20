@@ -58,7 +58,7 @@ public class DiaryService {
         List<DiaryResponseDto> diaryResponseDtoList = new ArrayList<>();
 
         for (Diary diary : diaryList) {
-            String uploadImageUrl = diary.getUploadPath();
+            String uploadImageUrl = diary.getImg();
             diaryResponseDtoList.add(DiaryResponseDto.from(diary, uploadImageUrl, diary.getMember()));
         }
 
@@ -75,15 +75,15 @@ public class DiaryService {
             throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
         }
 
-        if (diary.getUploadPath() != null) {
-            String uploadPath = diary.getUploadPath();
+        if (diary.getImg() != null) {
+            String uploadPath = diary.getImg();
             String filename = uploadPath.substring(50);
             s3Service.deleteFile(filename);
         }
 
         for (MultipartFile multipartFile : multipartFileList) {
             if (multipartFile.getOriginalFilename().equals("")) {
-                String uploadImageUrl = diary.getUploadPath();
+                String uploadImageUrl = diary.getImg();
                 diary.update(diaryRequestDto, uploadImageUrl);
                 return DiaryResponseDto.from(diary, uploadImageUrl, member);
             }
@@ -110,8 +110,8 @@ public class DiaryService {
             throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
         }
 
-        if (diary.getUploadPath() != null) {
-            String uploadPath = diary.getUploadPath();
+        if (diary.getImg() != null) {
+            String uploadPath = diary.getImg();
             String filename = uploadPath.substring(50);
             s3Service.deleteFile(filename);
         }
@@ -122,8 +122,8 @@ public class DiaryService {
 
 
         for (DiaryDetail diaryDetail : diaryDetailList) {
-            if (diaryDetail.getDetailUploadPath() != null) {
-                String detailUploadPath = diaryDetail.getDetailUploadPath();
+            if (diaryDetail.getImg() != null) {
+                String detailUploadPath = diaryDetail.getImg();
                 String detailFilename = detailUploadPath.substring(50);
                 s3Service.deleteFile(detailFilename);
             }
