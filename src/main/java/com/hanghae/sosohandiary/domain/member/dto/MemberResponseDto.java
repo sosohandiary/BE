@@ -1,6 +1,8 @@
 package com.hanghae.sosohandiary.domain.member.dto;
 
+import com.hanghae.sosohandiary.domain.friend.entity.FriendList;
 import com.hanghae.sosohandiary.domain.member.entity.Gender;
+import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,6 +25,14 @@ public class MemberResponseDto {
     public static MemberResponseDto from(String name) {
         return MemberResponseDto.builder()
                 .name(name)
+                .build();
+    }
+
+    public static MemberResponseDto from(FriendList friend) {
+        return MemberResponseDto.builder()
+                .name(friend.getMember().getName())
+                .gender(friend.getMember().getGender())
+                .statusMessage(friend.getMember().getStatusMessage())
                 .build();
     }
 

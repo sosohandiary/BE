@@ -1,6 +1,7 @@
 package com.hanghae.sosohandiary.domain.mypage.controller;
 
 import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
+import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageDiaryResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageFriendResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageProfileResponseDto;
@@ -50,6 +51,11 @@ public class MypageController {
     @GetMapping("/diaries")
     public List<DiaryResponseDto> getMyDiaries(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return mypageService.getMyDiaries(memberDetails.getMember());
+    }
+
+    @GetMapping("/friend/myfriends")
+    public List<MemberResponseDto> getMyFriends(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return mypageService.getMyFriends(memberDetails.getMember());
     }
 
 }
