@@ -1,6 +1,5 @@
 package com.hanghae.sosohandiary.domain.diarydetil.service;
 
-import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailRequestDto;
@@ -13,13 +12,14 @@ import com.hanghae.sosohandiary.exception.ErrorHandling;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import com.hanghae.sosohandiary.utils.s3.S3Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -44,7 +44,7 @@ public class DiaryDetailService {
         for (MultipartFile multipartFile : multipartFileList) {
             if (multipartFile.getOriginalFilename().equals("")) {
                 DiaryDetail diaryDetail = diaryDetailRepository.save(DiaryDetail.of(diaryDetailRequestDto, null, diary, member));
-                return DiaryDetailResponseDto.from(diaryDetail, null, diary, member);
+                return DiaryDetailResponseDto.from(diaryDetail, diary, member);
             }
         }
 
@@ -56,24 +56,16 @@ public class DiaryDetailService {
 
         DiaryDetail diaryDetail = diaryDetailRepository.save(DiaryDetail.of(diaryDetailRequestDto, uploadImageUrl, diary, member));
 
-        return DiaryDetailResponseDto.from(diaryDetail, uploadImageUrl, diary, member);
+        return DiaryDetailResponseDto.from(diaryDetail, diary, member);
     }
 
-    public List<DiaryDetailResponseDto> findListDetail(Long id) {
+    public Page<DiaryDetailResponseDto> findListDetail(Long id, Pageable pageable) {
         Diary diary = diaryRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
-        List<DiaryDetail> diaryDetailList = diaryDetailRepository.findAllByOrderByModifiedAtDesc().orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
-        );
-        List<DiaryDetailResponseDto> diaryDetailResponseDtoList = new ArrayList<>();
+        Page<DiaryDetail> diaryDetailList = diaryDetailRepository.findAllByOrderByModifiedAtDesc(pageable);
 
-        for (DiaryDetail diaryDetail : diaryDetailList) {
-            String uploadImageUrl = diaryDetail.getImg();
-            diaryDetailResponseDtoList.add(DiaryDetailResponseDto.from(diaryDetail, uploadImageUrl, diary, diaryDetail.getMember()));
-        }
-
-        return diaryDetailResponseDtoList;
+        return diaryDetailList.map((DiaryDetail diaryDetail) -> new DiaryDetailResponseDto(diaryDetail, diary, diaryDetail.getMember()));
     }
 
     public DiaryDetailResponseDto findDetail(Long diaryId, Long detailId) {
@@ -85,8 +77,7 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
-        String uploadImageUrl = diaryDetail.getImg();
-        return DiaryDetailResponseDto.from(diaryDetail, uploadImageUrl, diary, diaryDetail.getMember());
+        return DiaryDetailResponseDto.from(diaryDetail, diary, diaryDetail.getMember());
     }
 
     @Transactional
@@ -116,8 +107,8 @@ public class DiaryDetailService {
         for (MultipartFile multipartFile : multipartFileList) {
             if (multipartFile.getOriginalFilename().equals("")) {
                 String uploadImageUrl = diaryDetail.getImg();
-                        diaryDetail.update(diaryDetailRequestDto, uploadImageUrl);
-                return DiaryDetailResponseDto.from(diaryDetail, uploadImageUrl, diary, member);
+                diaryDetail.update(diaryDetailRequestDto, uploadImageUrl);
+                return DiaryDetailResponseDto.from(diaryDetail, diary, member);
             }
         }
 
@@ -129,7 +120,7 @@ public class DiaryDetailService {
 
         diaryDetail.update(diaryDetailRequestDto, uploadImageUrl);
 
-        return DiaryDetailResponseDto.from(diaryDetail, uploadImageUrl, diary, member);
+        return DiaryDetailResponseDto.from(diaryDetail, diary, member);
     }
 
     @Transactional
