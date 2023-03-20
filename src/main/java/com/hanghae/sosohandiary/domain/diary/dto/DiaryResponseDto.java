@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 public class DiaryResponseDto {
@@ -22,21 +21,13 @@ public class DiaryResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private DiaryResponseDto(Diary diary, String img, Member member) {
+    public DiaryResponseDto(Diary diary, Member member) {
         id = diary.getId();
-        this.img = img;
+        this.img = diary.getImg();
         title = diary.getTitle();
         name = member.getName();
         createdAt = diary.getCreatedAt();
         modifiedAt = diary.getModifiedAt();
-    }
-
-    public static DiaryResponseDto from(Diary diary, String img, Member member) {
-        return DiaryResponseDto.builder()
-                .img(img)
-                .diary(diary)
-                .member(member)
-                .build();
     }
 
     public static DiaryResponseDto from(Diary diary, Member member) {
