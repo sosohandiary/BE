@@ -69,7 +69,7 @@ public class DiaryDetailService {
         List<DiaryDetailResponseDto> diaryDetailResponseDtoList = new ArrayList<>();
 
         for (DiaryDetail diaryDetail : diaryDetailList) {
-            String uploadImageUrl = diaryDetail.getDetailUploadPath();
+            String uploadImageUrl = diaryDetail.getImg();
             diaryDetailResponseDtoList.add(DiaryDetailResponseDto.from(diaryDetail, uploadImageUrl, diary, diaryDetail.getMember()));
         }
 
@@ -85,7 +85,7 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
-        String uploadImageUrl = diaryDetail.getDetailUploadPath();
+        String uploadImageUrl = diaryDetail.getImg();
         return DiaryDetailResponseDto.from(diaryDetail, uploadImageUrl, diary, diaryDetail.getMember());
     }
 
@@ -107,15 +107,15 @@ public class DiaryDetailService {
             throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
         }
 
-        if (diaryDetail.getDetailUploadPath() != null) {
-            String uploadPath = diaryDetail.getDetailUploadPath();
+        if (diaryDetail.getImg() != null) {
+            String uploadPath = diaryDetail.getImg();
             String filename = uploadPath.substring(50);
             s3Service.deleteFile(filename);
         }
 
         for (MultipartFile multipartFile : multipartFileList) {
             if (multipartFile.getOriginalFilename().equals("")) {
-                String uploadImageUrl = diaryDetail.getDetailUploadPath();
+                String uploadImageUrl = diaryDetail.getImg();
                         diaryDetail.update(diaryDetailRequestDto, uploadImageUrl);
                 return DiaryDetailResponseDto.from(diaryDetail, uploadImageUrl, diary, member);
             }
@@ -150,8 +150,8 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
         );
         for (DiaryDetail diaryImage : diaryDetailList) {
-            if (diaryImage.getDetailUploadPath() != null) {
-                String uploadPath = diaryImage.getDetailUploadPath();
+            if (diaryImage.getImg() != null) {
+                String uploadPath = diaryImage.getImg();
                 String filename = uploadPath.substring(50);
                 s3Service.deleteFile(filename);
             }

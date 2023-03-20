@@ -24,7 +24,7 @@ public class Diary extends Timestamp {
     @Column(length = 30, nullable = false)
     private String title;
 
-    private String uploadPath;
+    private String img;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
@@ -33,7 +33,7 @@ public class Diary extends Timestamp {
     @Builder
     private Diary(DiaryRequestDto diaryRequestDto, String uploadPath, Member member) {
         title = diaryRequestDto.getTitle();
-        this.uploadPath = uploadPath;
+        this.img = uploadPath;
         this.member = member;
     }
 
@@ -54,6 +54,6 @@ public class Diary extends Timestamp {
 
     public void update(DiaryRequestDto diaryRequestDto, String uploadPath) {
         title = diaryRequestDto.getTitle();
-        this.uploadPath = uploadPath;
+        this.img = uploadPath;
     }
 }
