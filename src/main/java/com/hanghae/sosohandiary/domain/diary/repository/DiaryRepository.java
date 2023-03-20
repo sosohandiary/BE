@@ -15,4 +15,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Optional<Diary> findByMemberId(Long id);
 
     Long countByMemberId(Long id);
+
+    List<Diary> findAllByMemberIdOrderByModifiedAtDesc(Long id);
 }

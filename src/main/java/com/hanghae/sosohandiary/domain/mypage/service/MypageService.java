@@ -1,5 +1,6 @@
 package com.hanghae.sosohandiary.domain.mypage.service;
 
+import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diary.service.DiaryService;
@@ -17,12 +18,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-import static com.hanghae.sosohandiary.exception.ErrorHandling.NOT_FOUND_USER;
+import static com.hanghae.sosohandiary.exception.ErrorHandling.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MypageService {
 
     private final MemberRepository memberRepository;
@@ -30,7 +34,6 @@ public class MypageService {
     private final DiaryRepository diaryRepository;
     private final FriendListRepository friendsRepository;
 
-    @Transactional(readOnly = true)
     public MypageProfileResponseDto getProfile(Member member) {
 
         member = memberRepository.findById(member.getId()).orElseThrow(
@@ -75,7 +78,6 @@ public class MypageService {
         return MessageDto.of("회원 탈퇴 성공", HttpStatus.ACCEPTED);
     }
 
-    @Transactional(readOnly = true)
     public MypageDiaryResponseDto getMyDiaryCount(Member member) {
 
         member = memberRepository.findById(member.getId()).orElseThrow(
@@ -87,7 +89,6 @@ public class MypageService {
         return MypageDiaryResponseDto.from(diaryCount);
     }
 
-    @Transactional(readOnly = true)
     public MypageFriendResponseDto getMyFriendCount(Member member) {
 
         member = memberRepository.findById(member.getId()).orElseThrow(
@@ -98,4 +99,22 @@ public class MypageService {
 
         return MypageFriendResponseDto.from(friendCount);
     }
+
+    public List<DiaryResponseDto> getMyDiaries(Member member) {
+
+        member = memberRepository.findById(member.getId()).orElseThrow(
+                () -> new ApiException(NOT_FOUND_USER)
+        );
+
+        List<Diary> diaryList = diaryRepository.findAllByMemberIdOrderByModifiedAtDesc(member.getId());
+
+        List<DiaryResponseDto> diaryResponseDtoList = new ArrayList<>();
+
+        for(Diary diary : diaryList) {
+            diaryResponseDtoList.add(DiaryResponseDto.from(diary, member));
+        }
+
+        return diaryResponseDtoList;
+    }
+
 }
