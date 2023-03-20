@@ -1,5 +1,6 @@
 package com.hanghae.sosohandiary.domain.mypage.controller;
 
+import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageDiaryResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageFriendResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageProfileResponseDto;
@@ -10,6 +11,8 @@ import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,6 +45,11 @@ public class MypageController {
     @GetMapping("/friend/count")
     public MypageFriendResponseDto getMyFriendCount(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return mypageService.getMyFriendCount(memberDetails.getMember());
+    }
+
+    @GetMapping("/diaries")
+    public List<DiaryResponseDto> getMyDiaries(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return mypageService.getMyDiaries(memberDetails.getMember());
     }
 
 }
