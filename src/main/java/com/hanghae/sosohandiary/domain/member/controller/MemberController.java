@@ -3,6 +3,7 @@ package com.hanghae.sosohandiary.domain.member.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hanghae.sosohandiary.domain.member.dto.JoinRequestDto;
 import com.hanghae.sosohandiary.domain.member.dto.LoginRequestDto;
+import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
 import com.hanghae.sosohandiary.domain.member.service.KakaoMemberService;
 import com.hanghae.sosohandiary.domain.member.service.MemberService;
 import com.hanghae.sosohandiary.utils.MessageDto;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,5 +40,10 @@ public class MemberController {
         return memberService.login(loginRequestDto, response);
     }
 
+    @ResponseBody
+    @GetMapping("/search")
+    public List<MemberResponseDto> searchMember(@RequestParam(value = "name") String name) {
+        return memberService.getMembers(name);
+    }
 
 }

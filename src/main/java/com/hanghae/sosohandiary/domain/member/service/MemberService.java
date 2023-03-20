@@ -4,6 +4,7 @@ package com.hanghae.sosohandiary.domain.member.service;
 import com.hanghae.sosohandiary.auth.JwtUtil;
 import com.hanghae.sosohandiary.domain.member.dto.JoinRequestDto;
 import com.hanghae.sosohandiary.domain.member.dto.LoginRequestDto;
+import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.entity.Gender;
 import com.hanghae.sosohandiary.domain.member.entity.MemberRoleEnum;
@@ -17,12 +18,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static com.hanghae.sosohandiary.exception.ErrorHandling.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -78,5 +82,18 @@ public class MemberService {
         return MessageDto.of("로그인 성공", HttpStatus.ACCEPTED);
     }
 
+    @Transactional
+    public List<MemberResponseDto> getMembers(String name) {
+
+        List<Member> memberList = memberRepository.findByNameContaining(name);
+
+        List<MemberResponseDto> responseDtoList = new ArrayList<>();
+
+        for(Member member : memberList) {
+            responseDtoList.add(MemberResponseDto.from(member.getName()));
+        }
+
+        return responseDtoList;
+    }
 
 }
