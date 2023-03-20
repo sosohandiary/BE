@@ -15,8 +15,8 @@ public class DecorationController {
         return decorationService.saveDecoration(customJson);
     }
 
-//    @GetMapping("/insert/{id}")
-//    public Decoration getDecoration(@PathVariable Long id,@RequestBody String customJson){
-//        return decorationService.getDecoration(id, customJson);
-//    }
+    @GetMapping("/insert/{id}")
+    public Decoration getDecoration(@PathVariable Long id){
+        return decorationService.getDecoration(id);
+    }
 }
