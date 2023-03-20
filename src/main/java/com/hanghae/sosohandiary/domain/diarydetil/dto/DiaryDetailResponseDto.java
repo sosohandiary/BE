@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 public class DiaryDetailResponseDto {
@@ -24,23 +23,14 @@ public class DiaryDetailResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private DiaryDetailResponseDto(DiaryDetail diaryDetail, String img, Diary diary, Member member) {
+    public DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, Member member) {
         id = diaryDetail.getId();
-        this.img = img;
+        img = diaryDetail.getImg();
         content = diaryDetail.getContent();
         name = member.getName();
         diaryTitle = diary.getTitle();
         createdAt = diaryDetail.getCreatedAt();
         modifiedAt = diaryDetail.getModifiedAt();
-    }
-
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, String img, Diary diary, Member member) {
-        return DiaryDetailResponseDto.builder()
-                .img(img)
-                .diaryDetail(diaryDetail)
-                .diary(diary)
-                .member(member)
-                .build();
     }
 
     public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Diary diary, Member member) {
@@ -51,10 +41,10 @@ public class DiaryDetailResponseDto {
                 .build();
     }
 
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, String img, Member member) {
+
+    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Member member) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
-                .img(img)
                 .member(member)
                 .build();
     }
