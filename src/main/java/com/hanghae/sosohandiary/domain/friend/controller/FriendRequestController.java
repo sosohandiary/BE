@@ -16,8 +16,8 @@ import java.util.List;
 public class FriendRequestController {
     private final FriendsRequestService friendsRequestService;
 
-    @PostMapping("/request/{id}")
-    public MessageDto createFriendRequest(@PathVariable Long id,
+    @PostMapping("/request/{member-id}")
+    public MessageDto createFriendRequest(@PathVariable(value = "member-id") Long id,
                                           @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return friendsRequestService.createFriendRequest(id, memberDetails.getMember());
     }
@@ -27,8 +27,8 @@ public class FriendRequestController {
         return friendsRequestService.getFriendRequest(memberDetails.getMember());
     }
 
-    @PostMapping("/request/accept/{id}")
-    public MessageDto createFriendAccept(@PathVariable Long id,
+    @PostMapping("/request/accept/{friendrequest-id}")
+    public MessageDto createFriendAccept(@PathVariable(value = "friendrequest-id") Long id,
                                          @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return friendsRequestService.createFriendAccept(id, memberDetails.getMember());
     }
