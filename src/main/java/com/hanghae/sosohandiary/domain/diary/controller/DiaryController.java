@@ -5,8 +5,8 @@ import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.diary.service.DiaryService;
 import com.hanghae.sosohandiary.security.MemberDetailsImpl;
 import com.hanghae.sosohandiary.utils.MessageDto;
+import com.hanghae.sosohandiary.utils.page.PageCustom;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,7 +31,7 @@ public class DiaryController {
     }
 
     @GetMapping("/")
-    public Page<DiaryResponseDto> diaryList(@PageableDefault(size = 5) Pageable pageable) {
+    public PageCustom<DiaryResponseDto> diaryList(@PageableDefault(size = 5) Pageable pageable) {
         return diaryService.findDiaryList(pageable);
     }
 

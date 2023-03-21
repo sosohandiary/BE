@@ -10,6 +10,7 @@ import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
 import com.hanghae.sosohandiary.exception.ErrorHandling;
 import com.hanghae.sosohandiary.utils.MessageDto;
+import com.hanghae.sosohandiary.utils.page.PageCustom;
 import com.hanghae.sosohandiary.utils.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -59,13 +60,15 @@ public class DiaryDetailService {
         return DiaryDetailResponseDto.from(diaryDetail, diary, member);
     }
 
-    public Page<DiaryDetailResponseDto> findListDetail(Long id, Pageable pageable) {
+    public PageCustom<DiaryDetailResponseDto> findListDetail(Long id, Pageable pageable) {
         Diary diary = diaryRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
-        Page<DiaryDetail> diaryDetailList = diaryDetailRepository.findAllByOrderByModifiedAtDesc(pageable);
+        Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByOrderByModifiedAtDesc(pageable).map(
+                (DiaryDetail diaryDetail) -> new DiaryDetailResponseDto(diaryDetail, diary, diaryDetail.getMember())
+        );
 
-        return diaryDetailList.map((DiaryDetail diaryDetail) -> new DiaryDetailResponseDto(diaryDetail, diary, diaryDetail.getMember()));
+        return new PageCustom<>(diaryDetailResponseDtoPage.getContent(), diaryDetailResponseDtoPage.getPageable(), diaryDetailResponseDtoPage.getTotalElements());
     }
 
     public DiaryDetailResponseDto findDetail(Long diaryId, Long detailId) {

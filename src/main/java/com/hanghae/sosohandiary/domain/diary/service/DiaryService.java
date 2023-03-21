@@ -10,6 +10,7 @@ import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
 import com.hanghae.sosohandiary.exception.ErrorHandling;
 import com.hanghae.sosohandiary.utils.MessageDto;
+import com.hanghae.sosohandiary.utils.page.PageCustom;
 import com.hanghae.sosohandiary.utils.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -52,9 +53,10 @@ public class DiaryService {
         return DiaryResponseDto.from(diary, member);
     }
 
-    public Page<DiaryResponseDto> findDiaryList(Pageable pageable) {
-        Page<Diary> diaryList = diaryRepository.findAllByOrderByModifiedAtDesc(pageable);
-        return diaryList.map((Diary diary) -> new DiaryResponseDto(diary, diary.getMember()));
+    public PageCustom<DiaryResponseDto> findDiaryList(Pageable pageable) {
+        Page<DiaryResponseDto> diaryResponseDtoPage = diaryRepository.findAllByOrderByModifiedAtDesc(pageable).map(
+                (Diary diary) -> new DiaryResponseDto(diary, diary.getMember()));
+        return new PageCustom<>(diaryResponseDtoPage.getContent(), diaryResponseDtoPage.getPageable(), diaryResponseDtoPage.getTotalElements());
     }
 
     @Transactional
