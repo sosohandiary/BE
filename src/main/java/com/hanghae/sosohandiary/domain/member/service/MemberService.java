@@ -79,7 +79,7 @@ public class MemberService {
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(email, member.get().getRole()));
 
-        return MessageDto.of("로그인 성공", HttpStatus.ACCEPTED);
+        return MessageDto.ofLogin("로그인 성공", HttpStatus.ACCEPTED, member.get());
     }
 
     @Transactional
