@@ -25,4 +25,5 @@ public class PageCustom<T> implements Serializable {
         this.pageableCustom = new PageableCustom(new SliceImpl(content, pageable, hasNext));
     }
 
+
 }
