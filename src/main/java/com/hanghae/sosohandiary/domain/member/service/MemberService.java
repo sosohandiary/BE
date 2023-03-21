@@ -48,6 +48,11 @@ public class MemberService {
             throw new ApiException(DUPLICATED_EMAIL);
         }
 
+        Optional<Member> foundNickname = memberRepository.findByNickname(nickname);
+        if(foundNickname.isPresent()) {
+            throw new ApiException(DUPLICATED_NICKNAME);
+        }
+
         MemberRoleEnum role = MemberRoleEnum.MEMBER;
         if (joinRequestDto.isAdmin()) {
             if (!joinRequestDto.getAdminToken().equals(ADMIN_TOKEN)) {
