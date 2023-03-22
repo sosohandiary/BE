@@ -1,6 +1,5 @@
 package com.hanghae.sosohandiary.domain.member.dto;
 
-import com.hanghae.sosohandiary.domain.member.entity.Gender;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
@@ -25,8 +24,6 @@ public class JoinRequestDto {
     @NotNull(message = "닉네임을 입력 하세요")
     @Size(min = 2, max = 10, message = "닉네임은 2-20자 이내 입니다.")
     private String nickname;
-
-    private Gender gender;
 
     private boolean admin = false;
 

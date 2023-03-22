@@ -11,24 +11,21 @@ public class KakaoMemberInfoDto {
     private String email;
     private String name;
     private String nickname;
-    private String gender;
 
     @Builder
-    public KakaoMemberInfoDto(Long id, String email, String name, String nickname, String gender) {
+    public KakaoMemberInfoDto(Long id, String email, String name, String nickname) {
         this.id = id;
         this.email = email;
         this.name = name;
         this.nickname = nickname;
-        this.gender = gender;
     }
 
-    public static KakaoMemberInfoDto of(Long id, String email, String name, String nickname, String gender) {
+    public static KakaoMemberInfoDto of(Long id, String email, String name, String nickname) {
         return KakaoMemberInfoDto.builder()
                 .id(id)
                 .email(email)
                 .name(name)
                 .nickname(nickname)
-                .gender(gender)
                 .build();
     }
 
