@@ -47,6 +47,18 @@ public class FriendsRequestService {
             return new MessageDto("이미 친구 요청이 존재합니다.", HttpStatus.BAD_REQUEST);
         }
 
+        boolean alreadyRequestFriend = friendRequestRepository.existsByFriend_IdAndMember_Id(memberId.getId(), id);
+        if (alreadyRequestFriend) {
+            return new MessageDto("이미 상대방이 친구요청 했습니다. 친구 요청 리스트를 확인해주세요.", HttpStatus.BAD_REQUEST);
+        }
+
+        boolean existsFriend = friendListRepository.existsByFriend_IdAndMember_Id(memberId.getId(), id);
+        if (existsFriend) {
+            return new MessageDto("이미 친구요청에 등록되어 있는 상태입니다.", HttpStatus.BAD_REQUEST);
+        }
+
+
+
         friendRequestRepository.save(FriendRequest.of(memberId, friendId));
 
         return new MessageDto("친구요청 성공", HttpStatus.CREATED);
