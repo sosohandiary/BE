@@ -3,6 +3,7 @@ package com.hanghae.sosohandiary.domain.diary.service;
 import com.hanghae.sosohandiary.domain.diary.dto.DiaryRequestDto;
 import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
+import com.hanghae.sosohandiary.domain.diary.entity.DiaryCondition;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.diarydetil.repository.DiaryDetailRepository;
@@ -48,7 +49,13 @@ public class DiaryService {
 
         String uploadImageUrl = s3Service.getUploadImageUrl();
 
-        Diary diary = diaryRepository.save(Diary.of(diaryRequestDto, uploadImageUrl, member));
+        DiaryCondition condition = DiaryCondition.PUBLIC;
+
+        if(!diaryRequestDto.getDiaryCondition().equals(condition)) {
+            condition = DiaryCondition.PRIVATE;
+        }
+
+        Diary diary = diaryRepository.save(Diary.of(diaryRequestDto, uploadImageUrl, member, condition));
 
         return DiaryResponseDto.from(diary, member);
     }

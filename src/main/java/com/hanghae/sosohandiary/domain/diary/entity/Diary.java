@@ -30,11 +30,16 @@ public class Diary extends Timestamp {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Column(length = 10, nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private DiaryCondition diaryCondition;
+
     @Builder
-    private Diary(DiaryRequestDto diaryRequestDto, String uploadPath, Member member) {
+    private Diary(DiaryRequestDto diaryRequestDto, String uploadPath, Member member, DiaryCondition diaryCondition) {
         title = diaryRequestDto.getTitle();
         this.img = uploadPath;
         this.member = member;
+        this.diaryCondition = diaryCondition;
     }
 
     public static Diary of(DiaryRequestDto diaryRequestDto, String uploadPath, Member member) {
@@ -42,6 +47,15 @@ public class Diary extends Timestamp {
                 .diaryRequestDto(diaryRequestDto)
                 .uploadPath(uploadPath)
                 .member(member)
+                .build();
+    }
+
+    public static Diary of(DiaryRequestDto diaryRequestDto, String uploadPath, Member member, DiaryCondition diaryCondition) {
+        return Diary.builder()
+                .diaryRequestDto(diaryRequestDto)
+                .uploadPath(uploadPath)
+                .member(member)
+                .diaryCondition(diaryCondition)
                 .build();
     }
 

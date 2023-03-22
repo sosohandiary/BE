@@ -24,7 +24,7 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @PostMapping("/diary")
-    public DiaryResponseDto diarySave(@RequestPart(value = "title") DiaryRequestDto diaryDetailRequestDto,
+    public DiaryResponseDto diarySave(@RequestPart(value = "data") DiaryRequestDto diaryDetailRequestDto,
                                       @RequestPart(value = "img", required = false) List<MultipartFile> multipartFileList,
                                       @AuthenticationPrincipal MemberDetailsImpl memberDetails) throws IOException {
         return diaryService.saveDiary(diaryDetailRequestDto, multipartFileList, memberDetails.getMember());
