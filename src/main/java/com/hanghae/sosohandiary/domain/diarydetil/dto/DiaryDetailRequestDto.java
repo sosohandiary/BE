@@ -6,4 +6,5 @@ import lombok.Getter;
 public class DiaryDetailRequestDto {
 
     private String content;
+    private String customJson;
 }
