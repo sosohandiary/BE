@@ -36,33 +36,30 @@ public class DiaryDetail extends Timestamp {
     private Member member;
 
     @Builder
-    private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto, String detailUploadPath, Diary diary, Member member) {
+    private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary, Member member) {
         content = diaryDetailRequestDto.getContent();
         customJson = diaryDetailRequestDto.getCustomJson();
         this.diary = diary;
         this.member = member;
     }
 
-    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, String detailUploadPath, Diary diary, Member member) {
+    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary, Member member) {
         return DiaryDetail.builder()
                 .diaryDetailRequestDto(diaryDetailRequestDto)
-                .detailUploadPath(detailUploadPath)
                 .diary(diary)
                 .member(member)
                 .build();
     }
 
-    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, String detailUploadPath, Member member) {
+    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, Member member) {
         return DiaryDetail.builder()
                 .diaryDetailRequestDto(diaryDetailRequestDto)
-                .detailUploadPath(detailUploadPath)
                 .member(member)
                 .build();
     }
 
-    public void update(DiaryDetailRequestDto diaryDetailRequestDto, String detailUploadPath) {
+    public void update(DiaryDetailRequestDto diaryDetailRequestDto) {
         content = diaryDetailRequestDto.getContent();
-        this.img = detailUploadPath;
     }
 
 }

@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 public class DiaryDetailResponseDto {
 
     private Long id;
-    private String img;
     private String content;
+    private String customJson;
     private String name;
     private String diaryTitle;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
@@ -25,8 +25,8 @@ public class DiaryDetailResponseDto {
     @Builder
     public DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, Member member) {
         id = diaryDetail.getId();
-        img = diaryDetail.getImg();
         content = diaryDetail.getContent();
+        customJson = diaryDetail.getCustomJson();
         name = member.getName();
         diaryTitle = diary.getTitle();
         createdAt = diaryDetail.getCreatedAt();
