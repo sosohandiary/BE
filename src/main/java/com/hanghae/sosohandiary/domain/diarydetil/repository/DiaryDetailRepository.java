@@ -14,8 +14,6 @@ public interface DiaryDetailRepository extends JpaRepository<DiaryDetail, Long> 
 
     Optional<List<DiaryDetail>> findAllByDiaryId(Long id);
 
-    Optional<List<DiaryDetail>> findAllById(Long id);
-
     void deleteAllByDiaryId(Long id);
 
 }

@@ -5,7 +5,6 @@ import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.entity.DiaryCondition;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
-import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.diarydetil.repository.DiaryDetailRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
@@ -115,19 +114,6 @@ public class DiaryService {
             String uploadPath = diary.getImg();
             String filename = uploadPath.substring(50);
             s3Service.deleteFile(filename);
-        }
-
-        List<DiaryDetail> diaryDetailList = diaryDetailRepository.findAllByDiaryId(id).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
-        );
-
-
-        for (DiaryDetail diaryDetail : diaryDetailList) {
-            if (diaryDetail.getImg() != null) {
-                String detailUploadPath = diaryDetail.getImg();
-                String detailFilename = detailUploadPath.substring(50);
-                s3Service.deleteFile(detailFilename);
-            }
         }
 
         diaryDetailRepository.deleteAllByDiaryId(id);
