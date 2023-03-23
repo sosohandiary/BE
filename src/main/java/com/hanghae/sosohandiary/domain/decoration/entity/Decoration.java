@@ -15,17 +15,18 @@ public class Decoration {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT")
-    private String customJson;
+    @Column(nullable = false)
+    private String imageURL;
+
 
     @Builder
-    private Decoration(String customJson){
-        this.customJson=customJson;
+    private Decoration(String imageURL){
+        this.imageURL=imageURL;
     }
 
-    public static Decoration of(String customJson){
+    public static Decoration of(String imageURL){
         return Decoration.builder()
-                .customJson(customJson)
+                .imageURL(imageURL)
                 .build();
     }
 }
