@@ -47,18 +47,6 @@ public class S3Service {
         }
     }
 
-    public void uploadDiaryDetail(List<MultipartFile> multipartFilelist, DiaryDetailRequestDto diaryDetailRequestDto, Member member) throws IOException {
-
-        for (MultipartFile multipartFile : multipartFilelist) {
-            if (multipartFile != null) {
-                File uploadFile = convert(multipartFile).orElseThrow(
-                        () -> new IllegalArgumentException("파일 전환 실패")
-                );
-                DiaryDetail.of(diaryDetailRequestDto, upload(uploadFile), member);
-            }
-        }
-    }
-
     // S3에 파일이름 저장 후 업로드
     private String upload(File uploadFile) {
         String fileName = "" + UUID.randomUUID();
