@@ -24,7 +24,8 @@ public class DiaryDetail extends Timestamp {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    private String img;
+    @Column(columnDefinition = "TEXT")
+    private String customJson;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "diary_id")
@@ -37,7 +38,7 @@ public class DiaryDetail extends Timestamp {
     @Builder
     private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto, String detailUploadPath, Diary diary, Member member) {
         content = diaryDetailRequestDto.getContent();
-        this.img = detailUploadPath;
+        customJson = diaryDetailRequestDto.getCustomJson();
         this.diary = diary;
         this.member = member;
     }
