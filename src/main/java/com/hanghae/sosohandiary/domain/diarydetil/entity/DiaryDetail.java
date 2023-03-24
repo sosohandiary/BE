@@ -60,6 +60,7 @@ public class DiaryDetail extends Timestamp {
 
     public void update(DiaryDetailRequestDto diaryDetailRequestDto) {
         content = diaryDetailRequestDto.getContent();
+        customJson = diaryDetailRequestDto.getCustomJson();
     }
 
 }
