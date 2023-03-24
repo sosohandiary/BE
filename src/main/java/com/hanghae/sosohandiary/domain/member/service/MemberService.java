@@ -93,7 +93,7 @@ public class MemberService {
         List<MemberResponseDto> responseDtoList = new ArrayList<>();
 
         for(Member member : memberList) {
-            responseDtoList.add(MemberResponseDto.from(member.getName()));
+            responseDtoList.add(MemberResponseDto.from(member));
         }
 
         return responseDtoList;
