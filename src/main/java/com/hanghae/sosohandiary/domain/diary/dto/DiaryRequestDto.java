@@ -8,5 +8,6 @@ public class DiaryRequestDto {
 
     private String title;
     private DiaryCondition diaryCondition;
+    private String keyword;
 
 }

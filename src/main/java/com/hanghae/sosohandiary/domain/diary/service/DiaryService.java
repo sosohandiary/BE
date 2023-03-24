@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -55,19 +56,52 @@ public class DiaryService {
             condition = DiaryCondition.PRIVATE;
         }
 
-        Diary diary = diaryRepository.save(Diary.of(diaryRequestDto, uploadImageUrl, member, condition));
+        Diary diary = diaryRepository.save(Diary.of(diaryRequestDto, uploadImageUrl, member));
 
         return DiaryResponseDto.from(diary, member);
     }
 
-    public PageCustom<DiaryResponseDto> findDiaryList(Pageable pageable) {
-        Page<DiaryResponseDto> diaryResponseDtoPage = diaryRepository.findAllByOrderByModifiedAtDesc(pageable).map(
-                (Diary diary) -> new DiaryResponseDto(diary, diary.getMember()));
-        return new PageCustom<>(diaryResponseDtoPage.getContent(), diaryResponseDtoPage.getPageable(), diaryResponseDtoPage.getTotalElements());
+    public List<DiaryResponseDto> findDiaryList(Pageable pageable, Member member) {
+
+        Page<Diary> diaryPage = diaryRepository.findAllByOrderByModifiedAtDesc(pageable);
+        List<DiaryResponseDto> diaryResponseDtoList = new ArrayList<>();
+        for (Diary diary : diaryPage) {
+            if (diary.getDiaryCondition().equals(DiaryCondition.PUBLIC)) {
+                diaryResponseDtoList.add(DiaryResponseDto.from(diary, diary.getMember()));
+            } else if (diary.getMember().getId().equals(member.getId())) {
+                diaryResponseDtoList.add(DiaryResponseDto.from(diary, diary.getMember()));
+            }
+        }
+
+        return diaryResponseDtoList;
+    }
+
+    public PageCustom<DiaryResponseDto> findPublicDiaryList(Pageable pageable) {
+
+        Page<DiaryResponseDto> diaryResponseDtoPagePublic = diaryRepository
+                .findAllByDiaryConditionOrderByModifiedAtDesc(pageable, DiaryCondition.PUBLIC)
+                .map((Diary diary) -> new DiaryResponseDto(diary, diary.getMember()));
+
+        return new PageCustom<>(diaryResponseDtoPagePublic.getContent(),
+                diaryResponseDtoPagePublic.getPageable(),
+                diaryResponseDtoPagePublic.getTotalElements());
+    }
+
+    public PageCustom<DiaryResponseDto> findPrivateDiaryList(Pageable pageable,
+                                                             Member member) {
+        Page<DiaryResponseDto> diaryResponseDtoPagePrivate = diaryRepository
+                .findAllByMemberIdAndDiaryConditionOrderByModifiedAtDesc(pageable, member.getId(), DiaryCondition.PRIVATE)
+                .map((Diary diary) -> new DiaryResponseDto(diary, diary.getMember()));
+
+        return new PageCustom<>(diaryResponseDtoPagePrivate.getContent(),
+                diaryResponseDtoPagePrivate.getPageable(),
+                diaryResponseDtoPagePrivate.getTotalElements());
     }
 
     @Transactional
-    public DiaryResponseDto modifyDiary(Long id, DiaryRequestDto diaryRequestDto, List<MultipartFile> multipartFileList, Member member) throws IOException {
+    public DiaryResponseDto modifyDiary(Long id, DiaryRequestDto diaryRequestDto,
+                                        List<MultipartFile> multipartFileList,
+                                        Member member) throws IOException {
         Diary diary = diaryRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
@@ -135,4 +169,5 @@ public class DiaryService {
 
         return MessageDto.of("다이어리 삭제 완료", HttpStatus.OK);
     }
+
 }

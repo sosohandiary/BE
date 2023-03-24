@@ -31,8 +31,20 @@ public class DiaryController {
     }
 
     @GetMapping("/")
-    public PageCustom<DiaryResponseDto> diaryList(@PageableDefault(size = 5) Pageable pageable) {
-        return diaryService.findDiaryList(pageable);
+    public List<DiaryResponseDto> diaryList(@PageableDefault(size = 5) Pageable pageable,
+                                            @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return diaryService.findDiaryList(pageable, memberDetails.getMember());
+    }
+
+    @GetMapping("/public")
+    public PageCustom<DiaryResponseDto> diaryPublicList(@PageableDefault(size = 5) Pageable pageable) {
+        return diaryService.findPublicDiaryList(pageable);
+    }
+
+    @GetMapping("/private")
+    public PageCustom<DiaryResponseDto> diaryPrivateList(@PageableDefault(size = 5) Pageable pageable,
+                                                         @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return diaryService.findPrivateDiaryList(pageable, memberDetails.getMember());
     }
 
     @PatchMapping("/diary/{diary-id}")
