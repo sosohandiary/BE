@@ -41,13 +41,20 @@ public class InviteService {
                 () -> new ApiException(NOT_FOUND_USER)
         );
 
-        List<FriendList> toFriend = friendListRepository.findAllByMemberId(toMemberId);
+        List<FriendList> toFriend = friendListRepository.findAllByMemberId(fromMember.getId());
+
+        Long countInvite = inviteRepository.countByDiaryId(diaryId);
 
         for (FriendList friendList : toFriend) {
-            if(friendList.getFriend().getId().equals(toMemberId)) {
+            if (countInvite >= 8) {
+                throw new IllegalArgumentException("초대할 인원이 다 찼습니다.");
+            }
+
+            if (friendList.getFriend().getId().equals(toMemberId)) {
                 Invite invite = Invite.of(fromMember, toMember, diary);
                 inviteRepository.save(invite);
             }
+
         }
 
         return new MessageDto("공유 다이어리 초대 전송 완료", HttpStatus.OK);
