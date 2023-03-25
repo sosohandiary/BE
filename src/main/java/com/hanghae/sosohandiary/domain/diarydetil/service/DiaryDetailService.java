@@ -35,9 +35,9 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
-        DiaryDetail diaryDetail = diaryDetailRepository.save(DiaryDetail.of(diaryDetailRequestDto, diary, member));
+        DiaryDetail diaryDetail = diaryDetailRepository.save(DiaryDetail.of(diaryDetailRequestDto, diary));
 
-        return DiaryDetailResponseDto.from(diaryDetail, diary, member);
+        return DiaryDetailResponseDto.from(diaryDetail, diary);
     }
 
     public PageCustom<DiaryDetailResponseDto> findListDetail(Long id, Pageable pageable) {
@@ -45,7 +45,7 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
         Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByOrderByModifiedAtDesc(pageable).map(
-                (DiaryDetail diaryDetail) -> new DiaryDetailResponseDto(diaryDetail, diary, diaryDetail.getMember())
+                (DiaryDetail diaryDetail) -> new DiaryDetailResponseDto(diaryDetail, diary)
         );
 
         return new PageCustom<>(diaryDetailResponseDtoPage.getContent(), diaryDetailResponseDtoPage.getPageable(), diaryDetailResponseDtoPage.getTotalElements());
@@ -60,7 +60,7 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
-        return DiaryDetailResponseDto.from(diaryDetail, diary, diaryDetail.getMember());
+        return DiaryDetailResponseDto.from(diaryDetail, diary);
     }
 
     @Transactional
@@ -76,13 +76,9 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
-        if (!diaryDetail.getMember().getId().equals(member.getId())) {
-            throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
-        }
-
         diaryDetail.update(diaryDetailRequestDto);
 
-        return DiaryDetailResponseDto.from(diaryDetail, diary, member);
+        return DiaryDetailResponseDto.from(diaryDetail, diary);
     }
 
     @Transactional
@@ -91,13 +87,9 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
-        DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
+        diaryDetailRepository.findById(detailId).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
-
-        if (!diaryDetail.getMember().getId().equals(member.getId())) {
-            throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
-        }
 
         diaryDetailRepository.deleteById(detailId);
 

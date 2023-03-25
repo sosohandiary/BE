@@ -15,7 +15,6 @@ public class DiaryDetailResponseDto {
     private Long id;
     private String content;
     private String customJson;
-    private String name;
     private String diaryTitle;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
@@ -23,29 +22,26 @@ public class DiaryDetailResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    public DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, Member member) {
+    public DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary) {
         id = diaryDetail.getId();
         content = diaryDetail.getContent();
         customJson = diaryDetail.getCustomJson();
-        name = member.getName();
         diaryTitle = diary.getTitle();
         createdAt = diaryDetail.getCreatedAt();
         modifiedAt = diaryDetail.getModifiedAt();
     }
 
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Diary diary, Member member) {
+    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Diary diary) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
                 .diary(diary)
-                .member(member)
                 .build();
     }
 
 
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Member member) {
+    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
-                .member(member)
                 .build();
     }
 

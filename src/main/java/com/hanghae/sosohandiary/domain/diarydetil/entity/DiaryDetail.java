@@ -34,30 +34,23 @@ public class DiaryDetail extends Timestamp {
     @JoinColumn(name = "diary_id")
     private Diary diary;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
-
     @Builder
-    private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary, Member member) {
+    private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary) {
         content = diaryDetailRequestDto.getContent();
         customJson = diaryDetailRequestDto.getCustomJson();
         this.diary = diary;
-        this.member = member;
     }
 
-    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary, Member member) {
+    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary) {
         return DiaryDetail.builder()
                 .diaryDetailRequestDto(diaryDetailRequestDto)
                 .diary(diary)
-                .member(member)
                 .build();
     }
 
-    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, Member member) {
+    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto) {
         return DiaryDetail.builder()
                 .diaryDetailRequestDto(diaryDetailRequestDto)
-                .member(member)
                 .build();
     }
 
