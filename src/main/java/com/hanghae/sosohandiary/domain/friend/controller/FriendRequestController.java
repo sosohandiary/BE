@@ -1,3 +1,4 @@
+/*
 package com.hanghae.sosohandiary.domain.friend.controller;
 
 import com.hanghae.sosohandiary.domain.friend.dto.FriendResponseDto;
@@ -34,3 +35,4 @@ public class FriendRequestController {
     }
 
 }
+*/
