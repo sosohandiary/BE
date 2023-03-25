@@ -34,7 +34,7 @@ public class CommentResponseDto {
     }
 
 
-    public static CommentResponseDto from(DiaryDetail diaryDetail, Member member, Comment comment) {
+    public static CommentResponseDto of(DiaryDetail diaryDetail, Member member, Comment comment) {
         return CommentResponseDto.builder()
                 .diaryDetail(diaryDetail)
                 .member(member)

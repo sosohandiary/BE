@@ -34,7 +34,7 @@ public class CommentService {
 
         Comment comment = commentRepository.save(Comment.of(diaryDetail, member, requestDto));
 
-        return CommentResponseDto.from(diaryDetail, member, comment);
+        return CommentResponseDto.of(diaryDetail, member, comment);
     }
 
     public List<CommentResponseDto> getComment(Long id, Member member) {
@@ -47,7 +47,7 @@ public class CommentService {
         List<CommentResponseDto> commentResponseList = new ArrayList<>();
 
         for (Comment comment : commentList) {
-            commentResponseList.add(CommentResponseDto.from(diaryDetail, member, comment));
+            commentResponseList.add(CommentResponseDto.of(diaryDetail, member, comment));
         }
         return commentResponseList;
     }
@@ -67,7 +67,7 @@ public class CommentService {
 
         comment.update(requestDto.getComment());
 
-        return CommentResponseDto.from(diaryDetail, member, comment);
+        return CommentResponseDto.of(diaryDetail, member, comment);
     }
 
     public MessageDto deleteComment(Long detailId, Long id, Member member) {
