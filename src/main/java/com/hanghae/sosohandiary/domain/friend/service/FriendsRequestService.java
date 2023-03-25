@@ -1,3 +1,4 @@
+/*
 package com.hanghae.sosohandiary.domain.friend.service;
 
 import com.hanghae.sosohandiary.domain.friend.dto.FriendResponseDto;
@@ -93,3 +94,4 @@ public class FriendsRequestService {
     }
 
 }
+*/

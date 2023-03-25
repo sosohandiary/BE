@@ -1,6 +1,8 @@
 package com.hanghae.sosohandiary.domain.friend.repository;
 
+import com.hanghae.sosohandiary.domain.friend.Enum.StatusFriend;
 import com.hanghae.sosohandiary.domain.friend.entity.FriendList;
+import com.hanghae.sosohandiary.domain.friend.entity.FriendRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -17,4 +19,6 @@ public interface FriendListRepository extends JpaRepository<FriendList, Long> {
 
     boolean existsByFriend_IdAndMember_Id(Long friendId, Long memberId);
 
+
+    List<FriendList> findByFriendIdAndStatusOrderByCreatedAtDesc(Long id, StatusFriend Status);
 }

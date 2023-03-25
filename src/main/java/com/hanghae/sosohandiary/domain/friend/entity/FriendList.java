@@ -1,5 +1,6 @@
 package com.hanghae.sosohandiary.domain.friend.entity;
 
+import com.hanghae.sosohandiary.domain.friend.Enum.StatusFriend;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.utils.entity.Timestamp;
 import lombok.AccessLevel;
@@ -26,17 +27,27 @@ public class FriendList extends Timestamp {
     @JoinColumn(name = "friend_id")
     private Member friend;
 
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private StatusFriend status;
+
     @Builder
-    private FriendList(Member member, Member friend) {
+    private FriendList(Member member, Member friend, StatusFriend status) {
         this.member = member;
         this.friend = friend;
+        this.status = status;
     }
 
-    public static FriendList of(Member member, Member friend) {
+    public static FriendList of(Member member, Member friend, StatusFriend status) {
         return FriendList.builder()
                 .member(member)
                 .friend(friend)
+                .status(status)
                 .build();
+    }
+
+    public void updateFriendStatus(StatusFriend status){
+        this.status=status;
     }
 
 }

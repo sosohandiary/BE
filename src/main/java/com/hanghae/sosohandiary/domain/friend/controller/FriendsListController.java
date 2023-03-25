@@ -16,6 +16,23 @@ import java.util.List;
 public class FriendsListController {
     private final FriendsListService friendsListService;
 
+    @PostMapping("/request/{member-id}")
+    public MessageDto createFriendRequest(@PathVariable(value = "member-id") Long id,
+                                          @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return friendsListService.createFriendRequest(id, memberDetails.getMember());
+    }
+
+    @GetMapping("/request")
+    public List<FriendResponseDto> getFriendRequest(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return friendsListService.getFriendRequest(memberDetails.getMember());
+    }
+
+    @PutMapping("/request/accept/{friendrequest-id}")
+    public MessageDto acceptFriend(@PathVariable(value = "friendrequest-id") Long id,
+                                         @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return friendsListService.acceptFriend(id, memberDetails.getMember());
+    }
+
     @GetMapping("/list")
     public List<FriendResponseDto> getFriendList(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return friendsListService.getFriendList(memberDetails.getMember());
