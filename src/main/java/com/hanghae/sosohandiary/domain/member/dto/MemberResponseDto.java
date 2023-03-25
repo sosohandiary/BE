@@ -1,6 +1,6 @@
 package com.hanghae.sosohandiary.domain.member.dto;
 
-import com.hanghae.sosohandiary.domain.friend.entity.FriendList;
+import com.hanghae.sosohandiary.domain.friend.entity.Friend;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class MemberResponseDto {
                 .build();
     }
 
-    public static MemberResponseDto from(FriendList friend) {
+    public static MemberResponseDto from(Friend friend) {
         return MemberResponseDto.builder()
                 .id(friend.getFriend().getId())
                 .name(friend.getFriend().getName())

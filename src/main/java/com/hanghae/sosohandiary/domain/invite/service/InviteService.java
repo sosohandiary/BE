@@ -2,8 +2,8 @@ package com.hanghae.sosohandiary.domain.invite.service;
 
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
-import com.hanghae.sosohandiary.domain.friend.entity.FriendList;
-import com.hanghae.sosohandiary.domain.friend.repository.FriendListRepository;
+import com.hanghae.sosohandiary.domain.friend.entity.Friend;
+import com.hanghae.sosohandiary.domain.friend.repository.FriendRepository;
 import com.hanghae.sosohandiary.domain.invite.entity.Invite;
 import com.hanghae.sosohandiary.domain.invite.repository.InviteRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
@@ -28,7 +28,7 @@ public class InviteService {
     private final DiaryRepository diaryRepository;
     private final MemberRepository memberRepository;
     private final InviteRepository inviteRepository;
-    private final FriendListRepository friendListRepository;
+    private final FriendRepository friendListRepository;
 
     @Transactional
     public MessageDto invite(Long diaryId, Member fromMember, Long toMemberId) {
@@ -41,11 +41,11 @@ public class InviteService {
                 () -> new ApiException(NOT_FOUND_USER)
         );
 
-        List<FriendList> toFriend = friendListRepository.findAllByMemberId(fromMember.getId());
+        List<Friend> toFriend = friendListRepository.findAllByMemberId(fromMember.getId());
 
         Long countInvite = inviteRepository.countByDiaryId(diaryId);
 
-        for (FriendList friendList : toFriend) {
+        for (Friend friendList : toFriend) {
             if (countInvite >= 8) {
                 throw new IllegalArgumentException("초대할 인원이 다 찼습니다.");
             }

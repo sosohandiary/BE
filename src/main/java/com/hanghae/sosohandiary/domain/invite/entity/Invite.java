@@ -1,7 +1,6 @@
 package com.hanghae.sosohandiary.domain.invite.entity;
 
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
-import com.hanghae.sosohandiary.domain.friend.entity.FriendList;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.AccessLevel;
 import lombok.Builder;

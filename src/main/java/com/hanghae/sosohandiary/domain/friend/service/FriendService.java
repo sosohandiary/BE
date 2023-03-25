@@ -1,10 +1,9 @@
 package com.hanghae.sosohandiary.domain.friend.service;
 
-import com.hanghae.sosohandiary.domain.friend.Enum.StatusFriend;
 import com.hanghae.sosohandiary.domain.friend.dto.FriendResponseDto;
-import com.hanghae.sosohandiary.domain.friend.entity.FriendList;
-import com.hanghae.sosohandiary.domain.friend.entity.FriendRequest;
-import com.hanghae.sosohandiary.domain.friend.repository.FriendListRepository;
+import com.hanghae.sosohandiary.domain.friend.entity.Enum.StatusFriend;
+import com.hanghae.sosohandiary.domain.friend.entity.Friend;
+import com.hanghae.sosohandiary.domain.friend.repository.FriendRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
 import com.hanghae.sosohandiary.exception.ApiException;
@@ -21,10 +20,11 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class FriendsListService {
-    private final FriendListRepository friendListRepository;
+public class FriendService {
+    private final FriendRepository friendRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional
     public MessageDto createFriendRequest(Long id, Member member) {
         if (member.getId().equals(id)) {
             return new MessageDto("자기 자신을 추가할 수 없습니다.", HttpStatus.BAD_REQUEST);
@@ -37,32 +37,35 @@ public class FriendsListService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_USER)
         );
         // 친구 요청 중복 체크
-        boolean isDuplicated = friendListRepository.existsByFriend_IdAndMember_Id(id, memberId.getId());
+        boolean isDuplicated = friendRepository.existsByFriend_IdAndMember_Id(id, memberId.getId());
         if (isDuplicated) {
             return new MessageDto("이미 상대방에게 친구 요청 하였습니다.", HttpStatus.BAD_REQUEST);
         }
 
-
-        friendListRepository.save(FriendList.of(memberId, friendId, StatusFriend.PENDING));
+        friendRepository.save(Friend.of(memberId, friendId, StatusFriend.PENDING));
 
         return new MessageDto("친구요청 성공", HttpStatus.CREATED);
 
     }
 
     public List<FriendResponseDto> getFriendRequest(Member member) {
-        List<FriendList> friendRequestList = friendListRepository.findByFriendIdAndStatusOrderByCreatedAtDesc(member.getId(), StatusFriend.PENDING);
-        List<FriendResponseDto> myFriendResponseDtoList = new ArrayList<>();
+        List<Friend> friendList = friendRepository.findByFriendIdAndStatusOrderByCreatedAtDesc(member.getId(), StatusFriend.PENDING);
+        List<FriendResponseDto> friendResponseDtoList = new ArrayList<>();
 
-        for (FriendList friendRequest : friendRequestList) {
-            myFriendResponseDtoList.add(FriendResponseDto.from(friendRequest));
+        for (Friend friend : friendList) {
+            friendResponseDtoList.add(FriendResponseDto.builder()
+                    .id(friend.getId())
+                    .friendNickName(friend.getMember().getNickname())
+                    .nickname(friend.getFriend().getNickname())
+                    .build());
         }
-        return myFriendResponseDtoList;
+        return friendResponseDtoList;
     }
 
     @Transactional
     public MessageDto acceptFriend(Long id, Member member) {
 
-        FriendList friendAccept = friendListRepository.findById(id).orElseThrow(
+        Friend friendAccept = friendRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_REQUEST)
         );
 
@@ -75,35 +78,37 @@ public class FriendsListService {
 
         friendAccept.updateFriendStatus(StatusFriend.ACCEPTED);
 
-        friendListRepository.save(FriendList.of(memberId, friendId, StatusFriend.ACCEPTED));
+        friendRepository.save(Friend.of(memberId, friendId, StatusFriend.ACCEPTED));
         return new MessageDto("친구추가 성공", HttpStatus.ACCEPTED);
     }
 
     public List<FriendResponseDto> getFriendList(Member member) {
-        List<FriendList> friendAccept = friendListRepository.findByFriendIdAndStatusOrderByCreatedAtDesc(member.getId(), StatusFriend.ACCEPTED);
-        List<FriendResponseDto> friendListResponseDtoList = new ArrayList<>();
+        List<Friend> friendList = friendRepository.findByMemberIdAndStatusOrderByFriendNicknameAsc(member.getId(), StatusFriend.ACCEPTED);
+        List<FriendResponseDto> friendResponseDtoList = new ArrayList<>();
 
-        for (FriendList friendList : friendAccept) {
-            friendListResponseDtoList.add(FriendResponseDto.from(friendList));
+        for (Friend friend : friendList) {
+            friendResponseDtoList.add(FriendResponseDto.builder()
+                    .id(friend.getId())
+                    .friendNickName(friend.getFriend().getNickname())
+                    .nickname(friend.getMember().getNickname())
+                    .build());
         }
-        return friendListResponseDtoList;
+        return friendResponseDtoList;
     }
 
     @Transactional
     public MessageDto deleteFriendList(Long id, Member member) {
-        FriendList friendList = friendListRepository.findById(id).orElseThrow(
+        Friend friend = friendRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_USER)
         );
 
-        if (!friendList.getMember().getId().equals(member.getId())) {
+        if (!friend.getMember().getId().equals(member.getId())) {
             throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
         }
 
-        friendListRepository.deleteByMemberIdAndFriendId(friendList.getMember().getId(), friendList.getFriend().getId());
-        friendListRepository.deleteByFriendIdAndMemberId(friendList.getMember().getId(), friendList.getFriend().getId());
+        friendRepository.deleteByMemberIdAndFriendId(friend.getMember().getId(), friend.getFriend().getId());
+        friendRepository.deleteByFriendIdAndMemberId(friend.getMember().getId(), friend.getFriend().getId());
         return MessageDto.of("친구 삭제 완료", HttpStatus.OK);
     }
-
-
 
 }

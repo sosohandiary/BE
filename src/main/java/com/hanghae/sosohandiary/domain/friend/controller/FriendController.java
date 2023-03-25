@@ -1,7 +1,7 @@
 package com.hanghae.sosohandiary.domain.friend.controller;
 
 import com.hanghae.sosohandiary.domain.friend.dto.FriendResponseDto;
-import com.hanghae.sosohandiary.domain.friend.service.FriendsListService;
+import com.hanghae.sosohandiary.domain.friend.service.FriendService;
 import com.hanghae.sosohandiary.security.MemberDetailsImpl;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +13,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/friend")
 @RequiredArgsConstructor
-public class FriendsListController {
-    private final FriendsListService friendsListService;
+public class FriendController {
+    private final FriendService friendsListService;
 
     @PostMapping("/request/{member-id}")
     public MessageDto createFriendRequest(@PathVariable(value = "member-id") Long id,

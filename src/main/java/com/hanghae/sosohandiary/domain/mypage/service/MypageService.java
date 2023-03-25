@@ -4,11 +4,11 @@ import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diary.service.DiaryService;
-import com.hanghae.sosohandiary.domain.friend.entity.FriendList;
+import com.hanghae.sosohandiary.domain.friend.entity.Friend;
 import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
-import com.hanghae.sosohandiary.domain.friend.repository.FriendListRepository;
+import com.hanghae.sosohandiary.domain.friend.repository.FriendRepository;
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageDiaryResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageFriendResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.MypageProfileResponseDto;
@@ -34,7 +34,7 @@ public class MypageService {
     private final MemberRepository memberRepository;
     private final DiaryService diaryService;
     private final DiaryRepository diaryRepository;
-    private final FriendListRepository friendsRepository;
+    private final FriendRepository friendsRepository;
 
     public MypageProfileResponseDto getProfile(Member member) {
 
@@ -125,11 +125,11 @@ public class MypageService {
                 () -> new ApiException(NOT_FOUND_USER)
         );
 
-        List<FriendList> friendList = friendsRepository.findAllByMemberId(member.getId());
+        List<Friend> friendList = friendsRepository.findAllByMemberId(member.getId());
 
         List<MemberResponseDto> getMyFriends = new ArrayList<>();
 
-        for(FriendList friend : friendList) {
+        for(Friend friend : friendList) {
             getMyFriends.add(MemberResponseDto.from(friend));
         }
 

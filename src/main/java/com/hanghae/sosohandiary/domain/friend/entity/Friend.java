@@ -1,6 +1,6 @@
 package com.hanghae.sosohandiary.domain.friend.entity;
 
-import com.hanghae.sosohandiary.domain.friend.Enum.StatusFriend;
+import com.hanghae.sosohandiary.domain.friend.entity.Enum.StatusFriend;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.utils.entity.Timestamp;
 import lombok.AccessLevel;
@@ -13,11 +13,14 @@ import javax.persistence.*;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FriendList extends Timestamp {
+public class Friend extends Timestamp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(length = 10, nullable = false)
+    private String friendNickname;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -32,14 +35,15 @@ public class FriendList extends Timestamp {
     private StatusFriend status;
 
     @Builder
-    private FriendList(Member member, Member friend, StatusFriend status) {
+    private Friend(Member member, Member friend, StatusFriend status) {
+        friendNickname = friend.getNickname();
         this.member = member;
         this.friend = friend;
         this.status = status;
     }
 
-    public static FriendList of(Member member, Member friend, StatusFriend status) {
-        return FriendList.builder()
+    public static Friend of(Member member, Member friend, StatusFriend status) {
+        return Friend.builder()
                 .member(member)
                 .friend(friend)
                 .status(status)
