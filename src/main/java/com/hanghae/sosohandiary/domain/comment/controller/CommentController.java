@@ -1,9 +1,8 @@
 package com.hanghae.sosohandiary.domain.comment.controller;
 
+import com.hanghae.sosohandiary.domain.comment.dto.CommentRequestDto;
 import com.hanghae.sosohandiary.domain.comment.dto.CommentResponseDto;
 import com.hanghae.sosohandiary.domain.comment.service.CommentService;
-import com.hanghae.sosohandiary.domain.comment.dto.CommentRequestDto;
-import com.hanghae.sosohandiary.domain.comment.entity.Comment;
 import com.hanghae.sosohandiary.security.MemberDetailsImpl;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,7 @@ public class CommentController {
         return commentService.createComment(id, requestDto, memberDetails.getMember());
     }
 
-    @GetMapping("/detail/{detail-id}/comment")
+    @GetMapping("/detail/{detail-id}/comments")
     public List<CommentResponseDto> getComment(@PathVariable(name = "detail-id")Long id,
                                                @AuthenticationPrincipal MemberDetailsImpl memberDetails){
         return commentService.getComment(id, memberDetails.getMember());

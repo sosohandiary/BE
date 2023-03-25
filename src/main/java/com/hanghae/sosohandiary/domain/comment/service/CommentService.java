@@ -4,10 +4,8 @@ import com.hanghae.sosohandiary.domain.comment.dto.CommentRequestDto;
 import com.hanghae.sosohandiary.domain.comment.dto.CommentResponseDto;
 import com.hanghae.sosohandiary.domain.comment.entity.Comment;
 import com.hanghae.sosohandiary.domain.comment.repository.CommentRepository;
-import com.hanghae.sosohandiary.domain.diary.entity.Diary;
-import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailResponseDto;
-import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
-import com.hanghae.sosohandiary.domain.diarydetil.repository.DiaryDetailRepository;
+import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
+import com.hanghae.sosohandiary.domain.diarydetail.repository.DiaryDetailRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
 import com.hanghae.sosohandiary.exception.ErrorHandling;
@@ -36,7 +34,7 @@ public class CommentService {
 
         Comment comment = commentRepository.save(Comment.of(diaryDetail, member, requestDto));
 
-        return CommentResponseDto.from(diaryDetail, member, comment);
+        return CommentResponseDto.of(diaryDetail, member, comment);
     }
 
     public List<CommentResponseDto> getComment(Long id, Member member) {
@@ -49,7 +47,7 @@ public class CommentService {
         List<CommentResponseDto> commentResponseList = new ArrayList<>();
 
         for (Comment comment : commentList) {
-            commentResponseList.add(CommentResponseDto.from(diaryDetail, member, comment));
+            commentResponseList.add(CommentResponseDto.of(diaryDetail, member, comment));
         }
         return commentResponseList;
     }
@@ -69,7 +67,7 @@ public class CommentService {
 
         comment.update(requestDto.getComment());
 
-        return CommentResponseDto.from(diaryDetail, member, comment);
+        return CommentResponseDto.of(diaryDetail, member, comment);
     }
 
     public MessageDto deleteComment(Long detailId, Long id, Member member) {

@@ -1,8 +1,7 @@
 package com.hanghae.sosohandiary.domain.comment.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hanghae.sosohandiary.domain.comment.dto.CommentRequestDto;
-import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
+import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.utils.entity.Timestamp;
 import lombok.Builder;
