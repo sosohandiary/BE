@@ -24,13 +24,13 @@ public class CommentResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private CommentResponseDto(DiaryDetail diaryDetail,Member member, Comment comment) {
+    private CommentResponseDto(DiaryDetail diaryDetail, Member member, Comment comment) {
         diaryDetailId = diaryDetail.getId();
         commentId = comment.getId();
         this.comment = comment.getComment();
         this.commentName = member.getName();
-        createdAt = diaryDetail.getCreatedAt();
-        modifiedAt = diaryDetail.getModifiedAt();
+        createdAt = comment.getCreatedAt();
+        modifiedAt = comment.getModifiedAt();
     }
 
 
