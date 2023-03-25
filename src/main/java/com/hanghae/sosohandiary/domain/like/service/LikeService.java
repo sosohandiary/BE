@@ -1,7 +1,7 @@
 package com.hanghae.sosohandiary.domain.like.service;
 
-import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
-import com.hanghae.sosohandiary.domain.diarydetil.repository.DiaryDetailRepository;
+import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
+import com.hanghae.sosohandiary.domain.diarydetail.repository.DiaryDetailRepository;
 import com.hanghae.sosohandiary.domain.like.entity.Likes;
 import com.hanghae.sosohandiary.domain.like.repository.LikesRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;

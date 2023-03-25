@@ -1,6 +1,6 @@
-package com.hanghae.sosohandiary.domain.diarydetil.repository;
+package com.hanghae.sosohandiary.domain.diarydetail.repository;
 
-import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
+import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

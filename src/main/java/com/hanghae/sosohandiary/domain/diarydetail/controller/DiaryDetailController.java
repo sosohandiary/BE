@@ -1,8 +1,8 @@
-package com.hanghae.sosohandiary.domain.diarydetil.controller;
+package com.hanghae.sosohandiary.domain.diarydetail.controller;
 
-import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailRequestDto;
-import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailResponseDto;
-import com.hanghae.sosohandiary.domain.diarydetil.service.DiaryDetailService;
+import com.hanghae.sosohandiary.domain.diarydetail.dto.DiaryDetailRequestDto;
+import com.hanghae.sosohandiary.domain.diarydetail.dto.DiaryDetailResponseDto;
+import com.hanghae.sosohandiary.domain.diarydetail.service.DiaryDetailService;
 import com.hanghae.sosohandiary.security.MemberDetailsImpl;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import com.hanghae.sosohandiary.utils.page.PageCustom;

@@ -1,4 +1,4 @@
-package com.hanghae.sosohandiary.domain.diarydetil.dto;
+package com.hanghae.sosohandiary.domain.diarydetail.dto;
 
 import lombok.Getter;
 

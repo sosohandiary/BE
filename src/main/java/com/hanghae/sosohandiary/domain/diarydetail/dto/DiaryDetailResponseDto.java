@@ -1,9 +1,8 @@
-package com.hanghae.sosohandiary.domain.diarydetil.dto;
+package com.hanghae.sosohandiary.domain.diarydetail.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
-import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
-import com.hanghae.sosohandiary.domain.member.entity.Member;
+import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
 import lombok.Builder;
 import lombok.Getter;
 

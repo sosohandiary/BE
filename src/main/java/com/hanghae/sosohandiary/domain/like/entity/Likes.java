@@ -1,8 +1,6 @@
 package com.hanghae.sosohandiary.domain.like.entity;
 
-import com.hanghae.sosohandiary.domain.diary.entity.Diary;
-import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailRequestDto;
-import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
+import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.NoArgsConstructor;

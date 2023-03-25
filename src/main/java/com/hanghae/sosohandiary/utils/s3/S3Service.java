@@ -6,8 +6,6 @@ import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.hanghae.sosohandiary.domain.diary.dto.DiaryRequestDto;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
-import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailRequestDto;
-import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

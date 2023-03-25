@@ -1,8 +1,7 @@
-package com.hanghae.sosohandiary.domain.diarydetil.entity;
+package com.hanghae.sosohandiary.domain.diarydetail.entity;
 
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
-import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailRequestDto;
-import com.hanghae.sosohandiary.domain.member.entity.Member;
+import com.hanghae.sosohandiary.domain.diarydetail.dto.DiaryDetailRequestDto;
 import com.hanghae.sosohandiary.utils.entity.Timestamp;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,9 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 

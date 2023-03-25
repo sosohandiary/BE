@@ -1,11 +1,11 @@
-package com.hanghae.sosohandiary.domain.diarydetil.service;
+package com.hanghae.sosohandiary.domain.diarydetail.service;
 
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
-import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailRequestDto;
-import com.hanghae.sosohandiary.domain.diarydetil.dto.DiaryDetailResponseDto;
-import com.hanghae.sosohandiary.domain.diarydetil.entity.DiaryDetail;
-import com.hanghae.sosohandiary.domain.diarydetil.repository.DiaryDetailRepository;
+import com.hanghae.sosohandiary.domain.diarydetail.dto.DiaryDetailRequestDto;
+import com.hanghae.sosohandiary.domain.diarydetail.dto.DiaryDetailResponseDto;
+import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
+import com.hanghae.sosohandiary.domain.diarydetail.repository.DiaryDetailRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
 import com.hanghae.sosohandiary.exception.ErrorHandling;
