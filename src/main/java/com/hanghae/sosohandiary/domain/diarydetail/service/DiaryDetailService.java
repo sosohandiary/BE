@@ -45,13 +45,13 @@ public class DiaryDetailService {
     }
 
     public PageCustom<DiaryDetailResponseDto> findListDetail(Long id, Pageable pageable) {
-        int likes = 0;
-        int comment = 0;
+
+
         Diary diary = diaryRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
         Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByDiaryIdOrderByModifiedAtDesc(pageable, id).map(
-                (DiaryDetail diaryDetail) -> new DiaryDetailResponseDto(diaryDetail, diary,likes,comment)
+                (DiaryDetail diaryDetail) -> new DiaryDetailResponseDto(diaryDetail, diary, likesRepository.countByDiaryDetailId(diaryDetail.getId()), commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId()))
         );
 
         return new PageCustom<>(diaryDetailResponseDtoPage.getContent(), diaryDetailResponseDtoPage.getPageable(), diaryDetailResponseDtoPage.getTotalElements());
@@ -62,11 +62,11 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
-        DiaryDetail diaryDetail = diaryDetailRepository.findByDiaryIdAndId(diaryId,detailId).orElseThrow(
+        DiaryDetail diaryDetail = diaryDetailRepository.findByDiaryIdAndId(diaryId, detailId).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
-        return DiaryDetailResponseDto.from(diaryDetail, diary, likesRepository.countByDiaryDetailId(detailId),commentRepository.countCommentsByDiaryDetailId(detailId));
+        return DiaryDetailResponseDto.from(diaryDetail, diary, likesRepository.countByDiaryDetailId(detailId), commentRepository.countCommentsByDiaryDetailId(detailId));
     }
 
     @Transactional
