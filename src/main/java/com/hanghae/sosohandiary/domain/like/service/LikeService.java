@@ -1,5 +1,7 @@
 package com.hanghae.sosohandiary.domain.like.service;
 
+import com.hanghae.sosohandiary.domain.diary.entity.Diary;
+import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.diarydetail.repository.DiaryDetailRepository;
 import com.hanghae.sosohandiary.domain.like.entity.Likes;
@@ -18,9 +20,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LikeService {
     private final LikesRepository likesRepository;
+    private final DiaryRepository diaryRepository;
     private final DiaryDetailRepository diaryDetailRepository;
-    public MessageDto postLike(Long detailId, Member member) {
-        Optional<Likes> diaryDetailLike = likesRepository.findByDiaryDetailIdAndMemberId(detailId, member.getId());
+    public MessageDto postLike(Long diaryId, Long detailId, Member member) {
+        Optional<Likes> diaryDetailLike = likesRepository.findByDiaryIdAndDiaryDetailIdAndMemberId(diaryId,detailId, member.getId());
+
+        Diary diary = diaryRepository.findById(diaryId).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+        );
 
         DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
@@ -30,7 +37,7 @@ public class LikeService {
             likesRepository.delete(diaryDetailLike.get());
             return MessageDto.of("좋아요 취소완료",HttpStatus.OK);
         }
-        likesRepository.save(Likes.of(member,diaryDetail));
+        likesRepository.save(Likes.of(member,diary,diaryDetail));
         return MessageDto.of("좋아요 등록완료", HttpStatus.ACCEPTED);
     }
 }

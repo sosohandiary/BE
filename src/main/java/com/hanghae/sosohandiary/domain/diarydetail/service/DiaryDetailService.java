@@ -50,7 +50,7 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
         Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByOrderByModifiedAtDesc(pageable).map(
-                (DiaryDetail diaryDetail) -> DiaryDetailResponseDto.from(diaryDetail, diary,likesRepository.countByDiaryDetailId(diaryDetail.getId()),commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId()))
+                (DiaryDetail diaryDetail) -> DiaryDetailResponseDto.from(diaryDetail, diary,likesRepository.countByDiaryIdAndDiaryDetailId(diary.getId(),diaryDetail.getId()),commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId()))
         );
 
         return new PageCustom<>(diaryDetailResponseDtoPage.getContent(), diaryDetailResponseDtoPage.getPageable(), diaryDetailResponseDtoPage.getTotalElements());
@@ -65,7 +65,7 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
-        return DiaryDetailResponseDto.from(diaryDetail, diary, likesRepository.countByDiaryDetailId(detailId),commentRepository.countCommentsByDiaryDetailId(detailId));
+        return DiaryDetailResponseDto.from(diaryDetail, diary, likesRepository.countByDiaryIdAndDiaryDetailId(diaryId,detailId),commentRepository.countCommentsByDiaryDetailId(detailId));
     }
 
     @Transactional

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class LikeController {
     private final LikeService likeService;
-    @PostMapping("/detail/{detail-id}/like")
-    public MessageDto postLike(@PathVariable(name = "detail-id") Long detailId, @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+    @PostMapping("{diary-id}/detail/{detail-id}/like")
+    public MessageDto postLike(@PathVariable(name = "diary-id") Long diaryId,@PathVariable(name = "detail-id") Long detailId, @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
 
-        return likeService.postLike(detailId, memberDetails.getMember());
+        return likeService.postLike(diaryId, detailId, memberDetails.getMember());
     }
 
 }
