@@ -6,6 +6,8 @@ import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.entity.DiaryCondition;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diarydetail.repository.DiaryDetailRepository;
+import com.hanghae.sosohandiary.domain.invite.entity.Invite;
+import com.hanghae.sosohandiary.domain.invite.repository.InviteRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
 import com.hanghae.sosohandiary.exception.ErrorHandling;
@@ -31,6 +33,7 @@ public class DiaryService {
 
     private final DiaryDetailRepository diaryDetailRepository;
     private final DiaryRepository diaryRepository;
+    private final InviteRepository inviteRepository;
     private final S3Service s3Service;
 
     @Transactional
@@ -86,8 +89,8 @@ public class DiaryService {
                 diaryResponseDtoPagePublic.getTotalElements());
     }
 
-    public PageCustom<DiaryResponseDto> findPrivateDiaryList(Pageable pageable,
-                                                             Member member) {
+    public PageCustom<DiaryResponseDto> findPrivateDiaryList(Pageable pageable, Member member) {
+
         Page<DiaryResponseDto> diaryResponseDtoPagePrivate = diaryRepository
                 .findAllByMemberIdAndDiaryConditionOrderByModifiedAtDesc(pageable, member.getId(), DiaryCondition.PRIVATE)
                 .map((Diary diary) -> new DiaryResponseDto(diary, diary.getMember()));
@@ -95,6 +98,30 @@ public class DiaryService {
         return new PageCustom<>(diaryResponseDtoPagePrivate.getContent(),
                 diaryResponseDtoPagePrivate.getPageable(),
                 diaryResponseDtoPagePrivate.getTotalElements());
+    }
+
+    public PageCustom<DiaryResponseDto> findInvitedDiaryList(Pageable pageable, Member member) {
+
+        List<Invite> inviteList = inviteRepository.findAllByToMemberId(member.getId());
+
+        Page<DiaryResponseDto> diaryResponseDtoPage = null;
+
+        for (Invite invite : inviteList) {
+            diaryResponseDtoPage = diaryRepository
+                    .findAllByIdOrderByModifiedAtDesc(pageable, invite.getDiary().getId())
+                    .map((Diary diary) -> new DiaryResponseDto(diary, diary.getMember()));
+        }
+
+        try {
+            return new PageCustom<>(diaryResponseDtoPage.getContent(),
+                    diaryResponseDtoPage.getPageable(),
+                    diaryResponseDtoPage.getTotalElements());
+
+        } catch (NullPointerException e) {
+            e.getMessage();
+        }
+
+        return null;
     }
 
     @Transactional
