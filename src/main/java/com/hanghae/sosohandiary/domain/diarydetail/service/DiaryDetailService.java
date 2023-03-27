@@ -97,6 +97,12 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
+        if (commentRepository.countCommentsByDiaryDetailId(detailId) > 0) {
+            commentRepository.deleteAllByDiaryDetailId(detailId);
+        }
+        if (likesRepository.countByDiaryDetailId(detailId) > 0) {
+            likesRepository.deleteAllByDiaryDetailId(detailId);
+        }
         diaryDetailRepository.deleteById(detailId);
 
         return MessageDto.of("다이어리 삭제 완료", HttpStatus.OK);
