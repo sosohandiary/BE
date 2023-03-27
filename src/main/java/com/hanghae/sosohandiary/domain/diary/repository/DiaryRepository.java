@@ -18,5 +18,5 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
     Page<Diary> findAllByMemberIdAndDiaryConditionOrderByModifiedAtDesc(Pageable pageable, Long id, DiaryCondition condition);
     Page<Diary> findAllByOrderByModifiedAtDesc(Pageable pageable);
     Page<Diary> findAllByIdOrderByModifiedAtDesc(Pageable pageable, Long id);
-
+    void deleteAllByMemberId(Long id);
 }

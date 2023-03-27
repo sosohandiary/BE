@@ -5,6 +5,7 @@ import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diary.service.DiaryService;
 import com.hanghae.sosohandiary.domain.friend.entity.Friend;
+import com.hanghae.sosohandiary.domain.invite.repository.InviteRepository;
 import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
@@ -35,6 +36,7 @@ public class MypageService {
     private final DiaryService diaryService;
     private final DiaryRepository diaryRepository;
     private final FriendRepository friendsRepository;
+    private final InviteRepository inviteRepository;
 
     public MypageProfileResponseDto getProfile(Member member) {
 
@@ -76,6 +78,9 @@ public class MypageService {
         }
 
         memberRepository.deleteById(member.getId());
+        diaryRepository.deleteAllByMemberId(member.getId());
+        friendsRepository.deleteAllByFriendId(member.getId());
+        inviteRepository.deleteAllByToMemberId(member.getId());
 
         return MessageDto.of("회원 탈퇴 성공", HttpStatus.ACCEPTED);
     }
