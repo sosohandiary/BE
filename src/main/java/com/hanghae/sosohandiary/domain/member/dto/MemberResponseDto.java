@@ -8,14 +8,16 @@ import lombok.Getter;
 @Getter
 public class MemberResponseDto {
 
-    private final Long member_id;
+    private final Long memberId;
+    private final Long friendListId;
     private final String name;
     private final String nickname;
     private final String statusMessage;
 
     @Builder
-    public MemberResponseDto(Long id, String name, String nickname, String statusMessage) {
-        this.member_id = id;
+    public MemberResponseDto(Long id, Long friendListId, String name, String nickname, String statusMessage) {
+        this.memberId = id;
+        this.friendListId = friendListId;
         this.name = name;
         this.nickname = nickname;
         this.statusMessage = statusMessage;
@@ -31,6 +33,7 @@ public class MemberResponseDto {
     public static MemberResponseDto from(Friend friend) {
         return MemberResponseDto.builder()
                 .id(friend.getFriend().getId())
+                .friendListId(friend.getId())
                 .name(friend.getFriend().getName())
                 .nickname(friend.getFriend().getNickname())
                 .statusMessage(friend.getFriend().getStatusMessage())
