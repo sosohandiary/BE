@@ -19,7 +19,7 @@ public class Likes {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "diary_Id")
+    @JoinColumn(name = "diary_Detail_Id")
     private DiaryDetail diaryDetail;
 
     @Builder
