@@ -47,6 +47,12 @@ public class DiaryController {
         return diaryService.findPrivateDiaryList(pageable, memberDetails.getMember());
     }
 
+    @GetMapping("/invite")
+    public PageCustom<DiaryResponseDto> diaryinvitedList(@PageableDefault(size = 5) Pageable pageable,
+                                                         @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return diaryService.findInvitedDiaryList(pageable, memberDetails.getMember());
+    }
+
     @PatchMapping("/diary/{diary-id}")
     public DiaryResponseDto diaryModify(@PathVariable(name = "diary-id") Long id,
                                         @RequestPart(value = "title") DiaryRequestDto diaryRequestDto,
