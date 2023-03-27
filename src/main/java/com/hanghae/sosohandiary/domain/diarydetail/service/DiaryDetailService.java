@@ -1,11 +1,13 @@
 package com.hanghae.sosohandiary.domain.diarydetail.service;
 
+import com.hanghae.sosohandiary.domain.comment.repository.CommentRepository;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diarydetail.dto.DiaryDetailRequestDto;
 import com.hanghae.sosohandiary.domain.diarydetail.dto.DiaryDetailResponseDto;
 import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.diarydetail.repository.DiaryDetailRepository;
+import com.hanghae.sosohandiary.domain.like.repository.LikesRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
 import com.hanghae.sosohandiary.exception.ErrorHandling;
@@ -25,6 +27,8 @@ public class DiaryDetailService {
 
     private final DiaryDetailRepository diaryDetailRepository;
     private final DiaryRepository diaryRepository;
+    private final LikesRepository likesRepository;
+    private final CommentRepository commentRepository;
 
     @Transactional
     public DiaryDetailResponseDto saveDetail(Long id,
@@ -41,11 +45,12 @@ public class DiaryDetailService {
     }
 
     public PageCustom<DiaryDetailResponseDto> findListDetail(Long id, Pageable pageable) {
+        int likes = 0;
         Diary diary = diaryRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
         Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByOrderByModifiedAtDesc(pageable).map(
-                (DiaryDetail diaryDetail) -> new DiaryDetailResponseDto(diaryDetail, diary)
+                (DiaryDetail diaryDetail) -> DiaryDetailResponseDto.from(diaryDetail, diary,likesRepository.countByDiaryDetailId(diaryDetail.getId()),commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId()))
         );
 
         return new PageCustom<>(diaryDetailResponseDtoPage.getContent(), diaryDetailResponseDtoPage.getPageable(), diaryDetailResponseDtoPage.getTotalElements());
@@ -60,7 +65,7 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
-        return DiaryDetailResponseDto.from(diaryDetail, diary);
+        return DiaryDetailResponseDto.from(diaryDetail, diary, likesRepository.countByDiaryDetailId(detailId),commentRepository.countCommentsByDiaryDetailId(detailId));
     }
 
     @Transactional

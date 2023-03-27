@@ -8,5 +8,5 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByOrderByCreatedAtDesc();
 
-    long countCommentsById(Long id);
+    int countCommentsByDiaryDetailId(Long id);
 }

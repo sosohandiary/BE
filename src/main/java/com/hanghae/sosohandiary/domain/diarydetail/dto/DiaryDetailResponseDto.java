@@ -15,17 +15,21 @@ public class DiaryDetailResponseDto {
     private String content;
     private String customJson;
     private String diaryTitle;
+    private int likes;
+    private int comment;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime modifiedAt;
 
     @Builder
-    public DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary) {
+    public DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary,int likes, int comment) {
         id = diaryDetail.getId();
         content = diaryDetail.getContent();
         customJson = diaryDetail.getCustomJson();
         diaryTitle = diary.getTitle();
+        this.likes = likes;
+        this.comment=comment;
         createdAt = diaryDetail.getCreatedAt();
         modifiedAt = diaryDetail.getModifiedAt();
     }
@@ -41,6 +45,15 @@ public class DiaryDetailResponseDto {
     public static DiaryDetailResponseDto from(DiaryDetail diaryDetail) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
+                .build();
+    }
+
+    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Diary diary, int likes, int comment) {
+        return DiaryDetailResponseDto.builder()
+                .diaryDetail(diaryDetail)
+                .diary(diary)
+                .likes(likes)
+                .comment(comment)
                 .build();
     }
 
