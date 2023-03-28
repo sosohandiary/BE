@@ -42,7 +42,7 @@ public class DiaryController {
     }
 
     @GetMapping("/private")
-    public PageCustom<DiaryResponseDto> diaryPrivateList(@PageableDefault(size = 5) Pageable pageable,
+    public List<DiaryResponseDto> diaryPrivateList(@PageableDefault(size = 5) Pageable pageable,
                                                          @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return diaryService.findPrivateDiaryList(pageable, memberDetails.getMember());
     }
