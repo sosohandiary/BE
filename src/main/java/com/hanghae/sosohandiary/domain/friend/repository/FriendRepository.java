@@ -5,12 +5,15 @@ import com.hanghae.sosohandiary.domain.friend.entity.Friend;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
 
     Long countAllByMemberId(Long id);
 
     List<Friend> findAllByMemberId(Long id);
+
+    Optional<Friend> findByIdAndFriendId(Long id, Long friendId);
 
     void deleteByMemberIdAndFriendId(Long memberId, Long friendId);
 

@@ -65,7 +65,7 @@ public class FriendService {
     @Transactional
     public MessageDto acceptFriend(Long id, Member member) {
 
-        Friend friendAccept = friendRepository.findById(id).orElseThrow(
+        Friend friendAccept = friendRepository.findByIdAndFriendId(id, member.getId()).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_REQUEST)
         );
 
