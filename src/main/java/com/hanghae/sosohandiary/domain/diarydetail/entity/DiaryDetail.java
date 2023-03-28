@@ -2,6 +2,7 @@ package com.hanghae.sosohandiary.domain.diarydetail.entity;
 
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diarydetail.dto.DiaryDetailRequestDto;
+import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.utils.entity.Timestamp;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,15 +27,26 @@ public class DiaryDetail extends Timestamp {
     @Column(columnDefinition = "TEXT")
     private String customJson;
 
+    private String nickname;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "diary_id")
     private Diary diary;
 
     @Builder
-    private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary) {
+    private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary, Member member) {
         content = diaryDetailRequestDto.getContent();
         customJson = diaryDetailRequestDto.getCustomJson();
+        nickname = member.getNickname();
         this.diary = diary;
+    }
+
+    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary, Member member) {
+        return DiaryDetail.builder()
+                .diaryDetailRequestDto(diaryDetailRequestDto)
+                .member(member)
+                .diary(diary)
+                .build();
     }
 
     public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary) {

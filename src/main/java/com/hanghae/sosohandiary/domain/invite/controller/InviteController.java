@@ -1,11 +1,14 @@
 package com.hanghae.sosohandiary.domain.invite.controller;
 
+import com.hanghae.sosohandiary.domain.invite.dto.InviteResponseDto;
 import com.hanghae.sosohandiary.domain.invite.service.InviteService;
 import com.hanghae.sosohandiary.security.MemberDetailsImpl;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,4 +31,8 @@ public class InviteController {
         return inviteService.deny(inviteId);
     }
 
+    @GetMapping("/alarm")
+    public List<InviteResponseDto> alarmInvite(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return inviteService.alarmInvite(memberDetails.getMember());
+    }
 }

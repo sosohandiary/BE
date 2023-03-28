@@ -1,5 +1,6 @@
 package com.hanghae.sosohandiary.domain.comment.service;
 
+import com.hanghae.sosohandiary.domain.comment.dto.CommentAlarmResponseDto;
 import com.hanghae.sosohandiary.domain.comment.dto.CommentRequestDto;
 import com.hanghae.sosohandiary.domain.comment.dto.CommentResponseDto;
 import com.hanghae.sosohandiary.domain.comment.entity.Comment;
@@ -91,4 +92,21 @@ public class CommentService {
     }
 
 
+    public List<CommentAlarmResponseDto> alarmComment(Long detailId, Member member) {
+        DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
+                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
+        );
+
+        if (!diaryDetail.getNickname().equals(member.getNickname())) {
+            throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
+        }
+
+        List<Comment> commentList = commentRepository.findByDiaryDetailIdOrderByModifiedAtDesc(detailId);
+        List<CommentAlarmResponseDto> commentAlarmResponseDtoList = new ArrayList<>();
+        for (Comment comment : commentList) {
+            commentAlarmResponseDtoList.add(CommentAlarmResponseDto.of(diaryDetail, comment));
+        }
+
+        return commentAlarmResponseDtoList;
+    }
 }

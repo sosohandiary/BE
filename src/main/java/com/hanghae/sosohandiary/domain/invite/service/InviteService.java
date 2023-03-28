@@ -4,6 +4,7 @@ import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.friend.entity.Friend;
 import com.hanghae.sosohandiary.domain.friend.repository.FriendRepository;
+import com.hanghae.sosohandiary.domain.invite.dto.InviteResponseDto;
 import com.hanghae.sosohandiary.domain.invite.entity.Invite;
 import com.hanghae.sosohandiary.domain.invite.repository.InviteRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.hanghae.sosohandiary.exception.ErrorHandling.*;
@@ -69,5 +71,18 @@ public class InviteService {
         inviteRepository.delete(deleteInvite);
 
         return new MessageDto("공유 다이어리 초대 취소 하였습니다.", HttpStatus.ACCEPTED);
+    }
+
+    public List<InviteResponseDto> alarmInvite(Member member) {
+
+        List<Invite> inviteList = inviteRepository.findAllByToMemberId(member.getId());
+        List<InviteResponseDto> inviteResponseDtoList = new ArrayList<>();
+        for (Invite invite : inviteList) {
+            if (invite.getToMember().getId().equals(member.getId())) {
+                inviteResponseDtoList.add(InviteResponseDto.from(invite, invite.getFromMember()));
+            }
+        }
+
+        return inviteResponseDtoList;
     }
 }

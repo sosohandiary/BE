@@ -24,6 +24,7 @@ public class Comment extends Timestamp {
     @JoinColumn(name = "diarydetail_id")
     private DiaryDetail diaryDetail;
 
+    private String nickname;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
@@ -35,6 +36,7 @@ public class Comment extends Timestamp {
     @Builder
     private Comment(DiaryDetail diaryDetail, Member member, CommentRequestDto commentRequestDto) {
         this.diaryDetail = diaryDetail;
+        nickname = member.getNickname();
         this.comment = commentRequestDto.getComment();
         this.member = member;
     }

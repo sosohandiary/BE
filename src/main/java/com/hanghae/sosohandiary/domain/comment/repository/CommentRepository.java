@@ -8,8 +8,9 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findAllByOrderByCreatedAtDesc();
 
-    int countCommentsByDiaryDetailId(Long id);
+    List<Comment> findByDiaryDetailIdOrderByModifiedAtDesc(Long id);
 
+    int countCommentsByDiaryDetailId(Long id);
 
     void deleteAllByDiaryDetailId(Long detailId);
 }
