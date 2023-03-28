@@ -8,6 +8,8 @@ import java.util.List;
 public interface InviteRepository extends JpaRepository<Invite, Long> {
 
     Long countByDiaryId(Long diaryId);
+
     List<Invite> findAllByToMemberId(Long id);
+
     void deleteAllByToMemberId(Long id);
 }
