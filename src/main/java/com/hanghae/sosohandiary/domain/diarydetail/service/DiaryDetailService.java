@@ -39,9 +39,9 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
-        DiaryDetail diaryDetail = diaryDetailRepository.save(DiaryDetail.of(diaryDetailRequestDto, diary));
+        DiaryDetail diaryDetail = diaryDetailRepository.save(DiaryDetail.of(diaryDetailRequestDto, diary, member));
 
-        return DiaryDetailResponseDto.from(diaryDetail, diary);
+        return DiaryDetailResponseDto.from(diaryDetail, diary, member);
     }
 
     public PageCustom<DiaryDetailResponseDto> findListDetail(Long id, Pageable pageable) {
@@ -51,7 +51,7 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
         Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByDiaryIdOrderByModifiedAtDesc(pageable, id).map(
-                (DiaryDetail diaryDetail) -> new DiaryDetailResponseDto(diaryDetail, diary, likesRepository.countByDiaryDetailId(diaryDetail.getId()), commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId()))
+                (DiaryDetail diaryDetail) -> DiaryDetailResponseDto.from(diaryDetail, diary, likesRepository.countByDiaryDetailId(diaryDetail.getId()), commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId()))
         );
 
         return new PageCustom<>(diaryDetailResponseDtoPage.getContent(), diaryDetailResponseDtoPage.getPageable(), diaryDetailResponseDtoPage.getTotalElements());
