@@ -89,15 +89,16 @@ public class DiaryService {
                 diaryResponseDtoPagePublic.getTotalElements());
     }
 
-    public PageCustom<DiaryResponseDto> findPrivateDiaryList(Pageable pageable, Member member) {
+    public List<DiaryResponseDto> findPrivateDiaryList(Pageable pageable, Member member) {
 
-        Page<DiaryResponseDto> diaryResponseDtoPagePrivate = diaryRepository
-                .findAllByMemberIdAndDiaryConditionOrderByModifiedAtDesc(pageable, member.getId(), DiaryCondition.PRIVATE)
-                .map((Diary diary) -> new DiaryResponseDto(diary, diary.getMember()));
+        List<Diary> diaryList = diaryRepository
+                .findAllByMemberIdAndDiaryConditionOrderByModifiedAtDesc(pageable, member.getId(), DiaryCondition.PRIVATE);
+        List<DiaryResponseDto> diaryResponseDtoList = new ArrayList<>();
 
-        return new PageCustom<>(diaryResponseDtoPagePrivate.getContent(),
-                diaryResponseDtoPagePrivate.getPageable(),
-                diaryResponseDtoPagePrivate.getTotalElements());
+        for (Diary diary : diaryList) {
+            diaryResponseDtoList.add(DiaryResponseDto.from(diary, diary.getMember()));
+        }
+        return diaryResponseDtoList;
     }
 
     public PageCustom<DiaryResponseDto> findInvitedDiaryList(Pageable pageable, Member member) {
