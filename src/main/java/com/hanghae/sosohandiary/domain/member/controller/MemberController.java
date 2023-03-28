@@ -6,8 +6,10 @@ import com.hanghae.sosohandiary.domain.member.dto.LoginRequestDto;
 import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
 import com.hanghae.sosohandiary.domain.member.service.KakaoMemberService;
 import com.hanghae.sosohandiary.domain.member.service.MemberService;
+import com.hanghae.sosohandiary.security.MemberDetailsImpl;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,8 +44,8 @@ public class MemberController {
 
     @ResponseBody
     @GetMapping("/search")
-    public List<MemberResponseDto> searchMember(@RequestParam(value = "name") String name) {
-        return memberService.getMembers(name);
+    public List<MemberResponseDto> searchMember(@RequestParam(value = "name") String name, @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return memberService.getMembersWithFriendStatus(name,memberDetails.getMember().getId());
     }
 
 }

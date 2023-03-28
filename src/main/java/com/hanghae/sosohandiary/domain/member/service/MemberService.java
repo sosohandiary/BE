@@ -2,6 +2,9 @@ package com.hanghae.sosohandiary.domain.member.service;
 
 
 import com.hanghae.sosohandiary.auth.JwtUtil;
+import com.hanghae.sosohandiary.domain.friend.entity.Enum.StatusFriend;
+import com.hanghae.sosohandiary.domain.friend.entity.Friend;
+import com.hanghae.sosohandiary.domain.friend.repository.FriendRepository;
 import com.hanghae.sosohandiary.domain.member.dto.JoinRequestDto;
 import com.hanghae.sosohandiary.domain.member.dto.LoginRequestDto;
 import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
@@ -32,6 +35,7 @@ public class MemberService {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private static final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
+    private final FriendRepository friendRepository;
 
     @Transactional
     public MessageDto join(JoinRequestDto joinRequestDto) {
@@ -85,18 +89,61 @@ public class MemberService {
         return MessageDto.ofLogin("로그인 성공", HttpStatus.ACCEPTED, member.get());
     }
 
-    @Transactional
-    public List<MemberResponseDto> getMembers(String name) {
+//    @Transactional
+//    public List<MemberResponseDto> getMembers(String name) {
+//
+//        List<Member> memberList = memberRepository.findByNameContaining(name);
+//
+//        List<MemberResponseDto> responseDtoList = new ArrayList<>();
+//
+//        for(Member member : memberList) {
+//            responseDtoList.add(MemberResponseDto.from(member));
+//        }
+//
+//        return responseDtoList;
+//    }
 
+    @Transactional
+    public List<MemberResponseDto> getMembersWithFriendStatus(String name, Long memberId) {
         List<Member> memberList = memberRepository.findByNameContaining(name);
 
         List<MemberResponseDto> responseDtoList = new ArrayList<>();
 
-        for(Member member : memberList) {
-            responseDtoList.add(MemberResponseDto.from(member));
+        for (Member member : memberList) {
+            List<Friend> friendList = friendRepository.findByMemberIdAndStatusOrderByFriendNicknameAsc(member.getId(), StatusFriend.ACCEPTED);
+            boolean isFriend = friendList.stream().anyMatch(friend -> friend.getFriend().getId().equals(memberId));
+            boolean isPending = friendRepository.existsByFriend_IdAndMember_Id(memberId, member.getId()) || friendRepository.existsByFriend_IdAndMember_Id(member.getId(), memberId);
+
+            if (isFriend) {
+                responseDtoList.add(MemberResponseDto.builder()
+                        .id(member.getId())
+                        .name(member.getName())
+                        .nickname(member.getNickname())
+                        .statusMessage(member.getStatusMessage())
+                        .friendStatus(StatusFriend.ACCEPTED)
+                        .build());
+            } else if (isPending) {
+                responseDtoList.add(MemberResponseDto.builder()
+                        .id(member.getId())
+                        .name(member.getName())
+                        .nickname(member.getNickname())
+                        .statusMessage(member.getStatusMessage())
+                        .friendStatus(StatusFriend.PENDING)
+                        .build());
+            } else {
+                responseDtoList.add(MemberResponseDto.builder()
+                        .id(member.getId())
+                        .name(member.getName())
+                        .nickname(member.getNickname())
+                        .statusMessage(member.getStatusMessage())
+                        .friendStatus(null)
+                        .build());
+            }
         }
 
         return responseDtoList;
     }
+
+
 
 }
