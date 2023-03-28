@@ -44,7 +44,7 @@ public class CommentService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
         );
 
-        List<Comment> commentList = commentRepository.findAllByOrderByCreatedAtDesc();
+        List<Comment> commentList = commentRepository.findAllByDiaryDetailIdOrderByCreatedAtDesc(diaryDetail.getId());
         List<CommentResponseDto> commentResponseList = new ArrayList<>();
 
         for (Comment comment : commentList) {
