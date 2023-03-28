@@ -1,5 +1,6 @@
 package com.hanghae.sosohandiary.domain.comment.controller;
 
+import com.hanghae.sosohandiary.domain.comment.dto.CommentAlarmResponseDto;
 import com.hanghae.sosohandiary.domain.comment.dto.CommentRequestDto;
 import com.hanghae.sosohandiary.domain.comment.dto.CommentResponseDto;
 import com.hanghae.sosohandiary.domain.comment.service.CommentService;
@@ -17,15 +18,15 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/detail/{detail-id}/comment")
-    public CommentResponseDto createComment(@PathVariable(name = "detail-id")Long id,
-                                 @RequestBody CommentRequestDto requestDto,
-                                 @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+    public CommentResponseDto createComment(@PathVariable(name = "detail-id") Long id,
+                                            @RequestBody CommentRequestDto requestDto,
+                                            @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return commentService.createComment(id, requestDto, memberDetails.getMember());
     }
 
     @GetMapping("/detail/{detail-id}/comments")
-    public List<CommentResponseDto> getComment(@PathVariable(name = "detail-id")Long id,
-                                               @AuthenticationPrincipal MemberDetailsImpl memberDetails){
+    public List<CommentResponseDto> getComment(@PathVariable(name = "detail-id") Long id,
+                                               @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return commentService.getComment(id, memberDetails.getMember());
     }
 
@@ -44,5 +45,10 @@ public class CommentController {
         return commentService.deleteComment(detailId, commentId, memberDetails.getMember());
     }
 
+    @GetMapping("/detail/{detail-id}/comment")
+    public List<CommentAlarmResponseDto> alarmComment(@PathVariable("detail-id") Long detailId,
+                                                      @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return commentService.alarmComment(detailId, memberDetails.getMember());
+    }
 
 }
