@@ -3,7 +3,6 @@ package com.hanghae.sosohandiary.domain.diarydetail.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
-import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -25,22 +24,22 @@ public class DiaryDetailResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    public DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, Member member, int likes, int comment) {
+    public DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, String nickname, int likes, int comment) {
         id = diaryDetail.getId();
         content = diaryDetail.getContent();
         customJson = diaryDetail.getCustomJson();
         diaryTitle = diary.getTitle();
-        nickname = member.getNickname();
+        this.nickname = nickname;
         this.likes = likes;
         this.comment = comment;
         createdAt = diaryDetail.getCreatedAt();
         modifiedAt = diaryDetail.getModifiedAt();
     }
 
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Diary diary, Member member) {
+    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Diary diary, String nickname) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
-                .member(member)
+                .nickname(nickname)
                 .diary(diary)
                 .build();
     }
@@ -59,10 +58,11 @@ public class DiaryDetailResponseDto {
                 .build();
     }
 
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Diary diary, int likes, int comment) {
+    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Diary diary, String nickname, int likes, int comment) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
                 .diary(diary)
+                .nickname(nickname)
                 .likes(likes)
                 .comment(comment)
                 .build();

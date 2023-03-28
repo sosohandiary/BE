@@ -41,7 +41,7 @@ public class DiaryDetailService {
 
         DiaryDetail diaryDetail = diaryDetailRepository.save(DiaryDetail.of(diaryDetailRequestDto, diary, member));
 
-        return DiaryDetailResponseDto.from(diaryDetail, diary, member);
+        return DiaryDetailResponseDto.from(diaryDetail, diary, member.getNickname());
     }
 
     public PageCustom<DiaryDetailResponseDto> findListDetail(Long id, Pageable pageable) {
@@ -50,8 +50,10 @@ public class DiaryDetailService {
         Diary diary = diaryRepository.findById(id).orElseThrow(
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
-        Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByDiaryIdOrderByModifiedAtDesc(pageable, id).map(
-                (DiaryDetail diaryDetail) -> DiaryDetailResponseDto.from(diaryDetail, diary, likesRepository.countByDiaryDetailId(diaryDetail.getId()), commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId()))
+        Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByDiaryIdOrderByModifiedAtDesc(pageable, id)
+                        .map((DiaryDetail diaryDetail) -> DiaryDetailResponseDto
+                                .from(diaryDetail, diary, diaryDetail.getNickname(), likesRepository.countByDiaryDetailId(diaryDetail.getId()),
+                                        commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId()))
         );
 
         return new PageCustom<>(diaryDetailResponseDtoPage.getContent(), diaryDetailResponseDtoPage.getPageable(), diaryDetailResponseDtoPage.getTotalElements());
@@ -66,7 +68,9 @@ public class DiaryDetailService {
                 () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
         );
 
-        return DiaryDetailResponseDto.from(diaryDetail, diary, likesRepository.countByDiaryDetailId(detailId), commentRepository.countCommentsByDiaryDetailId(detailId));
+        return DiaryDetailResponseDto
+                .from(diaryDetail, diary, diaryDetail.getNickname(),
+                        likesRepository.countByDiaryDetailId(detailId), commentRepository.countCommentsByDiaryDetailId(detailId));
     }
 
     @Transactional
