@@ -50,7 +50,7 @@ public class DiaryDetailService {
         Diary diary = diaryRepository.findById(id).orElseThrow(
                 () -> new ApiException(NOT_FOUND_DIARY)
         );
-        Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByDiaryIdOrderByModifiedAtDesc(pageable, id)
+        Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByDiaryIdOrderByCreatedAtAsc(pageable, id)
                 .map((DiaryDetail diaryDetail) -> DiaryDetailResponseDto
                         .of(diaryDetail, diary, likesRepository
                                 .countByDiaryDetailId(diaryDetail.getId()), commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId()))

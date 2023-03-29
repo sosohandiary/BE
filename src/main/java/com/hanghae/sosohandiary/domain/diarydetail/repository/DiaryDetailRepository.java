@@ -11,7 +11,7 @@ public interface DiaryDetailRepository extends JpaRepository<DiaryDetail, Long> 
 
     void deleteAllByDiaryId(Long id);
 
-    Page<DiaryDetail> findAllByDiaryIdOrderByModifiedAtDesc(Pageable pageable, Long id);
-
     Optional<DiaryDetail> findByDiaryIdAndId(Long diaryId, Long id);
+
+    Page<DiaryDetail> findAllByDiaryIdOrderByCreatedAtAsc(Pageable pageable, Long id);
 }

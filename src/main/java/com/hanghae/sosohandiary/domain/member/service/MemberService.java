@@ -41,13 +41,13 @@ public class MemberService {
 
         String password = passwordEncoder.encode(joinRequestDto.getPassword());
 
-        memberRepository.findByEmail(joinRequestDto.getEmail()).orElseThrow(
-                () -> new ApiException(DUPLICATED_EMAIL)
-        );
+        if (memberRepository.existsByEmail(joinRequestDto.getEmail())) {
+            throw new ApiException(DUPLICATED_EMAIL);
+        }
 
-        memberRepository.findByNickname(joinRequestDto.getNickname()).orElseThrow(
-                () -> new ApiException(DUPLICATED_NICKNAME)
-        );
+        if (memberRepository.existsByNickname(joinRequestDto.getNickname())) {
+            throw new ApiException(DUPLICATED_NICKNAME);
+        }
 
         MemberRoleEnum role = MemberRoleEnum.MEMBER;
         if (joinRequestDto.isAdmin()) {

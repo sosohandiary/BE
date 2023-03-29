@@ -8,11 +8,13 @@ import java.util.Optional;
 
 public interface LikesRepository extends JpaRepository<Likes, Long> {
 
-    Optional<Likes> findByDiaryDetailIdAndMemberId(Long detailId, Long id);
+    Likes findByDiaryDetailIdAndMemberId(Long detailId, Long id);
 
     int countByDiaryDetailId(Long id);
 
     void deleteAllByDiaryDetailId(Long detailId);
 
     List<Likes> findAllByDiaryDetailId(Long detailId);
+
+    boolean existsByDiaryDetailIdAndMemberId(Long detailId, Long id);
 }

@@ -30,16 +30,12 @@ public class LikeService {
     @Transactional
     public MessageDto postLike(Long detailId, Member member) {
 
-        Likes diaryDetailLike = likesRepository.findByDiaryDetailIdAndMemberId(detailId, member.getId()).orElseThrow(
-                () -> new ApiException(INVALID_ACCESS)
-        );
-
         DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
                 () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
         );
 
-        if (diaryDetailLike.getMember().getId().equals(member.getId())) {
-            likesRepository.delete(diaryDetailLike);
+        if (likesRepository.existsByDiaryDetailIdAndMemberId(detailId, member.getId())) {
+            likesRepository.delete(likesRepository.findByDiaryDetailIdAndMemberId(detailId, member.getId()));
             return MessageDto.of("좋아요 취소 완료", OK);
         }
 
