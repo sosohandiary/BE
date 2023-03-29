@@ -25,6 +25,7 @@ public class MemberDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
+
         MemberRoleEnum role = member.getRole();
         String authority = role.getAuthority();
 

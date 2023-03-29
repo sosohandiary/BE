@@ -1,12 +1,12 @@
 package com.hanghae.sosohandiary.utils.page;
 
-import java.util.List;
+import lombok.Getter;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.SliceImpl;
-import lombok.Getter;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Getter
 public class PageCustom<T> implements Serializable {

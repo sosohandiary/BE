@@ -3,22 +3,24 @@ package com.hanghae.sosohandiary.domain.diary.entity;
 import com.hanghae.sosohandiary.domain.diary.dto.DiaryRequestDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.utils.entity.Timestamp;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class Diary extends Timestamp {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(length = 30, nullable = false)
@@ -31,11 +33,8 @@ public class Diary extends Timestamp {
     private Member member;
 
     @Column(length = 10, nullable = false)
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(value = STRING)
     private DiaryCondition diaryCondition;
-
-//    @OneToMany(mappedBy = "diary", cascade = CascadeType.ALL)
-//    private List<Invite> inviteDiaryList = new ArrayList<>();
 
     @Builder
     private Diary(DiaryRequestDto diaryRequestDto, String uploadPath, Member member) {

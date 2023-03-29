@@ -17,15 +17,13 @@ public class InviteController {
 
     private final InviteService inviteService;
 
-    // 공유 다이어리 초대
     @PostMapping("/{diary-id}/{to-member-id}")
-    public MessageDto invite(@PathVariable(name = "diary-id") Long diaryId,
+    public MessageDto invite(@PathVariable("diary-id") Long diaryId,
                              @AuthenticationPrincipal MemberDetailsImpl memberDetails,
-                             @PathVariable(name = "to-member-id") Long toMemberId) {
+                             @PathVariable("to-member-id") Long toMemberId) {
         return inviteService.invite(diaryId, memberDetails.getMember(), toMemberId);
     }
 
-    // 공유 다이어리 초대 거절
     @DeleteMapping("/{invite-id}")
     public MessageDto deny(@PathVariable("invite-id") Long inviteId) {
         return inviteService.deny(inviteId);

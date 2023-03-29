@@ -19,14 +19,14 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/")
 public class MemberController {
 
     private final KakaoMemberService kakaoMemberService;
     private final MemberService memberService;
 
     @GetMapping("/login/kakao")
-    public MessageDto LoginKakao(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+    public MessageDto loginKakao(@RequestParam String code,
+                                 HttpServletResponse response) throws JsonProcessingException {
         return kakaoMemberService.loginKakao(code, response);
     }
 
@@ -38,14 +38,16 @@ public class MemberController {
 
     @ResponseBody
     @PostMapping("/login")
-    public MessageDto login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public MessageDto login(@RequestBody LoginRequestDto loginRequestDto,
+                            HttpServletResponse response) {
         return memberService.login(loginRequestDto, response);
     }
 
     @ResponseBody
     @GetMapping("/search")
-    public List<MemberResponseDto> searchMember(@RequestParam(value = "name") String name, @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
-        return memberService.getMembersWithFriendStatus(name,memberDetails.getMember().getId());
+    public List<MemberResponseDto> searchMember(@RequestParam("name") String name,
+                                                @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return memberService.getMembersWithFriendStatus(name, memberDetails.getMember());
     }
 
 }

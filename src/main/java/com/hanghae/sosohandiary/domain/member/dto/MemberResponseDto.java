@@ -1,9 +1,7 @@
 package com.hanghae.sosohandiary.domain.member.dto;
 
-import com.hanghae.sosohandiary.domain.friend.entity.Enum.StatusFriend;
 import com.hanghae.sosohandiary.domain.friend.entity.Friend;
-import com.hanghae.sosohandiary.domain.member.entity.Member;
-import jdk.jshell.Snippet;
+import com.hanghae.sosohandiary.domain.friend.entity.StatusFriend;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -27,13 +25,6 @@ public class MemberResponseDto {
         this.friendStatus = friendStatus;
     }
 
-    public static MemberResponseDto from(Member member) {
-        return MemberResponseDto.builder()
-                .id(member.getId())
-                .name(member.getName())
-                .build();
-    }
-
     public static MemberResponseDto from(Friend friend) {
         return MemberResponseDto.builder()
                 .id(friend.getFriend().getId())
@@ -44,17 +35,5 @@ public class MemberResponseDto {
                 .friendStatus(friend.getStatus())
                 .build();
     }
-
-    public static MemberResponseDto from(Member member, StatusFriend friendStatus) {
-        return MemberResponseDto.builder()
-                .id(member.getId())
-                .name(member.getName())
-                .nickname(member.getNickname())
-                .statusMessage(member.getStatusMessage())
-                .friendStatus(friendStatus)
-                .build();
-    }
-
-
 
 }

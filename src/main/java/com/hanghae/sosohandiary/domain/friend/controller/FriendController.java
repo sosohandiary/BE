@@ -14,6 +14,7 @@ import java.util.List;
 @RequestMapping("/friend")
 @RequiredArgsConstructor
 public class FriendController {
+
     private final FriendService friendsListService;
 
     @PostMapping("/request/{member-id}")
@@ -29,7 +30,7 @@ public class FriendController {
 
     @PutMapping("/request/accept/{friendrequest-id}")
     public MessageDto acceptFriend(@PathVariable(value = "friendrequest-id") Long id,
-                                         @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+                                   @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return friendsListService.acceptFriend(id, memberDetails.getMember());
     }
 
@@ -38,8 +39,8 @@ public class FriendController {
         return friendsListService.getFriendList(memberDetails.getMember());
     }
 
-    @DeleteMapping("/list/{friendlist-id}")
-    public MessageDto deleteFriendList(@PathVariable(name = "friendlist-id") Long id,
+    @DeleteMapping("/list/{friend-id}")
+    public MessageDto deleteFriendList(@PathVariable("friend-id") Long id,
                                        @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return friendsListService.deleteFriendList(id, memberDetails.getMember());
     }

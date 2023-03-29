@@ -15,7 +15,7 @@ public class DiaryResponseDto {
     private Long id;
     private String img;
     private String title;
-    private String name;
+    private String nickname;
     private DiaryCondition diaryCondition;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
@@ -25,15 +25,15 @@ public class DiaryResponseDto {
     @Builder
     public DiaryResponseDto(Diary diary, Member member) {
         id = diary.getId();
-        this.img = diary.getImg();
+        img = diary.getImg();
         title = diary.getTitle();
-        name = member.getName();
+        nickname = member.getNickname();
         diaryCondition = diary.getDiaryCondition();
         createdAt = diary.getCreatedAt();
         modifiedAt = diary.getModifiedAt();
     }
 
-    public static DiaryResponseDto from(Diary diary, Member member) {
+    public static DiaryResponseDto of(Diary diary, Member member) {
         return DiaryResponseDto.builder()
                 .diary(diary)
                 .member(member)

@@ -36,7 +36,7 @@ public class Comment extends Timestamp {
     @Builder
     private Comment(DiaryDetail diaryDetail, Member member, CommentRequestDto commentRequestDto) {
         this.diaryDetail = diaryDetail;
-        nickname = member.getNickname();
+        this.nickname = member.getNickname();
         this.comment = commentRequestDto.getComment();
         this.member = member;
     }
@@ -49,8 +49,8 @@ public class Comment extends Timestamp {
                 .build();
     }
 
-    public void update(String commentRequestDto){
-        this.comment=commentRequestDto;
+    public void update(String commentRequestDto) {
+        this.comment = commentRequestDto;
     }
 
 }

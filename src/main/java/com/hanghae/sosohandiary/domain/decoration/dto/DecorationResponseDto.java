@@ -1,6 +1,5 @@
 package com.hanghae.sosohandiary.domain.decoration.dto;
 
-import com.hanghae.sosohandiary.domain.friend.dto.FriendResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,7 +7,6 @@ import lombok.Getter;
 public class DecorationResponseDto {
 
     private Long id;
-
     private String imageURL;
 
     @Builder
@@ -17,7 +15,7 @@ public class DecorationResponseDto {
         this.imageURL = imageURL;
     }
 
-    public static DecorationResponseDto from(Long id, String imageURL) {
+    public static DecorationResponseDto of(Long id, String imageURL) {
         return DecorationResponseDto.builder()
                 .id(id)
                 .imageURL(imageURL)

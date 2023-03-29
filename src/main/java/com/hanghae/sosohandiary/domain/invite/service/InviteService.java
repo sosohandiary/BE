@@ -10,6 +10,7 @@ import com.hanghae.sosohandiary.domain.invite.repository.InviteRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
 import com.hanghae.sosohandiary.exception.ApiException;
+import com.hanghae.sosohandiary.exception.ErrorHandling;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -47,30 +48,31 @@ public class InviteService {
 
         Long countInvite = inviteRepository.countByDiaryId(diaryId);
 
-        for (Friend friendList : toFriend) {
+        for (Friend friend : toFriend) {
             if (countInvite >= 8) {
-                throw new IllegalArgumentException("초대할 인원이 다 찼습니다.");
+                throw new ApiException(ErrorHandling.OVER_THE_LIMIT);
             }
 
-            if (friendList.getFriend().getId().equals(toMemberId)) {
+            if (friend.getFriend().getId().equals(toMemberId)) {
                 Invite invite = Invite.of(fromMember, toMember, diary);
                 inviteRepository.save(invite);
             }
 
         }
 
-        return new MessageDto("공유 다이어리 초대 전송 완료", HttpStatus.OK);
+        return MessageDto.of("공유 다이어리 초대 전송 완료", HttpStatus.OK);
     }
 
     @Transactional
     public MessageDto deny(Long inviteId) {
+
         Invite deleteInvite = inviteRepository.findById(inviteId).orElseThrow(
                 () -> new ApiException(NOT_FOUND_INVITE)
         );
 
         inviteRepository.delete(deleteInvite);
 
-        return new MessageDto("공유 다이어리 초대 취소 하였습니다.", HttpStatus.ACCEPTED);
+        return MessageDto.of("공유 다이어리 초대 취소 하였습니다.", HttpStatus.ACCEPTED);
     }
 
     public List<InviteResponseDto> alarmInvite(Member member) {
@@ -79,7 +81,7 @@ public class InviteService {
         List<InviteResponseDto> inviteResponseDtoList = new ArrayList<>();
         for (Invite invite : inviteList) {
             if (invite.getToMember().getId().equals(member.getId())) {
-                inviteResponseDtoList.add(InviteResponseDto.from(invite, invite.getFromMember()));
+                inviteResponseDtoList.add(InviteResponseDto.of(invite, invite.getFromMember()));
             }
         }
 

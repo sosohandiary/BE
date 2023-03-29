@@ -40,6 +40,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     public void setAuthentication(String username) {
+
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         Authentication authentication = jwtUtil.createAuthentication(username);
         context.setAuthentication(authentication);
@@ -48,6 +49,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     public void jwtExceptionHandler(HttpServletResponse response, String msg, HttpStatus statusCode) {
+
         response.setStatus(statusCode.value());
         response.setContentType("application/json");
         try {

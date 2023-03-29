@@ -13,39 +13,40 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/detail/{detail-id}")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
 
-    @PostMapping("/detail/{detail-id}/comment")
-    public CommentResponseDto createComment(@PathVariable(name = "detail-id") Long id,
+    @PostMapping("/comment")
+    public CommentResponseDto createComment(@PathVariable("detail-id") Long id,
                                             @RequestBody CommentRequestDto requestDto,
                                             @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return commentService.createComment(id, requestDto, memberDetails.getMember());
     }
 
-    @GetMapping("/detail/{detail-id}/comments")
-    public List<CommentResponseDto> getComment(@PathVariable(name = "detail-id") Long id,
+    @GetMapping("/comments")
+    public List<CommentResponseDto> getComment(@PathVariable("detail-id") Long id,
                                                @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return commentService.getComment(id, memberDetails.getMember());
     }
 
-    @PatchMapping("/detail/{detail-id}/comment/{comment-id}")
-    public CommentResponseDto updateComment(@PathVariable(name = "detail-id") Long detailId,
-                                            @PathVariable(name = "comment-id") Long commentId,
+    @PatchMapping("/comment/{comment-id}")
+    public CommentResponseDto updateComment(@PathVariable("detail-id") Long detailId,
+                                            @PathVariable("comment-id") Long commentId,
                                             @RequestBody CommentRequestDto requestDto,
                                             @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return commentService.updateComment(detailId, commentId, requestDto, memberDetails.getMember());
     }
 
-    @DeleteMapping("/detail/{detail-id}/comment/{comment-id}")
-    public MessageDto deleteComment(@PathVariable(name = "detail-id") Long detailId,
-                                    @PathVariable(name = "comment-id") Long commentId,
+    @DeleteMapping("/comment/{comment-id}")
+    public MessageDto deleteComment(@PathVariable("detail-id") Long detailId,
+                                    @PathVariable("comment-id") Long commentId,
                                     @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return commentService.deleteComment(detailId, commentId, memberDetails.getMember());
     }
 
-    @GetMapping("/detail/{detail-id}/comment")
+    @GetMapping("/comment")
     public List<CommentAlarmResponseDto> alarmComment(@PathVariable("detail-id") Long detailId,
                                                       @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return commentService.alarmComment(detailId, memberDetails.getMember());

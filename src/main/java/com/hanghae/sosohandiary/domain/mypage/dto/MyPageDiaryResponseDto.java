@@ -4,17 +4,17 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MypageDiaryResponseDto {
+public class MyPageDiaryResponseDto {
 
     private final Long myDiaryCount;
 
     @Builder
-    public MypageDiaryResponseDto(Long myDiaryCount) {
+    public MyPageDiaryResponseDto(Long myDiaryCount) {
         this.myDiaryCount = myDiaryCount;
     }
 
-    public static MypageDiaryResponseDto from(Long myDiaryCount) {
-        return MypageDiaryResponseDto.builder()
+    public static MyPageDiaryResponseDto from(Long myDiaryCount) {
+        return MyPageDiaryResponseDto.builder()
                 .myDiaryCount(myDiaryCount)
                 .build();
     }

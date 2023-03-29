@@ -2,11 +2,11 @@ package com.hanghae.sosohandiary.domain.mypage.controller;
 
 import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
-import com.hanghae.sosohandiary.domain.mypage.dto.MypageDiaryResponseDto;
-import com.hanghae.sosohandiary.domain.mypage.dto.MypageFriendResponseDto;
-import com.hanghae.sosohandiary.domain.mypage.dto.MypageProfileResponseDto;
+import com.hanghae.sosohandiary.domain.mypage.dto.MyPageDiaryResponseDto;
+import com.hanghae.sosohandiary.domain.mypage.dto.MyPageFriendResponseDto;
+import com.hanghae.sosohandiary.domain.mypage.dto.MyPageProfileResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.ProfileEditRequestDto;
-import com.hanghae.sosohandiary.domain.mypage.service.MypageService;
+import com.hanghae.sosohandiary.domain.mypage.service.MyPageService;
 import com.hanghae.sosohandiary.security.MemberDetailsImpl;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
@@ -18,17 +18,17 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/mypage")
-public class MypageController {
+public class MyPageController {
 
-    private final MypageService mypageService;
+    private final MyPageService mypageService;
 
     @GetMapping("/profile")
-    public MypageProfileResponseDto getMypageProfile(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+    public MyPageProfileResponseDto getMyPageProfile(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return mypageService.getProfile(memberDetails.getMember());
     }
 
     @PatchMapping("/profile/edit")
-    public MessageDto editMypageProfile(@AuthenticationPrincipal MemberDetailsImpl memberDetails,
+    public MessageDto editMyPageProfile(@AuthenticationPrincipal MemberDetailsImpl memberDetails,
                                         @RequestBody ProfileEditRequestDto profileEditRequestDto) {
         return mypageService.editProfile(memberDetails.getMember(), profileEditRequestDto);
     }
@@ -39,12 +39,12 @@ public class MypageController {
     }
 
     @GetMapping("/diary/count")
-    public MypageDiaryResponseDto getMyDiaryCount(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+    public MyPageDiaryResponseDto getMyDiaryCount(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return mypageService.getMyDiaryCount(memberDetails.getMember());
     }
 
     @GetMapping("/friend/count")
-    public MypageFriendResponseDto getMyFriendCount(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+    public MyPageFriendResponseDto getMyFriendCount(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return mypageService.getMyFriendCount(memberDetails.getMember());
     }
 

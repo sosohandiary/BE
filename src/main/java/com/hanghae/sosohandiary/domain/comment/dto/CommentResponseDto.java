@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hanghae.sosohandiary.domain.comment.entity.Comment;
 import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -28,11 +31,10 @@ public class CommentResponseDto {
         diaryDetailId = diaryDetail.getId();
         commentId = comment.getId();
         this.comment = comment.getComment();
-        this.commentName = member.getName();
+        commentName = member.getNickname();
         createdAt = comment.getCreatedAt();
         modifiedAt = comment.getModifiedAt();
     }
-
 
     public static CommentResponseDto of(DiaryDetail diaryDetail, Member member, Comment comment) {
         return CommentResponseDto.builder()

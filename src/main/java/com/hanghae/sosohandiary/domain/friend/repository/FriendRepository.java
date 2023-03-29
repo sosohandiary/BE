@@ -1,7 +1,7 @@
 package com.hanghae.sosohandiary.domain.friend.repository;
 
-import com.hanghae.sosohandiary.domain.friend.entity.Enum.StatusFriend;
 import com.hanghae.sosohandiary.domain.friend.entity.Friend;
+import com.hanghae.sosohandiary.domain.friend.entity.StatusFriend;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

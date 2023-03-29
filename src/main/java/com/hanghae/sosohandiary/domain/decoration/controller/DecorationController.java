@@ -12,14 +12,17 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/decoration")
 public class DecorationController {
+
     private final DecorationService decorationService;
+
     @PostMapping("/insert")
-    public Decoration saveDecoration(@RequestBody String customJson){
+    public Decoration saveDecoration(@RequestBody String customJson) {
         return decorationService.saveDecoration(customJson);
     }
 
-    @GetMapping("/")
-    public List<DecorationResponseDto> getDecoration(){
+    @GetMapping
+    public List<DecorationResponseDto> getDecoration() {
         return decorationService.getDecoration();
     }
+
 }

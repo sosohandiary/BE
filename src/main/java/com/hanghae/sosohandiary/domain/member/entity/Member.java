@@ -1,5 +1,7 @@
 package com.hanghae.sosohandiary.domain.member.entity;
 
+import com.hanghae.sosohandiary.domain.member.dto.JoinRequestDto;
+import com.hanghae.sosohandiary.domain.member.dto.KakaoMemberInfoDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,24 +50,24 @@ public class Member {
     }
 
     // 카카오 로그인
-    public static Member of(String email, Long kakaoId, String password, String name, String nickname, MemberRoleEnum role) {
+    public static Member of(KakaoMemberInfoDto kakaoMemberInfoDto, String password, MemberRoleEnum role) {
         return Member.builder()
-                .email(email)
-                .kakaoId(kakaoId)
+                .email(kakaoMemberInfoDto.getEmail())
+                .kakaoId(kakaoMemberInfoDto.getId())
                 .password(password)
-                .name(name)
-                .nickname(nickname)
+                .name(kakaoMemberInfoDto.getName())
+                .nickname(kakaoMemberInfoDto.getNickname())
                 .role(role)
                 .build();
     }
 
     // 로그인
-    public static Member of(String email, String password, String name, String nickname, MemberRoleEnum role) {
+    public static Member of(JoinRequestDto joinRequestDto, String password, MemberRoleEnum role) {
         return Member.builder()
-                .email(email)
+                .email(joinRequestDto.getEmail())
                 .password(password)
-                .name(name)
-                .nickname(nickname)
+                .name(joinRequestDto.getName())
+                .nickname(joinRequestDto.getNickname())
                 .role(role)
                 .build();
     }

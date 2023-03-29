@@ -17,7 +17,7 @@ public class InviteResponseDto {
         nickname = member.getNickname();
     }
 
-    public static InviteResponseDto from(Invite invite, Member member) {
+    public static InviteResponseDto of(Invite invite, Member member) {
         return InviteResponseDto.builder()
                 .invite(invite)
                 .member(member)

@@ -20,11 +20,11 @@ public class Decoration {
 
 
     @Builder
-    private Decoration(String imageURL){
-        this.imageURL=imageURL;
+    private Decoration(String imageURL) {
+        this.imageURL = imageURL;
     }
 
-    public static Decoration of(String imageURL){
+    public static Decoration from(String imageURL) {
         return Decoration.builder()
                 .imageURL(imageURL)
                 .build();

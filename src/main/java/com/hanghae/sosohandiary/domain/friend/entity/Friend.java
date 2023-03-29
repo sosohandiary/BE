@@ -1,6 +1,5 @@
 package com.hanghae.sosohandiary.domain.friend.entity;
 
-import com.hanghae.sosohandiary.domain.friend.entity.Enum.StatusFriend;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.utils.entity.Timestamp;
 import lombok.AccessLevel;
@@ -54,8 +53,8 @@ public class Friend extends Timestamp {
                 .build();
     }
 
-    public void updateFriendStatus(StatusFriend status){
-        this.status=status;
+    public void updateFriendStatus(StatusFriend status) {
+        this.status = status;
     }
 
 }

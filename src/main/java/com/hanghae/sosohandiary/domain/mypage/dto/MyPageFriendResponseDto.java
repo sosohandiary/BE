@@ -4,16 +4,16 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class MypageFriendResponseDto {
+public class MyPageFriendResponseDto {
     private final Long myFriendCount;
 
     @Builder
-    public MypageFriendResponseDto(Long myFriendCount) {
+    public MyPageFriendResponseDto(Long myFriendCount) {
         this.myFriendCount = myFriendCount;
     }
 
-    public static MypageFriendResponseDto from(Long friendCount) {
-        return MypageFriendResponseDto.builder()
+    public static MyPageFriendResponseDto from(Long friendCount) {
+        return MyPageFriendResponseDto.builder()
                 .myFriendCount(friendCount)
                 .build();
     }

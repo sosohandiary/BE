@@ -12,45 +12,34 @@ import java.time.LocalDateTime;
 public class DiaryDetailResponseDto {
 
     private Long id;
-    private String content;
     private String customJson;
     private String diaryTitle;
     private String nickname;
-    private int likes;
-    private int comment;
+    private int likeCount;
+    private int commentCount;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime modifiedAt;
 
     @Builder
-    public DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, String nickname, int likes, int comment) {
+    private DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, int likeCount, int commentCount) {
         id = diaryDetail.getId();
-        content = diaryDetail.getContent();
         customJson = diaryDetail.getCustomJson();
         diaryTitle = diary.getTitle();
-        this.nickname = nickname;
-        this.likes = likes;
-        this.comment = comment;
+        nickname = diaryDetail.getNickname();
+        this.likeCount = likeCount;
+        this.commentCount = commentCount;
         createdAt = diaryDetail.getCreatedAt();
         modifiedAt = diaryDetail.getModifiedAt();
     }
 
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Diary diary, String nickname) {
-        return DiaryDetailResponseDto.builder()
-                .diaryDetail(diaryDetail)
-                .nickname(nickname)
-                .diary(diary)
-                .build();
-    }
-
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Diary diary) {
+    public static DiaryDetailResponseDto of(DiaryDetail diaryDetail, Diary diary) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
                 .diary(diary)
                 .build();
     }
-
 
     public static DiaryDetailResponseDto from(DiaryDetail diaryDetail) {
         return DiaryDetailResponseDto.builder()
@@ -58,13 +47,12 @@ public class DiaryDetailResponseDto {
                 .build();
     }
 
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail, Diary diary, String nickname, int likes, int comment) {
+    public static DiaryDetailResponseDto of(DiaryDetail diaryDetail, Diary diary, int likeCount, int commentCount) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
                 .diary(diary)
-                .nickname(nickname)
-                .likes(likes)
-                .comment(comment)
+                .likeCount(likeCount)
+                .commentCount(commentCount)
                 .build();
     }
 

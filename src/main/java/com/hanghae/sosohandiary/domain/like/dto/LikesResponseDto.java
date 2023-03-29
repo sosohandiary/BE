@@ -17,7 +17,7 @@ public class LikesResponseDto {
         nickname = member.getNickname();
     }
 
-    public static LikesResponseDto from(Likes likes, Member member) {
+    public static LikesResponseDto of(Likes likes, Member member) {
         return LikesResponseDto.builder()
                 .likes(likes)
                 .member(member)

@@ -9,28 +9,30 @@ import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.diarydetail.repository.DiaryDetailRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
-import com.hanghae.sosohandiary.exception.ErrorHandling;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import static com.hanghae.sosohandiary.exception.ErrorHandling.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CommentService {
 
     private final CommentRepository commentRepository;
     private final DiaryDetailRepository diaryDetailRepository;
 
+    @Transactional
     public CommentResponseDto createComment(Long id, CommentRequestDto requestDto, Member member) {
 
         DiaryDetail diaryDetail = diaryDetailRepository.findById(id).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
+                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
         );
 
         Comment comment = commentRepository.save(Comment.of(diaryDetail, member, requestDto));
@@ -41,7 +43,7 @@ public class CommentService {
     public List<CommentResponseDto> getComment(Long id, Member member) {
 
         DiaryDetail diaryDetail = diaryDetailRepository.findById(id).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
+                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
         );
 
         List<Comment> commentList = commentRepository.findAllByDiaryDetailIdOrderByCreatedAtDesc(diaryDetail.getId());
@@ -54,16 +56,17 @@ public class CommentService {
     }
 
     @Transactional
-    public CommentResponseDto updateComment(Long detailId, Long id, CommentRequestDto requestDto, Member member) {
-        Comment comment = commentRepository.findById(id).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL_COMMENT)
-        );
+    public CommentResponseDto updateComment(Long detailId, Long commentId, CommentRequestDto requestDto, Member member) {
+
         DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
+                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
+        );
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new ApiException(NOT_FOUND_DIARY_DETAIL_COMMENT)
         );
 
         if (!comment.getMember().getId().equals(member.getId())) {
-            throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
         }
 
         comment.update(requestDto.getComment());
@@ -71,34 +74,33 @@ public class CommentService {
         return CommentResponseDto.of(diaryDetail, member, comment);
     }
 
-    public MessageDto deleteComment(Long detailId, Long id, Member member) {
-        Optional<Comment> comment = commentRepository.findById(id);
+    @Transactional
+    public MessageDto deleteComment(Long detailId, Long commentId, Member member) {
+
         diaryDetailRepository.findById(detailId).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
+                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
         );
 
-        if (comment.isPresent()) {
-            if (!comment.get().getMember().getId().equals(member.getId())) {
-                return new MessageDto("작성자만 삭제 가능합니다", HttpStatus.BAD_REQUEST);
-            }
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new ApiException(NOT_FOUND_COMMENT)
+        );
+
+        if (!comment.getMember().getId().equals(member.getId())) {
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
         }
 
-        commentRepository.findById(id).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL_COMMENT)
-        );
-
-        commentRepository.deleteById(id);
-        return new MessageDto("댓글삭제 완료", HttpStatus.OK);
+        commentRepository.deleteById(commentId);
+        return MessageDto.of("댓글삭제 완료", HttpStatus.OK);
     }
 
-
     public List<CommentAlarmResponseDto> alarmComment(Long detailId, Member member) {
+
         DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
+                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
         );
 
         if (!diaryDetail.getNickname().equals(member.getNickname())) {
-            throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
         }
 
         List<Comment> commentList = commentRepository.findByDiaryDetailIdOrderByModifiedAtDesc(detailId);

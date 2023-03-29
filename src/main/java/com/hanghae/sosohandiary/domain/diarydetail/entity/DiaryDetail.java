@@ -56,7 +56,7 @@ public class DiaryDetail extends Timestamp {
                 .build();
     }
 
-    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto) {
+    public static DiaryDetail from(DiaryDetailRequestDto diaryDetailRequestDto) {
         return DiaryDetail.builder()
                 .diaryDetailRequestDto(diaryDetailRequestDto)
                 .build();

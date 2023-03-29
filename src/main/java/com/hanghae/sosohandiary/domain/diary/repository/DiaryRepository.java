@@ -10,13 +10,22 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
+
     void deleteById(Long id);
+
     Optional<Diary> findByMemberId(Long id);
+
     Long countByMemberId(Long id);
+
     List<Diary> findAllByMemberIdOrderByModifiedAtDesc(Long id);
+
     Page<Diary> findAllByDiaryConditionOrderByModifiedAtDesc(Pageable pageable, DiaryCondition condition);
+
     List<Diary> findAllByMemberIdAndDiaryConditionOrderByModifiedAtDesc(Pageable pageable, Long id, DiaryCondition condition);
+
     Page<Diary> findAllByOrderByModifiedAtDesc(Pageable pageable);
+
     Page<Diary> findAllByIdOrderByModifiedAtDesc(Pageable pageable, Long id);
+
     void deleteAllByMemberId(Long id);
 }

@@ -2,38 +2,41 @@ package com.hanghae.sosohandiary.domain.invite.entity;
 
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
+import static org.hibernate.annotations.OnDeleteAction.CASCADE;
+
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class Invite {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "from_member_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = CASCADE)
     private Member fromMember;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "to_member_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = CASCADE)
     private Member toMember;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "diary_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @OnDelete(action = CASCADE)
     private Diary diary;
 
     @Builder
@@ -50,6 +53,5 @@ public class Invite {
                 .toMember(toMember)
                 .build();
     }
-
 
 }

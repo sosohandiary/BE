@@ -7,16 +7,17 @@ import com.hanghae.sosohandiary.domain.like.entity.Likes;
 import com.hanghae.sosohandiary.domain.like.repository.LikesRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
-import com.hanghae.sosohandiary.exception.ErrorHandling;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
+import static com.hanghae.sosohandiary.exception.ErrorHandling.*;
+import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.HttpStatus.OK;
 
 @Service
 @RequiredArgsConstructor
@@ -28,34 +29,38 @@ public class LikeService {
 
     @Transactional
     public MessageDto postLike(Long detailId, Member member) {
-        Optional<Likes> diaryDetailLike = likesRepository.findByDiaryDetailIdAndMemberId(detailId, member.getId());
 
-        DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
+        Likes diaryDetailLike = likesRepository.findByDiaryDetailIdAndMemberId(detailId, member.getId()).orElseThrow(
+                () -> new ApiException(INVALID_ACCESS)
         );
 
-        if (diaryDetailLike.isPresent()) {
-            likesRepository.delete(diaryDetailLike.get());
-            return MessageDto.of("좋아요 취소완료", HttpStatus.OK);
+        DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
+                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
+        );
+
+        if (diaryDetailLike.getMember().getId().equals(member.getId())) {
+            likesRepository.delete(diaryDetailLike);
+            return MessageDto.of("좋아요 취소 완료", OK);
         }
+
         likesRepository.save(Likes.of(member, diaryDetail));
-        return MessageDto.of("좋아요 등록완료", HttpStatus.ACCEPTED);
+        return MessageDto.of("좋아요 등록완료", ACCEPTED);
     }
 
     public List<LikesResponseDto> alarmLike(Long detailId, Member member) {
 
         DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY_DETAIL)
+                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
         );
 
         if (!diaryDetail.getNickname().equals(member.getNickname())) {
-            throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
         }
 
         List<Likes> likesList = likesRepository.findAllByDiaryDetailId(detailId);
         List<LikesResponseDto> likesResponseDtoList = new ArrayList<>();
         for (Likes likes : likesList) {
-            likesResponseDtoList.add(LikesResponseDto.from(likes, likes.getMember()));
+            likesResponseDtoList.add(LikesResponseDto.of(likes, likes.getMember()));
         }
 
         return likesResponseDtoList;

@@ -2,8 +2,8 @@ package com.hanghae.sosohandiary.domain.member.service;
 
 
 import com.hanghae.sosohandiary.auth.JwtUtil;
-import com.hanghae.sosohandiary.domain.friend.entity.Enum.StatusFriend;
 import com.hanghae.sosohandiary.domain.friend.entity.Friend;
+import com.hanghae.sosohandiary.domain.friend.entity.StatusFriend;
 import com.hanghae.sosohandiary.domain.friend.repository.FriendRepository;
 import com.hanghae.sosohandiary.domain.member.dto.JoinRequestDto;
 import com.hanghae.sosohandiary.domain.member.dto.LoginRequestDto;
@@ -22,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static com.hanghae.sosohandiary.exception.ErrorHandling.*;
 
@@ -40,20 +39,15 @@ public class MemberService {
     @Transactional
     public MessageDto join(JoinRequestDto joinRequestDto) {
 
-        String email = joinRequestDto.getEmail();
         String password = passwordEncoder.encode(joinRequestDto.getPassword());
-        String name = joinRequestDto.getName();
-        String nickname = joinRequestDto.getNickname();
 
-        Optional<Member> foundEmail = memberRepository.findByEmail(email);
-        if (foundEmail.isPresent()) {
-            throw new ApiException(DUPLICATED_EMAIL);
-        }
+        memberRepository.findByEmail(joinRequestDto.getEmail()).orElseThrow(
+                () -> new ApiException(DUPLICATED_EMAIL)
+        );
 
-        Optional<Member> foundNickname = memberRepository.findByNickname(nickname);
-        if(foundNickname.isPresent()) {
-            throw new ApiException(DUPLICATED_NICKNAME);
-        }
+        memberRepository.findByNickname(joinRequestDto.getNickname()).orElseThrow(
+                () -> new ApiException(DUPLICATED_NICKNAME)
+        );
 
         MemberRoleEnum role = MemberRoleEnum.MEMBER;
         if (joinRequestDto.isAdmin()) {
@@ -63,7 +57,7 @@ public class MemberService {
             role = MemberRoleEnum.ADMIN;
         }
 
-        Member member = Member.of(email, password, name, nickname, role);
+        Member member = Member.of(joinRequestDto, password, role);
         memberRepository.save(member);
 
         return MessageDto.of("회원가입 성공", HttpStatus.ACCEPTED);
@@ -72,78 +66,58 @@ public class MemberService {
     @Transactional
     public MessageDto login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
 
-        String email = loginRequestDto.getEmail();
-        String password = loginRequestDto.getPassword();
+        Member member = memberRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(
+                () -> new ApiException(NOT_FOUND_USER)
+        );
 
-        Optional<Member> member = memberRepository.findByEmail(email);
-        if (member.isEmpty()) {
-            throw new ApiException(NOT_FOUND_USER);
-        }
-
-        if (!passwordEncoder.matches(password, member.get().getPassword())) {
+        if (!passwordEncoder.matches(loginRequestDto.getPassword(), member.getPassword())) {
             throw new ApiException(INVALID_PASSWORD);
         }
 
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(email, member.get().getRole()));
+        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginRequestDto.getEmail(), member.getRole()));
 
-        return MessageDto.ofLogin("로그인 성공", HttpStatus.ACCEPTED, member.get());
+        return MessageDto.ofLogin("로그인 성공", HttpStatus.ACCEPTED, member);
     }
 
-//    @Transactional
-//    public List<MemberResponseDto> getMembers(String name) {
-//
-//        List<Member> memberList = memberRepository.findByNameContaining(name);
-//
-//        List<MemberResponseDto> responseDtoList = new ArrayList<>();
-//
-//        for(Member member : memberList) {
-//            responseDtoList.add(MemberResponseDto.from(member));
-//        }
-//
-//        return responseDtoList;
-//    }
-
     @Transactional
-    public List<MemberResponseDto> getMembersWithFriendStatus(String name, Long memberId) {
+    public List<MemberResponseDto> getMembersWithFriendStatus(String name, Member member) {
+
         List<Member> memberList = memberRepository.findByNameContaining(name);
 
         List<MemberResponseDto> responseDtoList = new ArrayList<>();
 
-        for (Member member : memberList) {
-            List<Friend> friendList = friendRepository.findByMemberIdAndStatusOrderByFriendNicknameAsc(member.getId(), StatusFriend.ACCEPTED);
-            boolean isFriend = friendList.stream().anyMatch(friend -> friend.getFriend().getId().equals(memberId));
-            boolean isPending = friendRepository.existsByFriend_IdAndMember_Id(memberId, member.getId()) || friendRepository.existsByFriend_IdAndMember_Id(member.getId(), memberId);
-
+        for (Member eachMember : memberList) {
+            List<Friend> friendList = friendRepository.findByMemberIdAndStatusOrderByFriendNicknameAsc(eachMember.getId(), StatusFriend.ACCEPTED);
+            boolean isFriend = friendList.stream().anyMatch(friend -> friend.getFriend().getId().equals(member.getId()));
+            boolean isPending = friendRepository.existsByFriend_IdAndMember_Id(member.getId(), eachMember.getId()) ||
+                    friendRepository.existsByFriend_IdAndMember_Id(eachMember.getId(), member.getId());
             if (isFriend) {
                 responseDtoList.add(MemberResponseDto.builder()
-                        .id(member.getId())
-                        .name(member.getName())
-                        .nickname(member.getNickname())
-                        .statusMessage(member.getStatusMessage())
+                        .id(eachMember.getId())
+                        .name(eachMember.getName())
+                        .nickname(eachMember.getNickname())
+                        .statusMessage(eachMember.getStatusMessage())
                         .friendStatus(StatusFriend.ACCEPTED)
                         .build());
             } else if (isPending) {
                 responseDtoList.add(MemberResponseDto.builder()
-                        .id(member.getId())
-                        .name(member.getName())
-                        .nickname(member.getNickname())
-                        .statusMessage(member.getStatusMessage())
+                        .id(eachMember.getId())
+                        .name(eachMember.getName())
+                        .nickname(eachMember.getNickname())
+                        .statusMessage(eachMember.getStatusMessage())
                         .friendStatus(StatusFriend.PENDING)
                         .build());
             } else {
                 responseDtoList.add(MemberResponseDto.builder()
-                        .id(member.getId())
-                        .name(member.getName())
-                        .nickname(member.getNickname())
-                        .statusMessage(member.getStatusMessage())
+                        .id(eachMember.getId())
+                        .name(eachMember.getName())
+                        .nickname(eachMember.getNickname())
+                        .statusMessage(eachMember.getStatusMessage())
                         .friendStatus(null)
                         .build());
             }
         }
-
         return responseDtoList;
     }
-
-
 
 }

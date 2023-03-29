@@ -45,8 +45,8 @@ public class S3Service {
         }
     }
 
-    // S3에 파일이름 저장 후 업로드
     private String upload(File uploadFile) {
+
         String fileName = "" + UUID.randomUUID();
         uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
@@ -54,12 +54,15 @@ public class S3Service {
     }
 
     private String putS3(File uploadFile, String fileName) {
-        S3Client.putObject(new PutObjectRequest(bucketName, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+
+        S3Client.putObject(new PutObjectRequest(bucketName, fileName, uploadFile)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
         return S3Client.getUrl(bucketName, fileName).toString();
     }
 
 
     private void removeNewFile(File targetFile) {
+
         if (targetFile.delete()) {
             log.info("File delete success");
             return;
@@ -68,7 +71,9 @@ public class S3Service {
     }
 
     private Optional<File> convert(MultipartFile multipartFile) throws IOException {
-        File convertFile = new File(multipartFile.getOriginalFilename());
+
+        File convertFile = new File(multipartFile.getName());
+
         if (convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
                 fos.write(multipartFile.getBytes());
@@ -79,17 +84,13 @@ public class S3Service {
         return Optional.empty();
     }
 
-    public String getThumbnailPath(String path) {
-        return S3Client.getUrl(bucketName, path).toString();
-    }
-
     public String getUploadImageUrl() {
         return uploadImageUrl;
     }
 
     public void deleteFile(String fileName) {
-        DeleteObjectRequest request = new DeleteObjectRequest(bucketName, fileName);
-        S3Client.deleteObject(request);
+
+        S3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
     }
 
 }

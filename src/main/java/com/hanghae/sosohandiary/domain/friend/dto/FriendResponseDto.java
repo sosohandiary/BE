@@ -7,7 +7,6 @@ import lombok.Getter;
 public class FriendResponseDto {
 
     private Long friendListId;
-
     private String friendNickName;
     private String nickname;
 
@@ -16,20 +15,14 @@ public class FriendResponseDto {
         this.friendListId = id;
         this.nickname = nickname;
         this.friendNickName = friendNickName;
-
     }
 
-    //    public static FriendResponseDto from(String nickName) {
-//        return FriendResponseDto.builder()
-//                .nickName(nickName)
-//                .build();
-//    }
-//    public static FriendResponseDto from(FriendList friendList) {
-//        return FriendResponseDto.builder()
-//                .id(friendList.getId())
-//                .friendNickName(friendList.getFriend().getNickname())
-//                .myNickname(friendList.getMember().getNickname())
-//                .build();
-//    }
+    public static FriendResponseDto of(Long id, String friendNickName, String nickname) {
+        return FriendResponseDto.builder()
+                .id(id)
+                .friendNickName(friendNickName)
+                .nickname(nickname)
+                .build();
+    }
 
 }

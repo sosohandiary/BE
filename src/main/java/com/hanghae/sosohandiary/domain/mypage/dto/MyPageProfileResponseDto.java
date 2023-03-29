@@ -6,19 +6,19 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class MypageProfileResponseDto {
+public class MyPageProfileResponseDto {
 
     private String nickname;
     private String statusMessage;
 
     @Builder
-    public MypageProfileResponseDto(String nickname, String statusMessage) {
+    public MyPageProfileResponseDto(String nickname, String statusMessage) {
         this.nickname = nickname;
         this.statusMessage = statusMessage;
     }
 
-    public static MypageProfileResponseDto of(String nickname, String statusMessage) {
-        return MypageProfileResponseDto.builder()
+    public static MyPageProfileResponseDto of(String nickname, String statusMessage) {
+        return MyPageProfileResponseDto.builder()
                 .nickname(nickname)
                 .statusMessage(statusMessage)
                 .build();

@@ -10,11 +10,11 @@ import com.hanghae.sosohandiary.domain.invite.entity.Invite;
 import com.hanghae.sosohandiary.domain.invite.repository.InviteRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
-import com.hanghae.sosohandiary.exception.ErrorHandling;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import com.hanghae.sosohandiary.utils.page.PageCustom;
 import com.hanghae.sosohandiary.utils.s3.S3Service;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -26,6 +26,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hanghae.sosohandiary.domain.diary.entity.DiaryCondition.PRIVATE;
+import static com.hanghae.sosohandiary.domain.diary.entity.DiaryCondition.PUBLIC;
+import static com.hanghae.sosohandiary.exception.ErrorHandling.NOT_FOUND_DIARY;
+import static com.hanghae.sosohandiary.exception.ErrorHandling.NOT_MATCH_AUTHORIZATION;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -40,27 +46,29 @@ public class DiaryService {
     public DiaryResponseDto saveDiary(DiaryRequestDto diaryRequestDto,
                                       List<MultipartFile> multipartFileList,
                                       Member member) throws IOException {
+
         for (MultipartFile multipartFile : multipartFileList) {
             if (multipartFile.getOriginalFilename().equals("")) {
                 Diary diary = diaryRepository.save(Diary.of(diaryRequestDto, null, member));
-                return DiaryResponseDto.from(diary, member);
+                return DiaryResponseDto.of(diary, member);
             }
         }
+
         if (multipartFileList != null) {
             s3Service.uploadDiary(multipartFileList, diaryRequestDto, member);
         }
 
         String uploadImageUrl = s3Service.getUploadImageUrl();
 
-        DiaryCondition condition = DiaryCondition.PUBLIC;
+        DiaryCondition condition = PUBLIC;
 
-        if(!diaryRequestDto.getDiaryCondition().equals(condition)) {
-            condition = DiaryCondition.PRIVATE;
+        if (diaryRequestDto.getDiaryCondition().equals(PRIVATE)) {
+            condition = PRIVATE;
         }
 
         Diary diary = diaryRepository.save(Diary.of(diaryRequestDto, uploadImageUrl, member));
 
-        return DiaryResponseDto.from(diary, member);
+        return DiaryResponseDto.of(diary, member);
     }
 
     public List<DiaryResponseDto> findDiaryList(Pageable pageable, Member member) {
@@ -68,10 +76,10 @@ public class DiaryService {
         Page<Diary> diaryPage = diaryRepository.findAllByOrderByModifiedAtDesc(pageable);
         List<DiaryResponseDto> diaryResponseDtoList = new ArrayList<>();
         for (Diary diary : diaryPage) {
-            if (diary.getDiaryCondition().equals(DiaryCondition.PUBLIC)) {
-                diaryResponseDtoList.add(DiaryResponseDto.from(diary, diary.getMember()));
+            if (diary.getDiaryCondition().equals(PUBLIC)) {
+                diaryResponseDtoList.add(DiaryResponseDto.of(diary, diary.getMember()));
             } else if (diary.getMember().getId().equals(member.getId())) {
-                diaryResponseDtoList.add(DiaryResponseDto.from(diary, diary.getMember()));
+                diaryResponseDtoList.add(DiaryResponseDto.of(diary, diary.getMember()));
             }
         }
 
@@ -81,7 +89,7 @@ public class DiaryService {
     public PageCustom<DiaryResponseDto> findPublicDiaryList(Pageable pageable) {
 
         Page<DiaryResponseDto> diaryResponseDtoPagePublic = diaryRepository
-                .findAllByDiaryConditionOrderByModifiedAtDesc(pageable, DiaryCondition.PUBLIC)
+                .findAllByDiaryConditionOrderByModifiedAtDesc(pageable, PUBLIC)
                 .map((Diary diary) -> new DiaryResponseDto(diary, diary.getMember()));
 
         return new PageCustom<>(diaryResponseDtoPagePublic.getContent(),
@@ -92,11 +100,11 @@ public class DiaryService {
     public List<DiaryResponseDto> findPrivateDiaryList(Pageable pageable, Member member) {
 
         List<Diary> diaryList = diaryRepository
-                .findAllByMemberIdAndDiaryConditionOrderByModifiedAtDesc(pageable, member.getId(), DiaryCondition.PRIVATE);
+                .findAllByMemberIdAndDiaryConditionOrderByModifiedAtDesc(pageable, member.getId(), PRIVATE);
         List<DiaryResponseDto> diaryResponseDtoList = new ArrayList<>();
 
         for (Diary diary : diaryList) {
-            diaryResponseDtoList.add(DiaryResponseDto.from(diary, diary.getMember()));
+            diaryResponseDtoList.add(DiaryResponseDto.of(diary, diary.getMember()));
         }
         return diaryResponseDtoList;
     }
@@ -117,7 +125,6 @@ public class DiaryService {
             return new PageCustom<>(diaryResponseDtoPage.getContent(),
                     diaryResponseDtoPage.getPageable(),
                     diaryResponseDtoPage.getTotalElements());
-
         } catch (NullPointerException e) {
             e.getMessage();
         }
@@ -129,12 +136,11 @@ public class DiaryService {
     public DiaryResponseDto modifyDiary(Long id, DiaryRequestDto diaryRequestDto,
                                         List<MultipartFile> multipartFileList,
                                         Member member) throws IOException {
-        Diary diary = diaryRepository.findById(id).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
-        );
+
+        Diary diary = getDiary(id);
 
         if (!diary.getMember().getId().equals(member.getId())) {
-            throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
         }
 
         if (diary.getImg() != null) {
@@ -147,29 +153,28 @@ public class DiaryService {
             if (multipartFile.getOriginalFilename().equals("")) {
                 String uploadImageUrl = diary.getImg();
                 diary.update(diaryRequestDto, uploadImageUrl);
-                return DiaryResponseDto.from(diary, member);
+                return DiaryResponseDto.of(diary, member);
             }
         }
 
         if (multipartFileList != null) {
             s3Service.uploadDiary(multipartFileList, diaryRequestDto, member);
         }
+
         String uploadImageUrl = s3Service.getUploadImageUrl();
 
         diary.update(diaryRequestDto, uploadImageUrl);
 
-        return DiaryResponseDto.from(diary, member);
+        return DiaryResponseDto.of(diary, member);
     }
 
     @Transactional
     public MessageDto removeDiary(Long id, Member member) {
 
-        Diary diary = diaryRepository.findById(id).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
-        );
+        Diary diary = getDiary(id);
 
         if (!diary.getMember().getId().equals(member.getId())) {
-            throw new ApiException(ErrorHandling.NOT_MATCH_AUTHORIZATION);
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
         }
 
         if (diary.getImg() != null) {
@@ -182,6 +187,13 @@ public class DiaryService {
         diaryRepository.deleteById(id);
 
         return MessageDto.of("다이어리 삭제 완료", HttpStatus.OK);
+    }
+
+    private Diary getDiary(Long id) {
+
+        return diaryRepository.findById(id).orElseThrow(
+                () -> new ApiException(NOT_FOUND_DIARY)
+        );
     }
 
 }

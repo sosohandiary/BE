@@ -10,7 +10,6 @@ import com.hanghae.sosohandiary.domain.diarydetail.repository.DiaryDetailReposit
 import com.hanghae.sosohandiary.domain.like.repository.LikesRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
-import com.hanghae.sosohandiary.exception.ErrorHandling;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import com.hanghae.sosohandiary.utils.page.PageCustom;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.hanghae.sosohandiary.exception.ErrorHandling.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,46 +32,48 @@ public class DiaryDetailService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public DiaryDetailResponseDto saveDetail(Long id,
-                                             DiaryDetailRequestDto diaryDetailRequestDto,
-                                             Member member) {
+    public DiaryDetailResponseDto createDetail(Long id,
+                                               DiaryDetailRequestDto diaryDetailRequestDto,
+                                               Member member) {
 
         Diary diary = diaryRepository.findById(id).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+                () -> new ApiException(NOT_FOUND_DIARY)
         );
 
         DiaryDetail diaryDetail = diaryDetailRepository.save(DiaryDetail.of(diaryDetailRequestDto, diary, member));
 
-        return DiaryDetailResponseDto.from(diaryDetail, diary, member.getNickname());
+        return DiaryDetailResponseDto.of(diaryDetail, diary);
     }
 
     public PageCustom<DiaryDetailResponseDto> findListDetail(Long id, Pageable pageable) {
 
-
         Diary diary = diaryRepository.findById(id).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+                () -> new ApiException(NOT_FOUND_DIARY)
         );
         Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByDiaryIdOrderByModifiedAtDesc(pageable, id)
-                        .map((DiaryDetail diaryDetail) -> DiaryDetailResponseDto
-                                .from(diaryDetail, diary, diaryDetail.getNickname(), likesRepository.countByDiaryDetailId(diaryDetail.getId()),
-                                        commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId()))
-        );
+                .map((DiaryDetail diaryDetail) -> DiaryDetailResponseDto
+                        .of(diaryDetail, diary, likesRepository
+                                .countByDiaryDetailId(diaryDetail.getId()), commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId()))
+                );
 
-        return new PageCustom<>(diaryDetailResponseDtoPage.getContent(), diaryDetailResponseDtoPage.getPageable(), diaryDetailResponseDtoPage.getTotalElements());
+        return new PageCustom<>(diaryDetailResponseDtoPage.getContent(),
+                diaryDetailResponseDtoPage.getPageable(),
+                diaryDetailResponseDtoPage.getTotalElements());
     }
 
     public DiaryDetailResponseDto findDetail(Long diaryId, Long detailId) {
+
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+                () -> new ApiException(NOT_FOUND_DIARY)
         );
 
         DiaryDetail diaryDetail = diaryDetailRepository.findByDiaryIdAndId(diaryId, detailId).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
         );
 
-        return DiaryDetailResponseDto
-                .from(diaryDetail, diary, diaryDetail.getNickname(),
-                        likesRepository.countByDiaryDetailId(detailId), commentRepository.countCommentsByDiaryDetailId(detailId));
+        return DiaryDetailResponseDto.of(diaryDetail, diary,
+                likesRepository.countByDiaryDetailId(detailId),
+                commentRepository.countCommentsByDiaryDetailId(detailId));
     }
 
     @Transactional
@@ -78,35 +81,47 @@ public class DiaryDetailService {
                                                Long detailId,
                                                DiaryDetailRequestDto diaryDetailRequestDto,
                                                Member member) {
+
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+                () -> new ApiException(NOT_FOUND_DIARY)
         );
 
         DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
         );
+
+        if (!diaryDetail.getNickname().equals(member.getNickname())) {
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
+        }
 
         diaryDetail.update(diaryDetailRequestDto);
 
-        return DiaryDetailResponseDto.from(diaryDetail, diary);
+        return DiaryDetailResponseDto.of(diaryDetail, diary);
     }
 
     @Transactional
     public MessageDto removeDetail(Long diaryId, Long detailId, Member member) {
+
         diaryRepository.findById(diaryId).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+                () -> new ApiException(NOT_FOUND_DIARY)
         );
 
-        diaryDetailRepository.findById(detailId).orElseThrow(
-                () -> new ApiException(ErrorHandling.NOT_FOUND_DIARY)
+        DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
+                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
         );
+
+        if (!diaryDetail.getNickname().equals(member.getNickname())) {
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
+        }
 
         if (commentRepository.countCommentsByDiaryDetailId(detailId) > 0) {
             commentRepository.deleteAllByDiaryDetailId(detailId);
         }
+
         if (likesRepository.countByDiaryDetailId(detailId) > 0) {
             likesRepository.deleteAllByDiaryDetailId(detailId);
         }
+
         diaryDetailRepository.deleteById(detailId);
 
         return MessageDto.of("다이어리 삭제 완료", HttpStatus.OK);

@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
 @RequiredArgsConstructor
 public class DiaryController {
 
@@ -43,12 +42,12 @@ public class DiaryController {
 
     @GetMapping("/private")
     public List<DiaryResponseDto> diaryPrivateList(@PageableDefault(size = 5) Pageable pageable,
-                                                         @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+                                                   @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return diaryService.findPrivateDiaryList(pageable, memberDetails.getMember());
     }
 
     @GetMapping("/invite")
-    public PageCustom<DiaryResponseDto> diaryinvitedList(@PageableDefault(size = 5) Pageable pageable,
+    public PageCustom<DiaryResponseDto> diaryInvitedList(@PageableDefault(size = 5) Pageable pageable,
                                                          @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return diaryService.findInvitedDiaryList(pageable, memberDetails.getMember());
     }
