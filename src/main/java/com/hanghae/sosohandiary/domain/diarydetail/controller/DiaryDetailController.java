@@ -34,8 +34,9 @@ public class DiaryDetailController {
 
     @GetMapping("/{detail-id}")
     public DiaryDetailResponseDto findDetail(@PathVariable("diary-id") Long diaryId,
-                                             @PathVariable("detail-id") Long detailId) {
-        return diaryDetailService.findDetail(diaryId, detailId);
+                                             @PathVariable("detail-id") Long detailId,
+                                             @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return diaryDetailService.findDetail(diaryId, detailId,memberDetails.getMember());
     }
 
     @PatchMapping("/{detail-id}")

@@ -17,19 +17,21 @@ public class DiaryDetailResponseDto {
     private String nickname;
     private int likeCount;
     private int commentCount;
+    private boolean likeStatus;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime modifiedAt;
 
     @Builder
-    private DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, int likeCount, int commentCount) {
+    private DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, int likeCount, int commentCount, boolean likeStatus) {
         id = diaryDetail.getId();
         customJson = diaryDetail.getCustomJson();
         diaryTitle = diary.getTitle();
         nickname = diaryDetail.getNickname();
         this.likeCount = likeCount;
         this.commentCount = commentCount;
+        this.likeStatus = likeStatus;
         createdAt = diaryDetail.getCreatedAt();
         modifiedAt = diaryDetail.getModifiedAt();
     }
@@ -53,6 +55,16 @@ public class DiaryDetailResponseDto {
                 .diary(diary)
                 .likeCount(likeCount)
                 .commentCount(commentCount)
+                .build();
+    }
+
+    public static DiaryDetailResponseDto of(DiaryDetail diaryDetail, Diary diary, int likeCount, int commentCount, boolean likeStatus) {
+        return DiaryDetailResponseDto.builder()
+                .diaryDetail(diaryDetail)
+                .diary(diary)
+                .likeCount(likeCount)
+                .commentCount(commentCount)
+                .likeStatus(likeStatus)
                 .build();
     }
 

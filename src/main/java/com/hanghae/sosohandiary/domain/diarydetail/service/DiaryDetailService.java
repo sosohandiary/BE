@@ -61,7 +61,7 @@ public class DiaryDetailService {
                 diaryDetailResponseDtoPage.getTotalElements());
     }
 
-    public DiaryDetailResponseDto findDetail(Long diaryId, Long detailId) {
+    public DiaryDetailResponseDto findDetail(Long diaryId, Long detailId, Member member) {
 
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(
                 () -> new ApiException(NOT_FOUND_DIARY)
@@ -73,7 +73,8 @@ public class DiaryDetailService {
 
         return DiaryDetailResponseDto.of(diaryDetail, diary,
                 likesRepository.countByDiaryDetailId(detailId),
-                commentRepository.countCommentsByDiaryDetailId(detailId));
+                commentRepository.countCommentsByDiaryDetailId(detailId),
+                likesRepository.existsByDiaryDetailIdAndMemberId(detailId, member.getId()));
     }
 
     @Transactional
