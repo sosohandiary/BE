@@ -22,9 +22,6 @@ public class DiaryDetail extends Timestamp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(columnDefinition = "TEXT")
-    private String content;
-
-    @Column(columnDefinition = "TEXT")
     private String customJson;
     @Column(columnDefinition = "TEXT")
     private String thumbnail;
@@ -37,7 +34,6 @@ public class DiaryDetail extends Timestamp {
 
     @Builder
     private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary, Member member) {
-        content = diaryDetailRequestDto.getContent();
         customJson = diaryDetailRequestDto.getCustomJson();
         thumbnail = diaryDetailRequestDto.getThumbnail();
         nickname = member.getNickname();
@@ -66,8 +62,8 @@ public class DiaryDetail extends Timestamp {
     }
 
     public void update(DiaryDetailRequestDto diaryDetailRequestDto) {
-        content = diaryDetailRequestDto.getContent();
         customJson = diaryDetailRequestDto.getCustomJson();
+        thumbnail = diaryDetailRequestDto.getThumbnail();
     }
 
 }
