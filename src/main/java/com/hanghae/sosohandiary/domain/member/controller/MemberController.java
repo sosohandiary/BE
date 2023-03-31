@@ -3,6 +3,7 @@ package com.hanghae.sosohandiary.domain.member.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.hanghae.sosohandiary.domain.member.dto.JoinRequestDto;
 import com.hanghae.sosohandiary.domain.member.dto.LoginRequestDto;
+import com.hanghae.sosohandiary.domain.member.dto.MemberMessageDto;
 import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
 import com.hanghae.sosohandiary.domain.member.service.KakaoMemberService;
 import com.hanghae.sosohandiary.domain.member.service.MemberService;
@@ -25,8 +26,8 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/login/kakao")
-    public MessageDto loginKakao(@RequestParam String code,
-                                 HttpServletResponse response) throws JsonProcessingException {
+    public MemberMessageDto loginKakao(@RequestParam String code,
+                                       HttpServletResponse response) throws JsonProcessingException {
         return kakaoMemberService.loginKakao(code, response);
     }
 
@@ -38,7 +39,7 @@ public class MemberController {
 
     @ResponseBody
     @PostMapping("/login")
-    public MessageDto login(@RequestBody LoginRequestDto loginRequestDto,
+    public MemberMessageDto login(@RequestBody LoginRequestDto loginRequestDto,
                             HttpServletResponse response) {
         return memberService.login(loginRequestDto, response);
     }

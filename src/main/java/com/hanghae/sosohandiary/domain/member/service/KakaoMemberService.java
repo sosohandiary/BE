@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hanghae.sosohandiary.auth.JwtUtil;
 import com.hanghae.sosohandiary.domain.member.dto.KakaoMemberInfoDto;
+import com.hanghae.sosohandiary.domain.member.dto.MemberMessageDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.entity.MemberRoleEnum;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
 import com.hanghae.sosohandiary.security.MemberDetailsServiceImpl;
-import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -36,7 +36,7 @@ public class KakaoMemberService {
     private final JwtUtil jwtUtil;
     private final MemberDetailsServiceImpl memberDetailsService;
 
-    public MessageDto loginKakao(String code, HttpServletResponse response) throws JsonProcessingException {
+    public MemberMessageDto loginKakao(String code, HttpServletResponse response) throws JsonProcessingException {
 
         String accessToken = getToken(code);
 
@@ -49,7 +49,7 @@ public class KakaoMemberService {
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
 
-        return new MessageDto("로그인 성공", HttpStatus.ACCEPTED);
+        return MemberMessageDto.of("로그인 성공", HttpStatus.ACCEPTED, kakaoMember);
     }
 
     private void forceLoginUser(Member member) {
