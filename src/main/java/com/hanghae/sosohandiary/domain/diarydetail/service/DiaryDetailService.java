@@ -2,11 +2,14 @@ package com.hanghae.sosohandiary.domain.diarydetail.service;
 
 import com.hanghae.sosohandiary.domain.comment.repository.CommentRepository;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
+import com.hanghae.sosohandiary.domain.diary.entity.DiaryCondition;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diarydetail.dto.DiaryDetailRequestDto;
 import com.hanghae.sosohandiary.domain.diarydetail.dto.DiaryDetailResponseDto;
 import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.diarydetail.repository.DiaryDetailRepository;
+import com.hanghae.sosohandiary.domain.invite.entity.Invite;
+import com.hanghae.sosohandiary.domain.invite.repository.InviteRepository;
 import com.hanghae.sosohandiary.domain.like.repository.LikesRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
@@ -19,6 +22,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.hanghae.sosohandiary.exception.ErrorHandling.*;
 
 @Service
@@ -30,6 +35,7 @@ public class DiaryDetailService {
     private final DiaryRepository diaryRepository;
     private final LikesRepository likesRepository;
     private final CommentRepository commentRepository;
+    private final InviteRepository inviteRepository;
 
     @Transactional
     public DiaryDetailResponseDto createDetail(Long id,
@@ -41,6 +47,9 @@ public class DiaryDetailService {
         );
 
         DiaryDetail diaryDetail = diaryDetailRepository.save(DiaryDetail.of(diaryDetailRequestDto, diary, member));
+
+        isAuthor(member, diary);
+        isPrivateMember(member, diary);
 
         return DiaryDetailResponseDto.of(diaryDetail, diary);
     }
@@ -71,6 +80,15 @@ public class DiaryDetailService {
                 () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
         );
 
+        List<Invite> inviteList = inviteRepository.findAllByDiaryId(diary.getId());
+
+        if (diary.getDiaryCondition().equals(DiaryCondition.PRIVATE) &&
+                inviteList.stream().noneMatch(invite -> invite.getToMember().getId().equals(member.getId()))) {
+            if (!diary.getMember().getId().equals(member.getId())) {
+                throw new ApiException(NOT_MATCH_AUTHORIZATION);
+            }
+        }
+
         return DiaryDetailResponseDto.of(diaryDetail, diary,
                 likesRepository.countByDiaryDetailId(detailId),
                 commentRepository.countCommentsByDiaryDetailId(detailId),
@@ -95,6 +113,8 @@ public class DiaryDetailService {
             throw new ApiException(NOT_MATCH_AUTHORIZATION);
         }
 
+        isAuthor(member, diary);
+        isPrivateMember(member, diary);
         diaryDetail.update(diaryDetailRequestDto);
 
         return DiaryDetailResponseDto.of(diaryDetail, diary);
@@ -115,17 +135,26 @@ public class DiaryDetailService {
             throw new ApiException(NOT_MATCH_AUTHORIZATION);
         }
 
-        if (commentRepository.countCommentsByDiaryDetailId(detailId) > 0) {
-            commentRepository.deleteAllByDiaryDetailId(detailId);
-        }
-
-        if (likesRepository.countByDiaryDetailId(detailId) > 0) {
-            likesRepository.deleteAllByDiaryDetailId(detailId);
-        }
-
+        commentRepository.deleteAllByDiaryDetailId(detailId);
+        likesRepository.deleteAllByDiaryDetailId(detailId);
         diaryDetailRepository.deleteById(detailId);
 
         return MessageDto.of("다이어리 삭제 완료", HttpStatus.OK);
     }
 
+    private static void isAuthor(Member member, Diary diary) {
+        if (diary.getDiaryCondition().equals(DiaryCondition.PUBLIC) && !diary.getMember().getId().equals(member.getId())) {
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
+        }
+    }
+
+    private void isPrivateMember(Member member, Diary diary) {
+        List<Invite> inviteList = inviteRepository.findAllByDiaryId(diary.getId());
+
+        if (inviteList.stream().noneMatch(invite -> invite.getToMember().getId().equals(member.getId()))) {
+            if (!diary.getMember().getId().equals(member.getId())) {
+                throw new ApiException(NOT_MATCH_AUTHORIZATION);
+            }
+        }
+    }
 }
