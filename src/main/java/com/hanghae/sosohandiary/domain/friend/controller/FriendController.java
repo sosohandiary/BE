@@ -30,7 +30,7 @@ public class FriendController {
 
     @PutMapping("/request/accept/{friendrequest-id}")
     public MessageDto acceptFriend(@PathVariable(value = "friendrequest-id") Long id,
-                                   @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+                                                    @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return friendsListService.acceptFriend(id, memberDetails.getMember());
     }
 

@@ -7,6 +7,7 @@ import com.hanghae.sosohandiary.domain.friend.entity.StatusFriend;
 import com.hanghae.sosohandiary.domain.friend.repository.FriendRepository;
 import com.hanghae.sosohandiary.domain.member.dto.JoinRequestDto;
 import com.hanghae.sosohandiary.domain.member.dto.LoginRequestDto;
+import com.hanghae.sosohandiary.domain.member.dto.MemberMessageDto;
 import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.entity.MemberRoleEnum;
@@ -64,7 +65,7 @@ public class MemberService {
     }
 
     @Transactional
-    public MessageDto login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public MemberMessageDto login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
 
         Member member = memberRepository.findByEmail(loginRequestDto.getEmail()).orElseThrow(
                 () -> new ApiException(NOT_FOUND_USER)
@@ -76,7 +77,7 @@ public class MemberService {
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(loginRequestDto.getEmail(), member.getRole()));
 
-        return MessageDto.ofLogin("로그인 성공", HttpStatus.ACCEPTED, member);
+        return MemberMessageDto.of("로그인 성공", HttpStatus.ACCEPTED, member);
     }
 
     @Transactional
