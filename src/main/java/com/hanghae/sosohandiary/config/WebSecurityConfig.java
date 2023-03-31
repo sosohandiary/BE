@@ -70,9 +70,7 @@ public class WebSecurityConfig {
                 .antMatchers("/login/**").permitAll()
                 .antMatchers("/join").permitAll()
                 .antMatchers("/public").permitAll()
-                .antMatchers("/private").permitAll()
-                .antMatchers("/invite").permitAll()
-                .antMatchers("/detail/{detail-id}").permitAll()
+                .antMatchers("/diary/{diary-id}/detail").permitAll()
                 .anyRequest().authenticated()
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 

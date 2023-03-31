@@ -12,4 +12,6 @@ public interface InviteRepository extends JpaRepository<Invite, Long> {
     List<Invite> findAllByToMemberId(Long id);
 
     void deleteAllByToMemberId(Long id);
+
+    List<Invite> findAllByDiaryId(Long diaryId);
 }

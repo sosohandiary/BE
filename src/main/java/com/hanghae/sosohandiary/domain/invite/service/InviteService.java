@@ -10,7 +10,6 @@ import com.hanghae.sosohandiary.domain.invite.repository.InviteRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.domain.member.repository.MemberRepository;
 import com.hanghae.sosohandiary.exception.ApiException;
-import com.hanghae.sosohandiary.exception.ErrorHandling;
 import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,19 +45,16 @@ public class InviteService {
 
         List<Friend> toFriend = friendListRepository.findAllByMemberId(fromMember.getId());
 
-        Long countInvite = inviteRepository.countByDiaryId(diaryId);
-
-        for (Friend friend : toFriend) {
-            if (countInvite >= 8) {
-                throw new ApiException(ErrorHandling.OVER_THE_LIMIT);
-            }
-
-            if (friend.getFriend().getId().equals(toMemberId)) {
-                Invite invite = Invite.of(fromMember, toMember, diary);
-                inviteRepository.save(invite);
-            }
-
+        if (inviteRepository.countByDiaryId(diaryId) >= 7) {
+            throw new ApiException(OVER_THE_LIMIT);
         }
+
+        if (toFriend.stream().noneMatch(friend -> friend.getFriend().getId().equals(toMemberId))) {
+            throw new ApiException(NOT_FRIEND);
+        }
+
+        Invite invite = Invite.of(fromMember, toMember, diary);
+        inviteRepository.save(invite);
 
         return MessageDto.of("공유 다이어리 초대 전송 완료", HttpStatus.OK);
     }
