@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
 
-    Long countAllByMemberId(Long id);
-
     List<Friend> findAllByMemberId(Long id);
 
     Optional<Friend> findByIdAndFriendId(Long id, Long friendId);
@@ -26,4 +24,6 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     List<Friend> findByFriendIdAndStatusOrderByCreatedAtDesc(Long id, StatusFriend Status);
 
     void deleteAllByFriendId(Long id);
+
+    Long countAllByMemberIdAndStatus(Long id, StatusFriend accepted);
 }
