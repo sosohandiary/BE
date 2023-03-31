@@ -5,6 +5,7 @@ import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.diary.service.DiaryService;
 import com.hanghae.sosohandiary.domain.friend.entity.Friend;
+import com.hanghae.sosohandiary.domain.friend.entity.StatusFriend;
 import com.hanghae.sosohandiary.domain.friend.repository.FriendRepository;
 import com.hanghae.sosohandiary.domain.invite.repository.InviteRepository;
 import com.hanghae.sosohandiary.domain.member.dto.MemberResponseDto;
@@ -99,7 +100,7 @@ public class MyPageService {
                 () -> new ApiException(NOT_FOUND_USER)
         );
 
-        Long friendCount = friendsRepository.countAllByMemberId(foundMember.getId());
+        Long friendCount = friendsRepository.countAllByMemberIdAndStatus(foundMember.getId(), StatusFriend.ACCEPTED);
 
         return MyPageFriendResponseDto.from(friendCount);
     }
