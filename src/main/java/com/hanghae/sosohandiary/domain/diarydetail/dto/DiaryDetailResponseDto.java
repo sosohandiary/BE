@@ -15,6 +15,7 @@ public class DiaryDetailResponseDto {
     private String customJson;
     private String diaryTitle;
     private String nickname;
+    private String thumbname;
     private int likeCount;
     private int commentCount;
     private boolean likeStatus;
@@ -29,6 +30,7 @@ public class DiaryDetailResponseDto {
         customJson = diaryDetail.getCustomJson();
         diaryTitle = diary.getTitle();
         nickname = diaryDetail.getNickname();
+        thumbname = diaryDetail.getThumbnail();
         this.likeCount = likeCount;
         this.commentCount = commentCount;
         this.likeStatus = likeStatus;

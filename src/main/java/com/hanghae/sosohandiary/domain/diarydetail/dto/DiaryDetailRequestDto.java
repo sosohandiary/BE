@@ -7,4 +7,5 @@ public class DiaryDetailRequestDto {
 
     private String content;
     private String customJson;
+    private String thumbnail;
 }

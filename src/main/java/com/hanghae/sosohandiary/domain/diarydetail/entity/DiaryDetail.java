@@ -26,6 +26,8 @@ public class DiaryDetail extends Timestamp {
 
     @Column(columnDefinition = "TEXT")
     private String customJson;
+    @Column(columnDefinition = "TEXT")
+    private String thumbnail;
 
     private String nickname;
 
@@ -37,6 +39,7 @@ public class DiaryDetail extends Timestamp {
     private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary, Member member) {
         content = diaryDetailRequestDto.getContent();
         customJson = diaryDetailRequestDto.getCustomJson();
+        thumbnail = diaryDetailRequestDto.getThumbnail();
         nickname = member.getNickname();
         this.diary = diary;
     }
