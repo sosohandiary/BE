@@ -18,11 +18,12 @@ public enum ErrorHandling {
     NOT_FOUND_DIARY_DETAIL(HttpStatus.NOT_FOUND, "해당 하는 diary 속지를 찾을 수 없습니다"),
     NOT_FOUND_DIARY_DETAIL_COMMENT(HttpStatus.NOT_FOUND, "해당 하는 diary 속지의 댓글을 찾을 수 없습니다"),
     NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "댓글을 찾을 수 없습니다"),
-    NOT_MATCH_AUTHORIZATION(HttpStatus.FORBIDDEN, "작성자만 삭제/수정할 수 있습니다"),
+    NOT_MATCH_AUTHORIZATION(HttpStatus.FORBIDDEN, "작성자만 조회/수정/삭제 할 수 있습니다"),
     NOT_FRIEND_REQUEST(HttpStatus.NOT_FOUND, "해당하는 친구 요청이 없습니다"),
     INVALID_ACCESS(HttpStatus.BAD_REQUEST, "유효하지 않은 접근입니다"),
     DUPLICATED_REQUEST(HttpStatus.CONFLICT, "중복된 요청입니다"),
-    OVER_THE_LIMIT(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED, "초대할 인원이 초과되었습니다");
+    OVER_THE_LIMIT(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED, "초대할 인원이 초과되었습니다"),
+    NOT_FRIEND(HttpStatus.BAD_REQUEST, "친구만 초대할 수 있습니다");
 
     private final HttpStatus httpStatus;
     private final String msg;
