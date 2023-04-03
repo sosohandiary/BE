@@ -18,6 +18,7 @@ public class CommentResponseDto {
     private Long diaryDetailId;
     private Long commentId;
     private String commentName;
+    private String commentProfileImageUrl;
     private String comment;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
@@ -32,6 +33,7 @@ public class CommentResponseDto {
         commentId = comment.getId();
         this.comment = comment.getComment();
         commentName = member.getNickname();
+        commentProfileImageUrl = member.getProfileImageUrl();
         createdAt = comment.getCreatedAt();
         modifiedAt = comment.getModifiedAt();
     }

@@ -57,7 +57,8 @@ public class FriendService {
         List<FriendResponseDto> friendResponseDtoList = new ArrayList<>();
 
         for (Friend friend : friendList) {
-            friendResponseDtoList.add(FriendResponseDto.of(friend.getId(), friend.getMember().getNickname(), friend.getFriend().getNickname()));
+            friendResponseDtoList.add(FriendResponseDto
+                    .of(friend.getId(), friend.getMember().getNickname(), friend.getFriend().getNickname(), friend.getFriend().getProfileImageUrl()));
         }
         return friendResponseDtoList;
     }
@@ -88,7 +89,8 @@ public class FriendService {
         List<FriendResponseDto> friendResponseDtoList = new ArrayList<>();
 
         for (Friend friend : friendList) {
-            friendResponseDtoList.add(FriendResponseDto.of(friend.getId(), friend.getFriend().getNickname(), friend.getMember().getNickname()));
+            friendResponseDtoList.add(FriendResponseDto
+                    .of(friend.getId(), friend.getMember().getNickname(), friend.getFriend().getNickname(), friend.getFriend().getProfileImageUrl()));
         }
         return friendResponseDtoList;
     }
