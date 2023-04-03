@@ -14,15 +14,17 @@ public class MemberResponseDto {
     private final String nickname;
     private final String statusMessage;
     private final StatusFriend friendStatus;
+    private final String profileImageUrl;
 
     @Builder
-    public MemberResponseDto(Long id, Long friendListId, String name, String nickname, String statusMessage, StatusFriend friendStatus) {
+    public MemberResponseDto(Long id, Long friendListId, String name, String nickname, String statusMessage, StatusFriend friendStatus, String profileImageUrl) {
         this.memberId = id;
         this.friendListId = friendListId;
         this.name = name;
         this.nickname = nickname;
         this.statusMessage = statusMessage;
         this.friendStatus = friendStatus;
+        this.profileImageUrl = profileImageUrl;
     }
 
     public static MemberResponseDto from(Friend friend) {
@@ -33,6 +35,7 @@ public class MemberResponseDto {
                 .nickname(friend.getFriend().getNickname())
                 .statusMessage(friend.getFriend().getStatusMessage())
                 .friendStatus(friend.getStatus())
+                .profileImageUrl(friend.getFriend().getProfileImageUrl())
                 .build();
     }
 
