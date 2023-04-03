@@ -34,6 +34,9 @@ public class Member {
     @Column(length = 100)
     private String statusMessage;
 
+    @Column
+    private String profileImageUrl;
+
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private MemberRoleEnum role;
@@ -77,7 +80,8 @@ public class Member {
         return this;
     }
 
-    public void updateProfile(String nickname, String statusMessage) {
+    public void updateProfile(String profileImageUrl, String nickname, String statusMessage) {
+        this.profileImageUrl = profileImageUrl;
         this.nickname = nickname;
         this.statusMessage = statusMessage;
     }

@@ -12,7 +12,9 @@ import com.hanghae.sosohandiary.utils.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -29,8 +31,9 @@ public class MyPageController {
 
     @PatchMapping("/profile/edit")
     public MessageDto editMyPageProfile(@AuthenticationPrincipal MemberDetailsImpl memberDetails,
-                                        @RequestBody ProfileEditRequestDto profileEditRequestDto) {
-        return mypageService.editProfile(memberDetails.getMember(), profileEditRequestDto);
+                                        @RequestPart(value = "img", required = false) List<MultipartFile> multipartFileList,
+                                        @RequestPart(value = "data") ProfileEditRequestDto profileEditRequestDto) throws IOException {
+        return mypageService.editProfile(memberDetails.getMember(), multipartFileList, profileEditRequestDto);
     }
 
     @DeleteMapping("/out")

@@ -9,14 +9,18 @@ import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,7 +34,6 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
     private String uploadImageUrl;
-
     private final AmazonS3 S3Client;
 
     public void uploadDiary(List<MultipartFile> multipartFilelist, DiaryRequestDto diaryRequestDto, Member member) throws IOException {
@@ -43,6 +46,24 @@ public class S3Service {
                 Diary.of(diaryRequestDto, upload(uploadFile), member);
             }
         }
+    }
+
+    public String uploadProfileImage(List<MultipartFile> multipartFilelist) throws IOException {
+
+        String imageUrl = "";
+
+        for (MultipartFile multipartFile : multipartFilelist) {
+
+            resizeImage(multipartFile);
+
+            File uploadFile = convert(multipartFile).orElseThrow(
+                    () -> new IllegalArgumentException("파일 전환 실패")
+            );
+
+            imageUrl = upload(uploadFile);
+        }
+
+        return imageUrl;
     }
 
     private String upload(File uploadFile) {
@@ -91,6 +112,44 @@ public class S3Service {
     public void deleteFile(String fileName) {
 
         S3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
+    }
+
+    private File resizeImage(MultipartFile file) throws IOException {
+
+        BufferedImage originalImage = ImageIO.read(file.getInputStream());
+        int originWidth = originalImage.getWidth();
+        int originHeight = originalImage.getHeight();
+
+        int newWidth = 220;
+        int newHeight = 0;
+        if (originWidth > newWidth) {
+            newHeight = (originHeight * newWidth) / originWidth; // 이미지 비율로 변환
+        }
+
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics2D = resizedImage.createGraphics();
+        graphics2D.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
+        graphics2D.dispose();
+
+        File outputfile = new File(file.getOriginalFilename());
+        try {
+            if (outputfile.createNewFile()) {
+
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+                String type = file.getContentType().substring(file.getContentType().indexOf("/")+1);
+                ImageIO.write(resizedImage, type, bos);
+
+                InputStream inputStream = new ByteArrayInputStream(bos.toByteArray());
+
+                Files.copy(inputStream, outputfile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                return outputfile;
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+        return null;
+
     }
 
 }

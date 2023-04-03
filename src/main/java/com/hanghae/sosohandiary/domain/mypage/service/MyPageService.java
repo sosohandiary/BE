@@ -17,11 +17,14 @@ import com.hanghae.sosohandiary.domain.mypage.dto.MyPageProfileResponseDto;
 import com.hanghae.sosohandiary.domain.mypage.dto.ProfileEditRequestDto;
 import com.hanghae.sosohandiary.exception.ApiException;
 import com.hanghae.sosohandiary.utils.MessageDto;
+import com.hanghae.sosohandiary.utils.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +41,7 @@ public class MyPageService {
     private final DiaryRepository diaryRepository;
     private final FriendRepository friendsRepository;
     private final InviteRepository inviteRepository;
+    private final S3Service s3Service;
 
     public MyPageProfileResponseDto getProfile(Member member) {
 
@@ -45,19 +49,17 @@ public class MyPageService {
                 () -> new ApiException(NOT_FOUND_USER)
         );
 
-        return MyPageProfileResponseDto.of(foundMember.getNickname(), foundMember.getStatusMessage());
+        return MyPageProfileResponseDto.of(foundMember.getProfileImageUrl(), foundMember.getNickname(), foundMember.getStatusMessage());
     }
 
     @Transactional
-    public MessageDto editProfile(Member member, ProfileEditRequestDto profileEditRequestDto) {
+    public MessageDto editProfile(Member member, List<MultipartFile> multipartFileList, ProfileEditRequestDto profileEditRequestDto) throws IOException {
 
         Member foundMember = memberRepository.findById(member.getId()).orElseThrow(
                 () -> new ApiException(NOT_FOUND_USER)
         );
 
-        foundMember.updateProfile(profileEditRequestDto.getNickname(), profileEditRequestDto.getStatusMessage());
-
-//        memberRepository.save(foundMember);
+        foundMember.updateProfile(s3Service.uploadProfileImage(multipartFileList), profileEditRequestDto.getNickname(), profileEditRequestDto.getStatusMessage());
 
         return MessageDto.of("프로필 수정 성공", HttpStatus.ACCEPTED);
 
