@@ -30,7 +30,7 @@ public class FriendController {
 
     @PutMapping("/request/accept/{friendrequest-id}")
     public MessageDto acceptFriend(@PathVariable(value = "friendrequest-id") Long id,
-                                                    @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+                                   @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return friendsListService.acceptFriend(id, memberDetails.getMember());
     }
 
@@ -43,5 +43,11 @@ public class FriendController {
     public MessageDto deleteFriendList(@PathVariable("friend-id") Long id,
                                        @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return friendsListService.deleteFriendList(id, memberDetails.getMember());
+    }
+
+    @PatchMapping("/request/read/{friendrequest-id}")
+    public FriendResponseDto readRequest(@PathVariable(value = "friendrequest-id") Long id,
+                                       @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return friendsListService.readRequest(id, memberDetails.getMember());
     }
 }

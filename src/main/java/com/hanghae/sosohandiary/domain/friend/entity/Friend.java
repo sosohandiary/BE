@@ -37,12 +37,24 @@ public class Friend extends Timestamp {
     @Enumerated(EnumType.STRING)
     private StatusFriend status;
 
+    private boolean alarm;
+
     @Builder
-    private Friend(Member member, Member friend, StatusFriend status) {
+    private Friend(Member member, Member friend, StatusFriend status, boolean alarm) {
         friendNickname = friend.getNickname();
         this.member = member;
         this.friend = friend;
         this.status = status;
+        this.alarm = alarm;
+    }
+
+    public static Friend of(Member member, Member friend, StatusFriend status, boolean alarm) {
+        return Friend.builder()
+                .member(member)
+                .friend(friend)
+                .status(status)
+                .alarm(alarm)
+                .build();
     }
 
     public static Friend of(Member member, Member friend, StatusFriend status) {
@@ -55,6 +67,10 @@ public class Friend extends Timestamp {
 
     public void updateFriendStatus(StatusFriend status) {
         this.status = status;
+    }
+
+    public void updateAlarm(boolean alarm) {
+        this.alarm = alarm;
     }
 
 }
