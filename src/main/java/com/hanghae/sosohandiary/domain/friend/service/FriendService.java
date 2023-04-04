@@ -79,7 +79,7 @@ public class FriendService {
 
         friendAccept.updateFriendStatus(ACCEPTED);
 
-        friendRepository.save(Friend.of(memberId, friendId, ACCEPTED));
+        friendRepository.save(Friend.of(memberId, friendId, ACCEPTED, true));
         return MessageDto.of("친구추가 성공", HttpStatus.ACCEPTED);
     }
 
@@ -112,4 +112,19 @@ public class FriendService {
         return MessageDto.of("친구 삭제 완료", HttpStatus.OK);
     }
 
+    @Transactional
+    public FriendResponseDto readRequest(Long id, Member member) {
+
+        Friend friend = friendRepository.findById(id).orElseThrow(
+                () -> new ApiException(NOT_FOUND_USER)
+        );
+
+        if (!friend.getFriend().getId().equals(member.getId())) {
+            System.out.println("getFriendId = " + friend.getFriend().getId());
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
+        }
+
+        friend.updateAlarm(true);
+        return FriendResponseDto.of(friend.getId(), friend.getFriendNickname(), friend.getMember().getNickname(), friend.isAlarm());
+    }
 }

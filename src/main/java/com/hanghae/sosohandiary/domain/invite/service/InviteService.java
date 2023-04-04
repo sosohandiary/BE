@@ -83,4 +83,19 @@ public class InviteService {
 
         return inviteResponseDtoList;
     }
+
+    @Transactional
+    public InviteResponseDto alarmRead(Long inviteId, Member member) {
+
+        Invite invite = inviteRepository.findById(inviteId).orElseThrow(
+                () -> new ApiException(NOT_FOUND_INVITE)
+        );
+
+        if (!invite.getToMember().getId().equals(member.getId())) {
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
+        }
+
+        invite.updateAlarm(true);
+        return InviteResponseDto.of(invite, invite.getToMember());
+    }
 }

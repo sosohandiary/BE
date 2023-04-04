@@ -10,11 +10,13 @@ public class InviteResponseDto {
 
     private Long inviteId;
     private String nickname;
+    private boolean alarm;
 
     @Builder
     private InviteResponseDto(Invite invite, Member member) {
         inviteId = invite.getId();
         nickname = member.getNickname();
+        alarm = invite.isAlarm();
     }
 
     public static InviteResponseDto of(Invite invite, Member member) {

@@ -18,6 +18,7 @@ public class CommentAlarmResponseDto {
     private Long diaryDetailId;
     private Long commentId;
     private String commentName;
+    private boolean alarm;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;
@@ -32,6 +33,7 @@ public class CommentAlarmResponseDto {
         this.commentName = comment.getNickname();
         createdAt = comment.getCreatedAt();
         modifiedAt = comment.getModifiedAt();
+        alarm = comment.isAlarm();
     }
 
     public static CommentAlarmResponseDto of(DiaryDetail diaryDetail, Comment comment) {

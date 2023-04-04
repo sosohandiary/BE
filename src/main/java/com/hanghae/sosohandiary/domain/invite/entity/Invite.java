@@ -39,11 +39,23 @@ public class Invite {
     @OnDelete(action = CASCADE)
     private Diary diary;
 
+    private boolean alarm;
+
     @Builder
-    private Invite(Member fromMember, Member toMember, Diary diary) {
+    private Invite(Member fromMember, Member toMember, Diary diary, boolean alarm) {
         this.fromMember = fromMember;
         this.toMember = toMember;
         this.diary = diary;
+        this.alarm = alarm;
+    }
+
+    public static Invite of(Member fromMember, Member toMember, Diary diary, boolean alarm) {
+        return Invite.builder()
+                .diary(diary)
+                .fromMember(fromMember)
+                .toMember(toMember)
+                .alarm(alarm)
+                .build();
     }
 
     public static Invite of(Member fromMember, Member toMember, Diary diary) {
@@ -52,6 +64,10 @@ public class Invite {
                 .fromMember(fromMember)
                 .toMember(toMember)
                 .build();
+    }
+
+    public void updateAlarm(boolean alarm) {
+        this.alarm = alarm;
     }
 
 }
