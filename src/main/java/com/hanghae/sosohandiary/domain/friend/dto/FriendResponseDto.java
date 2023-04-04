@@ -21,12 +21,20 @@ public class FriendResponseDto {
         this.alarm = alarm;
     }
 
-    public static FriendResponseDto of(Long id, String friendNickName, String nickname, String profileImageUrl, boolean alarm) {
+    public static FriendResponseDto of(Long id, String friendNickName, String nickname, String profileImageUrl) {
         return FriendResponseDto.builder()
                 .id(id)
                 .friendNickName(friendNickName)
                 .nickname(nickname)
-                 .profileImageUrl(profileImageUrl)
+                .profileImageUrl(profileImageUrl)
+                .build();
+    }
+
+    public static FriendResponseDto of(Long id, String friendNickName, String nickname, boolean alarm) {
+        return FriendResponseDto.builder()
+                .id(id)
+                .friendNickName(friendNickName)
+                .nickname(nickname)
                 .alarm(alarm)
                 .build();
     }
