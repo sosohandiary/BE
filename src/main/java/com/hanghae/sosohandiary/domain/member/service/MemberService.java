@@ -99,6 +99,7 @@ public class MemberService {
                         .nickname(eachMember.getNickname())
                         .statusMessage(eachMember.getStatusMessage())
                         .friendStatus(StatusFriend.ACCEPTED)
+                        .profileImageUrl(eachMember.getProfileImageUrl())
                         .build());
             } else if (isPending) {
                 responseDtoList.add(MemberResponseDto.builder()
@@ -107,6 +108,7 @@ public class MemberService {
                         .nickname(eachMember.getNickname())
                         .statusMessage(eachMember.getStatusMessage())
                         .friendStatus(StatusFriend.PENDING)
+                        .profileImageUrl(eachMember.getProfileImageUrl())
                         .build());
             } else {
                 responseDtoList.add(MemberResponseDto.builder()
@@ -115,6 +117,7 @@ public class MemberService {
                         .nickname(eachMember.getNickname())
                         .statusMessage(eachMember.getStatusMessage())
                         .friendStatus(null)
+                        .profileImageUrl(eachMember.getProfileImageUrl())
                         .build());
             }
         }
