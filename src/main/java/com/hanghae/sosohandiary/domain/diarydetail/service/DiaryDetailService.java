@@ -51,7 +51,7 @@ public class DiaryDetailService {
         isAuthor(member, diary);
         isPrivateMember(member, diary);
 
-        return DiaryDetailResponseDto.of(diaryDetail, diary);
+        return DiaryDetailResponseDto.of(diaryDetail, diary, member);
     }
 
     public PageCustom<DiaryDetailResponseDto> findListDetail(Long id, Pageable pageable) {
@@ -89,7 +89,7 @@ public class DiaryDetailService {
             }
         }
 
-        return DiaryDetailResponseDto.of(diaryDetail, diary,
+        return DiaryDetailResponseDto.of(diaryDetail, diary, member,
                 likesRepository.countByDiaryDetailId(detailId),
                 commentRepository.countCommentsByDiaryDetailId(detailId),
                 likesRepository.existsByDiaryDetailIdAndMemberId(detailId, member.getId()));
@@ -117,7 +117,7 @@ public class DiaryDetailService {
         isPrivateMember(member, diary);
         diaryDetail.update(diaryDetailRequestDto);
 
-        return DiaryDetailResponseDto.of(diaryDetail, diary);
+        return DiaryDetailResponseDto.of(diaryDetail, diary, member);
     }
 
     @Transactional

@@ -3,6 +3,7 @@ package com.hanghae.sosohandiary.domain.diarydetail.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
+import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,6 +16,7 @@ public class DiaryDetailResponseDto {
     private String customJson;
     private String diaryTitle;
     private String nickname;
+    private String profileImageUrl;
     private String thumbnail;
     private int likeCount;
     private int commentCount;
@@ -25,11 +27,12 @@ public class DiaryDetailResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, int likeCount, int commentCount, boolean likeStatus) {
+    private DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, Member member, int likeCount, int commentCount, boolean likeStatus) {
         id = diaryDetail.getId();
         customJson = diaryDetail.getCustomJson();
         diaryTitle = diary.getTitle();
         nickname = diaryDetail.getNickname();
+        profileImageUrl = member.getProfileImageUrl();
         thumbnail = diaryDetail.getThumbnail();
         this.likeCount = likeCount;
         this.commentCount = commentCount;
@@ -38,10 +41,11 @@ public class DiaryDetailResponseDto {
         modifiedAt = diaryDetail.getModifiedAt();
     }
 
-    public static DiaryDetailResponseDto of(DiaryDetail diaryDetail, Diary diary) {
+    public static DiaryDetailResponseDto of(DiaryDetail diaryDetail, Diary diary, Member member) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
                 .diary(diary)
+                .member(member)
                 .build();
     }
 
@@ -60,10 +64,11 @@ public class DiaryDetailResponseDto {
                 .build();
     }
 
-    public static DiaryDetailResponseDto of(DiaryDetail diaryDetail, Diary diary, int likeCount, int commentCount, boolean likeStatus) {
+    public static DiaryDetailResponseDto of(DiaryDetail diaryDetail, Diary diary, Member member, int likeCount, int commentCount, boolean likeStatus) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
                 .diary(diary)
+                .member(member)
                 .likeCount(likeCount)
                 .commentCount(commentCount)
                 .likeStatus(likeStatus)
