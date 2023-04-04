@@ -59,7 +59,13 @@ public class MyPageService {
                 () -> new ApiException(NOT_FOUND_USER)
         );
 
-        foundMember.updateProfile(s3Service.uploadProfileImage(multipartFileList), profileEditRequestDto.getNickname(), profileEditRequestDto.getStatusMessage());
+        if (multipartFileList != null) {
+            s3Service.uploadProfileImage(multipartFileList);
+        }
+
+        String imageUrl = s3Service.getUploadImageUrl();
+
+        foundMember.updateProfile(imageUrl, profileEditRequestDto.getNickname(), profileEditRequestDto.getStatusMessage());
 
         return MessageDto.of("프로필 수정 성공", HttpStatus.ACCEPTED);
 

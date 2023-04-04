@@ -40,6 +40,9 @@ public class S3Service {
 
         for (MultipartFile multipartFile : multipartFilelist) {
             if (multipartFile != null) {
+
+                resizeImage(multipartFile);
+
                 File uploadFile = convert(multipartFile).orElseThrow(
                         () -> new IllegalArgumentException("파일 전환 실패")
                 );
@@ -48,9 +51,7 @@ public class S3Service {
         }
     }
 
-    public String uploadProfileImage(List<MultipartFile> multipartFilelist) throws IOException {
-
-        String imageUrl = "";
+    public void uploadProfileImage(List<MultipartFile> multipartFilelist) throws IOException {
 
         for (MultipartFile multipartFile : multipartFilelist) {
 
@@ -60,10 +61,9 @@ public class S3Service {
                     () -> new IllegalArgumentException("파일 전환 실패")
             );
 
-            imageUrl = upload(uploadFile);
+            Member.of(uploadImageUrl);
         }
 
-        return imageUrl;
     }
 
     private String upload(File uploadFile) {

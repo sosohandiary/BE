@@ -42,13 +42,14 @@ public class Member {
     private MemberRoleEnum role;
 
     @Builder
-    public Member(Long kakaoId, String email, String password, String name, String nickname, String statusMessage, MemberRoleEnum role) {
+    public Member(Long kakaoId, String email, String password, String name, String nickname, String statusMessage, String profileImageUrl, MemberRoleEnum role) {
         this.kakaoId = kakaoId;
         this.email = email;
         this.password = password;
         this.name = name;
         this.nickname = nickname;
         this.statusMessage = statusMessage;
+        this.profileImageUrl = profileImageUrl;
         this.role = role;
     }
 
@@ -72,6 +73,12 @@ public class Member {
                 .name(joinRequestDto.getName())
                 .nickname(joinRequestDto.getNickname())
                 .role(role)
+                .build();
+    }
+
+    public static Member of(String profileImageUrl) {
+        return Member.builder()
+                .profileImageUrl(profileImageUrl)
                 .build();
     }
 
