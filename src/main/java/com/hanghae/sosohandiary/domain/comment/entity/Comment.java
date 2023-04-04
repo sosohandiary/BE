@@ -33,6 +33,8 @@ public class Comment extends Timestamp {
     @Column(nullable = false)
     private String comment;
 
+    private boolean alarm;
+
     @Builder
     private Comment(DiaryDetail diaryDetail, Member member, CommentRequestDto commentRequestDto) {
         this.diaryDetail = diaryDetail;
@@ -51,6 +53,10 @@ public class Comment extends Timestamp {
 
     public void update(String commentRequestDto) {
         this.comment = commentRequestDto;
+    }
+
+    public void updateAlarm(boolean alarm) {
+        this.alarm = alarm;
     }
 
 }

@@ -52,4 +52,11 @@ public class CommentController {
         return commentService.alarmComment(detailId, memberDetails.getMember());
     }
 
+    @PatchMapping("/comment/alarm/{comment-id}")
+    public CommentAlarmResponseDto readAlarm(@PathVariable("detail-id") Long detailId,
+                                             @PathVariable("comment-id") Long commentId,
+                                             @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return commentService.readAlarm(detailId, commentId, memberDetails.getMember());
+    }
+
 }

@@ -111,4 +111,23 @@ public class CommentService {
 
         return commentAlarmResponseDtoList;
     }
+
+    @Transactional
+    public CommentAlarmResponseDto readAlarm(Long detailId, Long commentId, Member member) {
+
+        DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
+                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
+        );
+
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new ApiException(NOT_FOUND_COMMENT)
+        );
+
+        if (!diaryDetail.getNickname().equals(member.getNickname())) {
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
+        }
+
+        comment.updateAlarm(true);
+        return CommentAlarmResponseDto.of(diaryDetail, comment);
+    }
 }
