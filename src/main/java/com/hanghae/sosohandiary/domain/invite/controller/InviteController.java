@@ -33,4 +33,10 @@ public class InviteController {
     public List<InviteResponseDto> alarmInvite(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return inviteService.alarmInvite(memberDetails.getMember());
     }
+
+    @PatchMapping("/alarm/read/{invite-id}")
+    public InviteResponseDto alarmRead(@PathVariable("invite-id") Long inviteId,
+                                       @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return inviteService.alarmRead(inviteId, memberDetails.getMember());
+    }
 }
