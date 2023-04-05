@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface DiaryDetailRepository extends JpaRepository<DiaryDetail, Long> {
@@ -14,4 +15,7 @@ public interface DiaryDetailRepository extends JpaRepository<DiaryDetail, Long> 
     Optional<DiaryDetail> findByDiaryIdAndId(Long diaryId, Long id);
 
     Page<DiaryDetail> findAllByDiaryIdOrderByCreatedAtAsc(Pageable pageable, Long id);
+
+    List<DiaryDetail> findAllByMemberId(Long id);
+
 }
