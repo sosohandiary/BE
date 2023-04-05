@@ -26,7 +26,9 @@ public class DiaryDetail extends Timestamp {
     @Column(columnDefinition = "TEXT")
     private String thumbnail;
 
-    private String nickname;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "diary_id")
@@ -36,7 +38,7 @@ public class DiaryDetail extends Timestamp {
     private DiaryDetail(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary, Member member) {
         customJson = diaryDetailRequestDto.getCustomJson();
         thumbnail = diaryDetailRequestDto.getThumbnail();
-        nickname = member.getNickname();
+        this.member = member;
         this.diary = diary;
     }
 

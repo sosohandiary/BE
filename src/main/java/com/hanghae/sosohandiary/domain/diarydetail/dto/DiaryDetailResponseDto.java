@@ -15,7 +15,7 @@ public class DiaryDetailResponseDto {
     private Long id;
     private String customJson;
     private String diaryTitle;
-    private String nickname;
+    private String nickName;
     private String profileImageUrl;
     private String thumbnail;
     private int likeCount;
@@ -31,7 +31,7 @@ public class DiaryDetailResponseDto {
         id = diaryDetail.getId();
         customJson = diaryDetail.getCustomJson();
         diaryTitle = diary.getTitle();
-        nickname = diaryDetail.getNickname();
+        nickName = member.getNickname();
         profileImageUrl = member.getProfileImageUrl();
         thumbnail = diaryDetail.getThumbnail();
         this.likeCount = likeCount;

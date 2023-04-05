@@ -109,7 +109,7 @@ public class DiaryDetailService {
                 () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
         );
 
-        if (!diaryDetail.getNickname().equals(member.getNickname())) {
+        if (!diaryDetail.getMember().getId().equals(member.getId())) {
             throw new ApiException(NOT_MATCH_AUTHORIZATION);
         }
 
@@ -131,7 +131,7 @@ public class DiaryDetailService {
                 () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
         );
 
-        if (!diaryDetail.getNickname().equals(member.getNickname())) {
+        if (!diaryDetail.getMember().getId().equals(member.getId())) {
             throw new ApiException(NOT_MATCH_AUTHORIZATION);
         }
 
