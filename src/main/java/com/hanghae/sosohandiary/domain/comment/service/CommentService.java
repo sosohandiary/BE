@@ -93,41 +93,4 @@ public class CommentService {
         return MessageDto.of("댓글삭제 완료", HttpStatus.OK);
     }
 
-    public List<CommentAlarmResponseDto> alarmComment(Long detailId, Member member) {
-
-        DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
-                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
-        );
-
-        if (!diaryDetail.getNickname().equals(member.getNickname())) {
-            throw new ApiException(NOT_MATCH_AUTHORIZATION);
-        }
-
-        List<Comment> commentList = commentRepository.findByDiaryDetailIdOrderByModifiedAtDesc(detailId);
-        List<CommentAlarmResponseDto> commentAlarmResponseDtoList = new ArrayList<>();
-        for (Comment comment : commentList) {
-            commentAlarmResponseDtoList.add(CommentAlarmResponseDto.of(diaryDetail, comment));
-        }
-
-        return commentAlarmResponseDtoList;
-    }
-
-    @Transactional
-    public CommentAlarmResponseDto readAlarm(Long detailId, Long commentId, Member member) {
-
-        DiaryDetail diaryDetail = diaryDetailRepository.findById(detailId).orElseThrow(
-                () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
-        );
-
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new ApiException(NOT_FOUND_COMMENT)
-        );
-
-        if (!diaryDetail.getNickname().equals(member.getNickname())) {
-            throw new ApiException(NOT_MATCH_AUTHORIZATION);
-        }
-
-        comment.updateAlarm(true);
-        return CommentAlarmResponseDto.of(diaryDetail, comment);
-    }
 }
