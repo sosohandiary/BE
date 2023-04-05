@@ -49,7 +49,7 @@ public class MyPageService {
                 () -> new ApiException(NOT_FOUND_USER)
         );
 
-        return MyPageProfileResponseDto.of(foundMember.getProfileImageUrl(), foundMember.getNickname(), foundMember.getStatusMessage());
+        return MyPageProfileResponseDto.of(foundMember);
     }
 
     @Transactional
@@ -63,16 +63,14 @@ public class MyPageService {
             s3Service.uploadProfileImage(multipartFileList);
         }
 
-        String imageUrl = s3Service.getUploadImageUrl();
-
-        foundMember.updateProfile(imageUrl, profileEditRequestDto.getNickname(), profileEditRequestDto.getStatusMessage());
+        foundMember.updateProfile(s3Service.getUploadImageUrl(), profileEditRequestDto.getNickname(), profileEditRequestDto.getStatusMessage());
 
         return MessageDto.of("프로필 수정 성공", HttpStatus.ACCEPTED);
 
     }
 
     @Transactional
-    public MessageDto deleteMember(Member member) {
+    public MessageDto deleteMember(Member member) throws IOException {
 
         member = memberRepository.findById(member.getId()).orElseThrow(
                 () -> new ApiException(NOT_FOUND_USER)

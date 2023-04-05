@@ -37,7 +37,7 @@ public class MyPageController {
     }
 
     @DeleteMapping("/out")
-    public MessageDto deleteMember(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+    public MessageDto deleteMember(@AuthenticationPrincipal MemberDetailsImpl memberDetails) throws IOException {
         return mypageService.deleteMember(memberDetails.getMember());
     }
 

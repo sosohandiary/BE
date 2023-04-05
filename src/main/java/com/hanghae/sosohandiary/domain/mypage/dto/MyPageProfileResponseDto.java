@@ -1,5 +1,6 @@
 package com.hanghae.sosohandiary.domain.mypage.dto;
 
+import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -8,22 +9,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MyPageProfileResponseDto {
 
+    private Long memberId;
     private String profileImageUrl;
     private String nickname;
     private String statusMessage;
 
+
     @Builder
-    private MyPageProfileResponseDto(String profileImageUrl, String nickname, String statusMessage) {
-        this.profileImageUrl = profileImageUrl;
-        this.nickname = nickname;
-        this.statusMessage = statusMessage;
+    private MyPageProfileResponseDto(Member member) {
+        this.memberId = member.getId();
+        this.profileImageUrl = member.getProfileImageUrl();
+        this.nickname = member.getNickname();
+        this.statusMessage = member.getStatusMessage();
     }
 
-    public static MyPageProfileResponseDto of(String profileImageUrl, String nickname, String statusMessage) {
+    public static MyPageProfileResponseDto of(Member member) {
         return MyPageProfileResponseDto.builder()
-                .profileImageUrl(profileImageUrl)
-                .nickname(nickname)
-                .statusMessage(statusMessage)
+                .member(member)
                 .build();
     }
 
