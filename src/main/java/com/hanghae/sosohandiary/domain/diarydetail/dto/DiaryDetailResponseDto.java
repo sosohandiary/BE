@@ -55,10 +55,11 @@ public class DiaryDetailResponseDto {
                 .build();
     }
 
-    public static DiaryDetailResponseDto of(DiaryDetail diaryDetail, Diary diary, int likeCount, int commentCount) {
+    public static DiaryDetailResponseDto of(DiaryDetail diaryDetail, Diary diary, Member member, int likeCount, int commentCount) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
                 .diary(diary)
+                .member(member)
                 .likeCount(likeCount)
                 .commentCount(commentCount)
                 .build();
