@@ -28,8 +28,8 @@ public class FriendController {
         return friendsListService.getFriendRequest(memberDetails.getMember());
     }
 
-    @PutMapping("/request/accept/{friend-id}")
-    public MessageDto acceptFriend(@PathVariable(value = "friend-id") Long id,
+    @PutMapping("/request/accept/{friendlist-id}")
+    public MessageDto acceptFriend(@PathVariable(value = "friendlist-id") Long id,
                                    @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return friendsListService.acceptFriend(id, memberDetails.getMember());
     }
@@ -39,14 +39,14 @@ public class FriendController {
         return friendsListService.getFriendList(memberDetails.getMember());
     }
 
-    @DeleteMapping("/list/{friend-id}")
-    public MessageDto deleteFriendList(@PathVariable("friend-id") Long id,
+    @DeleteMapping("/list/{friendlist-id}")
+    public MessageDto deleteFriendList(@PathVariable("friendlist-id") Long id,
                                        @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return friendsListService.deleteFriendList(id, memberDetails.getMember());
     }
 
-    @PatchMapping("/request/read/{friend-id}")
-    public FriendResponseDto readRequest(@PathVariable(value = "friend-id") Long id,
+    @PatchMapping("/request/read/{friendlist-id}")
+    public FriendResponseDto readRequest(@PathVariable(value = "friendlist-id") Long id,
                                        @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return friendsListService.readRequest(id, memberDetails.getMember());
     }
