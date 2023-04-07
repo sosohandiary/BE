@@ -30,7 +30,7 @@ public class CommentAlarmResponseDto {
     private CommentAlarmResponseDto(DiaryDetail diaryDetail, Comment comment) {
         diaryDetailId = diaryDetail.getId();
         commentId = comment.getId();
-        this.commentName = comment.getNickname();
+        this.commentName = comment.getMember().getNickname();
         createdAt = comment.getCreatedAt();
         modifiedAt = comment.getModifiedAt();
         alarm = comment.isAlarm();
