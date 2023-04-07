@@ -76,11 +76,15 @@ public class MyPageService {
                 () -> new ApiException(NOT_FOUND_USER)
         );
 
-        Diary diary = diaryRepository.findByMemberId(member.getId()).orElseThrow(
-                () -> new ApiException(NOT_FOUND_DIARY)
-        );
+        List<Diary> diaryList = diaryRepository.findByMemberId(member.getId());
 
-        diaryService.removeDiary(diary.getId(), member);
+        for (Diary diary : diaryList) {
+            if(diaryList.isEmpty()) {
+                diaryService.removeDiary(diary.getId(), member);
+            }
+            diaryService.removeDiary(diary.getId(), member);
+        }
+
         memberRepository.deleteById(member.getId());
         diaryRepository.deleteAllByMemberId(member.getId());
         friendsRepository.deleteAllByFriendId(member.getId());
