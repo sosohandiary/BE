@@ -32,7 +32,7 @@ public class DiaryDetailResponseDto {
         customJson = diaryDetail.getCustomJson();
         diaryTitle = diary.getTitle();
         nickname = diaryDetail.getMember().getNickname();
-        profileImageUrl = member.getProfileImageUrl();
+        profileImageUrl = diaryDetail.getMember().getProfileImageUrl();
         thumbnail = diaryDetail.getThumbnail();
         this.likeCount = likeCount;
         this.commentCount = commentCount;
