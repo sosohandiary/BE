@@ -1,6 +1,6 @@
 package com.hanghae.sosohandiary.utils.s3;
 
-import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -9,19 +9,16 @@ import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,41 +31,48 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucketName;
     private String uploadImageUrl;
-    private final AmazonS3 S3Client;
+    private final AmazonS3Client S3Client;
 
     public void uploadDiary(List<MultipartFile> multipartFilelist, DiaryRequestDto diaryRequestDto, Member member) throws IOException {
 
         for (MultipartFile multipartFile : multipartFilelist) {
             if (multipartFile != null) {
 
-                resizeImage(multipartFile);
-
                 File uploadFile = convert(multipartFile).orElseThrow(
                         () -> new IllegalArgumentException("파일 전환 실패")
                 );
-                Diary.of(diaryRequestDto, upload(uploadFile), member);
+                Diary.of(diaryRequestDto, diaryUpload(uploadFile), member);
             }
         }
     }
 
-    public void uploadProfileImage(List<MultipartFile> multipartFilelist) throws IOException {
+    public String uploadProfileImage(List<MultipartFile> multipartFilelist) throws IOException {
+
+        String imageUrl = "";
 
         for (MultipartFile multipartFile : multipartFilelist) {
-
-            resizeImage(multipartFile);
 
             File uploadFile = convert(multipartFile).orElseThrow(
                     () -> new IllegalArgumentException("파일 전환 실패")
             );
 
-            Member.of(uploadImageUrl);
+            imageUrl = profileUpload(uploadFile);
         }
 
+        return imageUrl;
     }
 
-    private String upload(File uploadFile) {
+    private String diaryUpload(File uploadFile) throws IOException {
 
-        String fileName = "" + UUID.randomUUID();
+        String fileName = "diary" + "/" + UUID.randomUUID().toString();
+        uploadImageUrl = putS3(uploadFile, fileName);
+        removeNewFile(uploadFile);
+        return uploadImageUrl;
+    }
+
+    private String profileUpload(File uploadFile) throws IOException {
+
+        String fileName = "profile" + "/" + UUID.randomUUID().toString();
         uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;
@@ -81,19 +85,19 @@ public class S3Service {
         return S3Client.getUrl(bucketName, fileName).toString();
     }
 
-
-    private void removeNewFile(File targetFile) {
+    private void removeNewFile(File targetFile) throws IOException {
 
         if (targetFile.delete()) {
-            log.info("File delete success");
-            return;
+            log.info("File success to delete");
+        } else {
+            log.info("File fail to delete");
         }
-        log.info("File delete fail");
+
     }
 
     private Optional<File> convert(MultipartFile multipartFile) throws IOException {
 
-        File convertFile = new File(multipartFile.getName());
+        File convertFile = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
 
         if (convertFile.createNewFile()) {
             try (FileOutputStream fos = new FileOutputStream(convertFile)) {
@@ -114,42 +118,5 @@ public class S3Service {
         S3Client.deleteObject(new DeleteObjectRequest(bucketName, fileName));
     }
 
-    private File resizeImage(MultipartFile file) throws IOException {
-
-        BufferedImage originalImage = ImageIO.read(file.getInputStream());
-        int originWidth = originalImage.getWidth();
-        int originHeight = originalImage.getHeight();
-
-        int newWidth = 220;
-        int newHeight = 0;
-        if (originWidth > newWidth) {
-            newHeight = (originHeight * newWidth) / originWidth; // 이미지 비율로 변환
-        }
-
-        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics2D = resizedImage.createGraphics();
-        graphics2D.drawImage(originalImage, 0, 0, newWidth, newHeight, null);
-        graphics2D.dispose();
-
-        File outputfile = new File(file.getOriginalFilename());
-        try {
-            if (outputfile.createNewFile()) {
-
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-                String type = file.getContentType().substring(file.getContentType().indexOf("/")+1);
-                ImageIO.write(resizedImage, type, bos);
-
-                InputStream inputStream = new ByteArrayInputStream(bos.toByteArray());
-
-                Files.copy(inputStream, outputfile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                return outputfile;
-            }
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
-        }
-        return null;
-
-    }
 
 }

@@ -150,6 +150,7 @@ public class DiaryService {
         }
 
         for (MultipartFile multipartFile : multipartFileList) {
+
             if (multipartFile.getOriginalFilename().equals("")) {
                 String uploadImageUrl = diary.getImg();
                 diary.update(diaryRequestDto, uploadImageUrl);
@@ -157,9 +158,7 @@ public class DiaryService {
             }
         }
 
-        if (multipartFileList != null) {
-            s3Service.uploadDiary(multipartFileList, diaryRequestDto, member);
-        }
+        s3Service.uploadDiary(multipartFileList, diaryRequestDto, member);
 
         String uploadImageUrl = s3Service.getUploadImageUrl();
 
@@ -169,7 +168,7 @@ public class DiaryService {
     }
 
     @Transactional
-    public MessageDto removeDiary(Long id, Member member) {
+    public MessageDto removeDiary(Long id, Member member) throws IOException {
 
         Diary diary = getDiary(id);
 

@@ -55,14 +55,14 @@ public class DiaryController {
     @PatchMapping("/diary/{diary-id}")
     public DiaryResponseDto diaryModify(@PathVariable(name = "diary-id") Long id,
                                         @RequestPart(value = "title") DiaryRequestDto diaryRequestDto,
-                                        @RequestPart(value = "img") List<MultipartFile> multipartFileList,
+                                        @RequestPart(value = "img", required = false) List<MultipartFile> multipartFileList,
                                         @AuthenticationPrincipal MemberDetailsImpl memberDetails) throws IOException {
         return diaryService.modifyDiary(id, diaryRequestDto, multipartFileList, memberDetails.getMember());
     }
 
     @DeleteMapping("/diary/{diary-id}")
     public MessageDto diaryRemove(@PathVariable(name = "diary-id") Long id,
-                                  @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+                                  @AuthenticationPrincipal MemberDetailsImpl memberDetails) throws IOException {
         return diaryService.removeDiary(id, memberDetails.getMember());
     }
 
