@@ -33,7 +33,7 @@ public class CommentResponseDto {
         commentId = comment.getId();
         this.comment = comment.getComment();
         commentName = comment.getMember().getNickname();
-        commentProfileImageUrl = member.getProfileImageUrl();
+        commentProfileImageUrl = comment.getMember().getProfileImageUrl();
         createdAt = comment.getCreatedAt();
         modifiedAt = comment.getModifiedAt();
     }
