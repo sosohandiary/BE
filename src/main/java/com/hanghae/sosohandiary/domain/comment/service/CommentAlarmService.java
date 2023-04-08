@@ -29,11 +29,9 @@ public class CommentAlarmService {
     public List<CommentAlarmResponseDto> alarmComment(Member member) {
 
         List<DiaryDetail> diaryDetailList = diaryDetailRepository.findAllByMemberId(member.getId());
-        List<Comment> commentList = new ArrayList<>();
         List<CommentAlarmResponseDto> commentAlarmResponseDtoList = new ArrayList<>();
         for (DiaryDetail diaryDetail : diaryDetailList) {
-            Optional<Comment> comment = commentRepository.findByDiaryDetailIdOrderByModifiedAtDesc(diaryDetail.getId());
-            comment.ifPresent(commentList::add);
+            List<Comment> commentList = commentRepository.findAllByDiaryDetailIdOrderByCreatedAtDesc(diaryDetail.getId());
             for (Comment comments : commentList) {
                 commentAlarmResponseDtoList.add(CommentAlarmResponseDto.of(diaryDetail, comments));
             }
