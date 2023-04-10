@@ -74,11 +74,12 @@ public class InviteService {
     public List<InviteResponseDto> findInviteList(Long diaryId, Member member) {
 
         List<Invite> inviteList = inviteRepository.findAllByDiaryId(diaryId);
+        if (inviteList.stream().noneMatch(invite -> invite.getFromMember().getId().equals(member.getId()) ||
+                invite.getToMember().getId().equals(member.getId()))) {
+            throw new ApiException(NOT_MATCH_AUTHORIZATION);
+        }
         List<InviteResponseDto> inviteResponseDtoList = new ArrayList<>();
         for (Invite invite : inviteList) {
-            if (!(invite.getToMember().getId().equals(member.getId()) || invite.getFromMember().getId().equals(member.getId()))) {
-                throw new ApiException(NOT_MATCH_AUTHORIZATION);
-            }
             inviteResponseDtoList.add(InviteResponseDto.of(invite, invite.getToMember()));
         }
 
