@@ -4,6 +4,7 @@ import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.friend.entity.Friend;
 import com.hanghae.sosohandiary.domain.friend.repository.FriendRepository;
+import com.hanghae.sosohandiary.domain.invite.dto.InviteFindResponseDto;
 import com.hanghae.sosohandiary.domain.invite.dto.InviteResponseDto;
 import com.hanghae.sosohandiary.domain.invite.entity.Invite;
 import com.hanghae.sosohandiary.domain.invite.repository.InviteRepository;
@@ -71,16 +72,16 @@ public class InviteService {
         return MessageDto.of("공유 다이어리 초대 취소 하였습니다.", HttpStatus.ACCEPTED);
     }
 
-    public List<InviteResponseDto> findInviteList(Long diaryId, Member member) {
+    public List<InviteFindResponseDto> findInviteList(Long diaryId, Member member) {
 
         List<Invite> inviteList = inviteRepository.findAllByDiaryId(diaryId);
         if (inviteList.stream().noneMatch(invite -> invite.getFromMember().getId().equals(member.getId()) ||
                 invite.getToMember().getId().equals(member.getId()))) {
             throw new ApiException(NOT_MATCH_AUTHORIZATION);
         }
-        List<InviteResponseDto> inviteResponseDtoList = new ArrayList<>();
+        List<InviteFindResponseDto> inviteResponseDtoList = new ArrayList<>();
         for (Invite invite : inviteList) {
-            inviteResponseDtoList.add(InviteResponseDto.of(invite, invite.getToMember()));
+            inviteResponseDtoList.add(InviteFindResponseDto.of(invite, invite.getToMember()));
         }
 
         return inviteResponseDtoList;

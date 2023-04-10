@@ -1,5 +1,6 @@
 package com.hanghae.sosohandiary.domain.invite.controller;
 
+import com.hanghae.sosohandiary.domain.invite.dto.InviteFindResponseDto;
 import com.hanghae.sosohandiary.domain.invite.dto.InviteResponseDto;
 import com.hanghae.sosohandiary.domain.invite.service.InviteService;
 import com.hanghae.sosohandiary.security.MemberDetailsImpl;
@@ -41,8 +42,8 @@ public class InviteController {
     }
 
     @GetMapping("/{diary-id}/list")
-    public List<InviteResponseDto> findInviteList(@PathVariable("diary-id") Long diaryId,
-                                                  @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+    public List<InviteFindResponseDto> findInviteList(@PathVariable("diary-id") Long diaryId,
+                                                      @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return inviteService.findInviteList(diaryId, memberDetails.getMember());
     }
 
