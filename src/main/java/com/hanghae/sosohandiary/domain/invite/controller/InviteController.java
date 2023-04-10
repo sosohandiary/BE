@@ -40,9 +40,10 @@ public class InviteController {
         return inviteService.alarmRead(inviteId, memberDetails.getMember());
     }
 
-    @GetMapping
-    public List<InviteResponseDto> findInviteList(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
-        return inviteService.findInviteList(memberDetails.getMember());
+    @GetMapping("/{diary-id}/list")
+    public List<InviteResponseDto> findInviteList(@PathVariable("diary-id") Long diaryId,
+                                                  @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return inviteService.findInviteList(diaryId, memberDetails.getMember());
     }
 
 }
