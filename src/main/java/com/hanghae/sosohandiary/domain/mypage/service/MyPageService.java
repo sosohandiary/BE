@@ -59,11 +59,13 @@ public class MyPageService {
                 () -> new ApiException(NOT_FOUND_USER)
         );
 
-        if (multipartFileList != null) {
-            s3Service.uploadProfileImage(multipartFileList);
-        }
 
-        foundMember.updateProfile(s3Service.getUploadImageUrl(), profileEditRequestDto.getNickname(), profileEditRequestDto.getStatusMessage());
+        if (multipartFileList == null) {
+            foundMember.updateProfile(profileEditRequestDto.getNickname(), profileEditRequestDto.getStatusMessage());
+        } else {
+            s3Service.uploadProfileImage(multipartFileList);
+            foundMember.updateProfile(s3Service.getUploadImageUrl(), profileEditRequestDto.getNickname(), profileEditRequestDto.getStatusMessage());
+        }
 
         return MessageDto.of("프로필 수정 성공", HttpStatus.ACCEPTED);
 

@@ -71,6 +71,19 @@ public class InviteService {
         return MessageDto.of("공유 다이어리 초대 취소 하였습니다.", HttpStatus.ACCEPTED);
     }
 
+    public List<InviteResponseDto> findInviteList(Member member) {
+
+        List<Invite> inviteList = inviteRepository.findAllByToMemberId(member.getId());
+        List<InviteResponseDto> inviteResponseDtoList = new ArrayList<>();
+        for (Invite invite : inviteList) {
+            if (invite.getToMember().getId().equals(member.getId())) {
+                inviteResponseDtoList.add(InviteResponseDto.of(invite, invite.getToMember()));
+            }
+        }
+
+        return inviteResponseDtoList;
+    }
+
     public List<InviteResponseDto> alarmInvite(Member member) {
 
         List<Invite> inviteList = inviteRepository.findAllByToMemberId(member.getId());

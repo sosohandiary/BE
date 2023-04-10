@@ -39,4 +39,10 @@ public class InviteController {
                                        @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return inviteService.alarmRead(inviteId, memberDetails.getMember());
     }
+
+    @GetMapping
+    public List<InviteResponseDto> findInviteList(@AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+        return inviteService.findInviteList(memberDetails.getMember());
+    }
+
 }

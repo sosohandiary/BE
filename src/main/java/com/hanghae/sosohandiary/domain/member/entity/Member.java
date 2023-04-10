@@ -93,4 +93,9 @@ public class Member {
         this.statusMessage = statusMessage;
     }
 
+    public void updateProfile(String nickname, String statusMessage) {
+        this.nickname = nickname;
+        this.statusMessage = statusMessage;
+    }
+
 }
