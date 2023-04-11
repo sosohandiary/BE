@@ -26,9 +26,8 @@ public class CommentController {
     }
 
     @GetMapping("/comments")
-    public List<CommentResponseDto> getComment(@PathVariable("detail-id") Long id,
-                                               @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
-        return commentService.getComment(id, memberDetails.getMember());
+    public List<CommentResponseDto> getComment(@PathVariable("detail-id") Long id) {
+        return commentService.getComment(id);
     }
 
     @PatchMapping("/comment/{comment-id}")

@@ -88,10 +88,13 @@ public class MemberService {
         List<MemberResponseDto> responseDtoList = new ArrayList<>();
 
         for (Member eachMember : memberList) {
+
             List<Friend> friendList = friendRepository.findByMemberIdAndStatusOrderByFriendNicknameAsc(eachMember.getId(), StatusFriend.ACCEPTED);
+
             boolean isFriend = friendList.stream().anyMatch(friend -> friend.getFriend().getId().equals(member.getId()));
             boolean isPending = friendRepository.existsByFriend_IdAndMember_Id(member.getId(), eachMember.getId()) ||
                     friendRepository.existsByFriend_IdAndMember_Id(eachMember.getId(), member.getId());
+
             if (isFriend) {
                 responseDtoList.add(MemberResponseDto.builder()
                         .id(eachMember.getId())
@@ -121,6 +124,7 @@ public class MemberService {
                         .build());
             }
         }
+
         return responseDtoList;
     }
 

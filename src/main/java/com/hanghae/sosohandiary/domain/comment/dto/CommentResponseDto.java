@@ -3,7 +3,6 @@ package com.hanghae.sosohandiary.domain.comment.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hanghae.sosohandiary.domain.comment.entity.Comment;
 import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
-import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +27,7 @@ public class CommentResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private CommentResponseDto(DiaryDetail diaryDetail, Member member, Comment comment) {
+    private CommentResponseDto(DiaryDetail diaryDetail, Comment comment) {
         diaryDetailId = diaryDetail.getId();
         commentId = comment.getId();
         this.comment = comment.getComment();
@@ -38,10 +37,9 @@ public class CommentResponseDto {
         modifiedAt = comment.getModifiedAt();
     }
 
-    public static CommentResponseDto of(DiaryDetail diaryDetail, Member member, Comment comment) {
+    public static CommentResponseDto of(DiaryDetail diaryDetail, Comment comment) {
         return CommentResponseDto.builder()
                 .diaryDetail(diaryDetail)
-                .member(member)
                 .comment(comment)
                 .build();
     }

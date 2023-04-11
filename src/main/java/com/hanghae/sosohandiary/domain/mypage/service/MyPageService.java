@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hanghae.sosohandiary.exception.ErrorHandling.NOT_FOUND_DIARY;
 import static com.hanghae.sosohandiary.exception.ErrorHandling.NOT_FOUND_USER;
 
 @Service
@@ -81,7 +80,8 @@ public class MyPageService {
         List<Diary> diaryList = diaryRepository.findByMemberId(member.getId());
 
         for (Diary diary : diaryList) {
-            if(diaryList.isEmpty()) {
+
+            if (diaryList.isEmpty()) {
                 diaryService.removeDiary(diary.getId(), member);
             }
             diaryService.removeDiary(diary.getId(), member);

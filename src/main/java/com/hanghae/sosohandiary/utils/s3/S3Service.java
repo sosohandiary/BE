@@ -64,7 +64,7 @@ public class S3Service {
 
     private String diaryUpload(File uploadFile) throws IOException {
 
-        String fileName = "diary" + "/" + UUID.randomUUID().toString();
+        String fileName = "diary" + "/" + UUID.randomUUID();
         uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;
@@ -72,7 +72,7 @@ public class S3Service {
 
     private String profileUpload(File uploadFile) throws IOException {
 
-        String fileName = "profile" + "/" + UUID.randomUUID().toString();
+        String fileName = "profile" + "/" + UUID.randomUUID();
         uploadImageUrl = putS3(uploadFile, fileName);
         removeNewFile(uploadFile);
         return uploadImageUrl;

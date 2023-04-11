@@ -49,15 +49,6 @@ public class Invite {
         this.alarm = alarm;
     }
 
-    public static Invite of(Member fromMember, Member toMember, Diary diary, boolean alarm) {
-        return Invite.builder()
-                .diary(diary)
-                .fromMember(fromMember)
-                .toMember(toMember)
-                .alarm(alarm)
-                .build();
-    }
-
     public static Invite of(Member fromMember, Member toMember, Diary diary) {
         return Invite.builder()
                 .diary(diary)

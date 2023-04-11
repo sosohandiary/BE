@@ -3,7 +3,6 @@ package com.hanghae.sosohandiary.domain.diarydetail.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
-import com.hanghae.sosohandiary.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -73,10 +72,5 @@ public class DiaryDetailResponseDto {
                 .build();
     }
 
-    public static DiaryDetailResponseDto from(DiaryDetail diaryDetail) {
-        return DiaryDetailResponseDto.builder()
-                .diaryDetail(diaryDetail)
-                .build();
-    }
 
 }

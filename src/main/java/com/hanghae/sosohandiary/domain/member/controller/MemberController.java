@@ -40,7 +40,7 @@ public class MemberController {
     @ResponseBody
     @PostMapping("/login")
     public MemberMessageDto login(@RequestBody LoginRequestDto loginRequestDto,
-                            HttpServletResponse response) {
+                                  HttpServletResponse response) {
         return memberService.login(loginRequestDto, response);
     }
 

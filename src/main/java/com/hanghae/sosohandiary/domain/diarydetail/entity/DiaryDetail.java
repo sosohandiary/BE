@@ -50,19 +50,6 @@ public class DiaryDetail extends Timestamp {
                 .build();
     }
 
-    public static DiaryDetail of(DiaryDetailRequestDto diaryDetailRequestDto, Diary diary) {
-        return DiaryDetail.builder()
-                .diaryDetailRequestDto(diaryDetailRequestDto)
-                .diary(diary)
-                .build();
-    }
-
-    public static DiaryDetail from(DiaryDetailRequestDto diaryDetailRequestDto) {
-        return DiaryDetail.builder()
-                .diaryDetailRequestDto(diaryDetailRequestDto)
-                .build();
-    }
-
     public void update(DiaryDetailRequestDto diaryDetailRequestDto) {
         customJson = diaryDetailRequestDto.getCustomJson();
         thumbnail = diaryDetailRequestDto.getThumbnail();

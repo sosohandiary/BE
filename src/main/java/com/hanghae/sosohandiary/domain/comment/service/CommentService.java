@@ -1,6 +1,5 @@
 package com.hanghae.sosohandiary.domain.comment.service;
 
-import com.hanghae.sosohandiary.domain.comment.dto.CommentAlarmResponseDto;
 import com.hanghae.sosohandiary.domain.comment.dto.CommentRequestDto;
 import com.hanghae.sosohandiary.domain.comment.dto.CommentResponseDto;
 import com.hanghae.sosohandiary.domain.comment.entity.Comment;
@@ -37,10 +36,10 @@ public class CommentService {
 
         Comment comment = commentRepository.save(Comment.of(diaryDetail, member, requestDto));
 
-        return CommentResponseDto.of(diaryDetail, member, comment);
+        return CommentResponseDto.of(diaryDetail, comment);
     }
 
-    public List<CommentResponseDto> getComment(Long id, Member member) {
+    public List<CommentResponseDto> getComment(Long id) {
 
         DiaryDetail diaryDetail = diaryDetailRepository.findById(id).orElseThrow(
                 () -> new ApiException(NOT_FOUND_DIARY_DETAIL)
@@ -50,7 +49,7 @@ public class CommentService {
         List<CommentResponseDto> commentResponseList = new ArrayList<>();
 
         for (Comment comment : commentList) {
-            commentResponseList.add(CommentResponseDto.of(diaryDetail, member, comment));
+            commentResponseList.add(CommentResponseDto.of(diaryDetail, comment));
         }
         return commentResponseList;
     }
@@ -71,7 +70,7 @@ public class CommentService {
 
         comment.update(requestDto.getComment());
 
-        return CommentResponseDto.of(diaryDetail, member, comment);
+        return CommentResponseDto.of(diaryDetail, comment);
     }
 
     @Transactional

@@ -47,7 +47,7 @@ public class FriendController {
 
     @PatchMapping("/request/read/{friendlist-id}")
     public FriendResponseDto readRequest(@PathVariable(value = "friendlist-id") Long id,
-                                       @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
+                                         @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return friendsListService.readRequest(id, memberDetails.getMember());
     }
 }

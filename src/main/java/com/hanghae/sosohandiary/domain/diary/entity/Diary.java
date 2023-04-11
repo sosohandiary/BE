@@ -52,13 +52,6 @@ public class Diary extends Timestamp {
                 .build();
     }
 
-    public static Diary of(DiaryRequestDto diaryRequestDto, Member member) {
-        return Diary.builder()
-                .diaryRequestDto(diaryRequestDto)
-                .member(member)
-                .build();
-    }
-
     public void update(DiaryRequestDto diaryRequestDto, String uploadPath) {
         title = diaryRequestDto.getTitle();
         this.img = uploadPath;

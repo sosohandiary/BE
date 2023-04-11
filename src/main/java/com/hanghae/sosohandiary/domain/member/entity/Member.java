@@ -18,31 +18,24 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long kakaoId;
-
     @Column(length = 30, nullable = false)
     private String email;
-
     @Column(nullable = false, length = 100)
     private String password;
-
     @Column(length = 20, nullable = false)
     private String name;
-
     @Column(length = 10, nullable = false)
     private String nickname;
-
     @Column(length = 100)
     private String statusMessage;
-
     @Column
     private String profileImageUrl;
-
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private MemberRoleEnum role;
 
     @Builder
-    public Member(Long kakaoId, String email, String password, String name, String nickname, String statusMessage, String profileImageUrl, MemberRoleEnum role) {
+    private Member(Long kakaoId, String email, String password, String name, String nickname, String statusMessage, String profileImageUrl, MemberRoleEnum role) {
         this.kakaoId = kakaoId;
         this.email = email;
         this.password = password;
@@ -73,12 +66,6 @@ public class Member {
                 .name(joinRequestDto.getName())
                 .nickname(joinRequestDto.getNickname())
                 .role(role)
-                .build();
-    }
-
-    public static Member of(String profileImageUrl) {
-        return Member.builder()
-                .profileImageUrl(profileImageUrl)
                 .build();
     }
 

@@ -62,8 +62,8 @@ public class DiaryDetailService {
         );
         Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByDiaryIdOrderByCreatedAtAsc(pageable, id)
                 .map((DiaryDetail diaryDetail) -> DiaryDetailResponseDto.of(diaryDetail, diary,
-                                                                            likesRepository.countByDiaryDetailId(diaryDetail.getId()),
-                                                                            commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId())));
+                        likesRepository.countByDiaryDetailId(diaryDetail.getId()),
+                        commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId())));
 
         return new PageCustom<>(diaryDetailResponseDtoPage.getContent(),
                 diaryDetailResponseDtoPage.getPageable(),

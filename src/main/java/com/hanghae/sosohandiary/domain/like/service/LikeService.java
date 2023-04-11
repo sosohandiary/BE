@@ -15,7 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hanghae.sosohandiary.exception.ErrorHandling.*;
+import static com.hanghae.sosohandiary.exception.ErrorHandling.NOT_FOUND_DIARY_DETAIL;
+import static com.hanghae.sosohandiary.exception.ErrorHandling.NOT_MATCH_AUTHORIZATION;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.OK;
 

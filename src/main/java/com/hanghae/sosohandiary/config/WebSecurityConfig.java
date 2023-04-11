@@ -44,6 +44,7 @@ public class WebSecurityConfig {
 
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("https://localhost:3000");
+        config.addAllowedOrigin("https://us-diary.vercel.app");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.addExposedHeader("Authorization");
@@ -71,6 +72,8 @@ public class WebSecurityConfig {
                 .antMatchers("/join").permitAll()
                 .antMatchers("/public").permitAll()
                 .antMatchers("/diary/{diary-id}/detail").permitAll()
+                .antMatchers("/diary/{diary-id}/detail/{detail-id}").permitAll()
+                .antMatchers("/detail/{detail-id}/comments").permitAll()
                 .anyRequest().authenticated()
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 

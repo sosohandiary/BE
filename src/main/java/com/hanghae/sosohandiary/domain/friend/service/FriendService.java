@@ -58,7 +58,7 @@ public class FriendService {
 
         for (Friend friend : friendList) {
             friendResponseDtoList.add(FriendResponseDto
-                    .of(friend.getId(), friend.getMember().getNickname(), friend.getFriend().getNickname(), friend.getFriend().getProfileImageUrl()));
+                    .of(friend.getId(), friend.getMember().getNickname(), friend.getFriend().getNickname(), friend.getMember().getProfileImageUrl()));
         }
         return friendResponseDtoList;
     }
