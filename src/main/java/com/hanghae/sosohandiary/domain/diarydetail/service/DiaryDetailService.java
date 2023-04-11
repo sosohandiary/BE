@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.hanghae.sosohandiary.exception.ErrorHandling.*;
@@ -51,7 +52,7 @@ public class DiaryDetailService {
         isAuthor(member, diary);
         isPrivateMember(member, diary);
 
-        return DiaryDetailResponseDto.of(diaryDetail, diary, member);
+        return DiaryDetailResponseDto.of(diaryDetail, diary);
     }
 
     public PageCustom<DiaryDetailResponseDto> findListDetail(Long id, Pageable pageable) {
@@ -60,7 +61,7 @@ public class DiaryDetailService {
                 () -> new ApiException(NOT_FOUND_DIARY)
         );
         Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByDiaryIdOrderByCreatedAtAsc(pageable, id)
-                .map((DiaryDetail diaryDetail) -> DiaryDetailResponseDto.of(diaryDetail, diary, diaryDetail.getMember(),
+                .map((DiaryDetail diaryDetail) -> DiaryDetailResponseDto.of(diaryDetail, diary,
                                                                             likesRepository.countByDiaryDetailId(diaryDetail.getId()),
                                                                             commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId())));
 
@@ -80,6 +81,11 @@ public class DiaryDetailService {
         );
 
         List<Invite> inviteList = inviteRepository.findAllByDiaryId(diary.getId());
+        List<Long> toMemberId = new ArrayList<>();
+        toMemberId.add(diary.getMember().getId());
+        for (Invite invite : inviteList) {
+            toMemberId.add(invite.getToMember().getId());
+        }
 
         if (diary.getDiaryCondition().equals(DiaryCondition.PRIVATE) &&
                 inviteList.stream().noneMatch(invite -> invite.getToMember().getId().equals(member.getId()))) {
@@ -88,7 +94,7 @@ public class DiaryDetailService {
             }
         }
 
-        return DiaryDetailResponseDto.of(diaryDetail, diary, member,
+        return DiaryDetailResponseDto.of(diaryDetail, diary, toMemberId,
                 likesRepository.countByDiaryDetailId(detailId),
                 commentRepository.countCommentsByDiaryDetailId(detailId),
                 likesRepository.existsByDiaryDetailIdAndMemberId(detailId, member.getId()));
@@ -116,7 +122,7 @@ public class DiaryDetailService {
         isPrivateMember(member, diary);
         diaryDetail.update(diaryDetailRequestDto);
 
-        return DiaryDetailResponseDto.of(diaryDetail, diary, member);
+        return DiaryDetailResponseDto.of(diaryDetail, diary);
     }
 
     @Transactional
