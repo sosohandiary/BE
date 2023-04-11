@@ -9,18 +9,21 @@ import lombok.Getter;
 public class InviteResponseDto {
 
     private Long inviteId;
+    private Long diaryId;
     private String nickname;
     private boolean alarm;
 
     @Builder
-    private InviteResponseDto(Invite invite, Member member) {
+    private InviteResponseDto(Long diaryId, Invite invite, Member member) {
+        this.diaryId = diaryId;
         inviteId = invite.getId();
         nickname = member.getNickname();
         alarm = invite.isAlarm();
     }
 
-    public static InviteResponseDto of(Invite invite, Member member) {
+    public static InviteResponseDto of(Long diaryId, Invite invite, Member member) {
         return InviteResponseDto.builder()
+                .diaryId(diaryId)
                 .invite(invite)
                 .member(member)
                 .build();

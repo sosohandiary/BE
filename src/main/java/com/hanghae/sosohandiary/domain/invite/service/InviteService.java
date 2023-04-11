@@ -93,7 +93,7 @@ public class InviteService {
         List<InviteResponseDto> inviteResponseDtoList = new ArrayList<>();
         for (Invite invite : inviteList) {
             if (invite.getToMember().getId().equals(member.getId())) {
-                inviteResponseDtoList.add(InviteResponseDto.of(invite, invite.getFromMember()));
+                inviteResponseDtoList.add(InviteResponseDto.of(invite.getDiary().getId(), invite, invite.getFromMember()));
             }
         }
 
@@ -112,6 +112,6 @@ public class InviteService {
         }
 
         invite.updateAlarm(true);
-        return InviteResponseDto.of(invite, invite.getToMember());
+        return InviteResponseDto.of(invite.getDiary().getId(), invite, invite.getFromMember());
     }
 }
