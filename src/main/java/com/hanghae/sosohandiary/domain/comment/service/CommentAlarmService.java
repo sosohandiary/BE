@@ -33,7 +33,7 @@ public class CommentAlarmService {
         for (DiaryDetail diaryDetail : diaryDetailList) {
             List<Comment> commentList = commentRepository.findAllByDiaryDetailIdOrderByCreatedAtDesc(diaryDetail.getId());
             for (Comment comments : commentList) {
-                commentAlarmResponseDtoList.add(CommentAlarmResponseDto.of(diaryDetail, comments));
+                commentAlarmResponseDtoList.add(CommentAlarmResponseDto.of(diaryDetail.getDiary().getId(), diaryDetail, comments));
             }
         }
 
@@ -56,6 +56,6 @@ public class CommentAlarmService {
         }
 
         comment.updateAlarm(true);
-        return CommentAlarmResponseDto.of(diaryDetail, comment);
+        return CommentAlarmResponseDto.of(diaryDetail.getDiary().getId(), diaryDetail, comment);
     }
 }
