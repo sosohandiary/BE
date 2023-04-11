@@ -30,8 +30,10 @@ public class CommentAlarmService {
         List<CommentAlarmResponseDto> commentAlarmResponseDtoList = new ArrayList<>();
         for (DiaryDetail diaryDetail : diaryDetailList) {
             List<Comment> commentList = commentRepository.findAllByDiaryDetailIdOrderByCreatedAtDesc(diaryDetail.getId());
-            for (Comment comments : commentList) {
-                commentAlarmResponseDtoList.add(CommentAlarmResponseDto.of(diaryDetail.getDiary().getId(), diaryDetail, comments));
+            for (Comment comment : commentList) {
+                if (!comment.getMember().getId().equals(diaryDetail.getDiary().getMember().getId())) {
+                    commentAlarmResponseDtoList.add(CommentAlarmResponseDto.of(diaryDetail.getDiary().getId(), diaryDetail, comment));
+                }
             }
         }
 
