@@ -1,6 +1,7 @@
 package com.hanghae.sosohandiary.domain.invite.service;
 
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
+import com.hanghae.sosohandiary.domain.diary.entity.DiaryCondition;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
 import com.hanghae.sosohandiary.domain.friend.entity.Friend;
 import com.hanghae.sosohandiary.domain.friend.repository.FriendRepository;
@@ -39,6 +40,10 @@ public class InviteService {
         Diary diary = diaryRepository.findById(diaryId).orElseThrow(
                 () -> new ApiException(NOT_FOUND_DIARY)
         );
+
+        if (diary.getDiaryCondition().equals(DiaryCondition.PUBLIC)) {
+            throw new ApiException(NOT_SHARE_DIARY);
+        }
 
         Member toMember = memberRepository.findById(toMemberId).orElseThrow(
                 () -> new ApiException(NOT_FOUND_USER)

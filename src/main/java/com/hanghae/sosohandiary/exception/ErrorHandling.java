@@ -23,7 +23,8 @@ public enum ErrorHandling {
     INVALID_ACCESS(HttpStatus.BAD_REQUEST, "유효하지 않은 접근입니다"),
     DUPLICATED_REQUEST(HttpStatus.CONFLICT, "중복된 요청입니다"),
     OVER_THE_LIMIT(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED, "초대할 인원이 초과되었습니다"),
-    NOT_FRIEND(HttpStatus.BAD_REQUEST, "친구만 초대할 수 있습니다");
+    NOT_FRIEND(HttpStatus.BAD_REQUEST, "친구만 초대할 수 있습니다"),
+    NOT_SHARE_DIARY(HttpStatus.BAD_REQUEST, "공유 다이어리만 초대할 수 있습니다");
 
     private final HttpStatus httpStatus;
     private final String msg;
