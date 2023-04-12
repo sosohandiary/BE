@@ -6,6 +6,8 @@ import com.hanghae.sosohandiary.utils.entity.Timestamp;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -17,6 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
+@OnDelete(action = OnDeleteAction.CASCADE)
 public class Diary extends Timestamp {
 
     @Id
