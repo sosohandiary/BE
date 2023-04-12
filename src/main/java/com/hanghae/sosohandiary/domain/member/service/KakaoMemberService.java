@@ -67,8 +67,11 @@ public class KakaoMemberService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", "b47175c20956cf2b54129db2d3886d94");
-        body.add("redirect_uri", "http://localhost:3000/oauth");
+//        body.add("redirect_uri", "http://localhost:3000/oauth");
+        body.add("redirect_uri", "https://us-diary.vercel.app/oauth");
         body.add("code", code);
+
+
 
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest =
                 new HttpEntity<>(body, headers);
