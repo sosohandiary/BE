@@ -30,24 +30,24 @@ public class DiaryController {
     }
 
     @GetMapping("/")
-    public List<DiaryResponseDto> diaryList(@PageableDefault(size = 5) Pageable pageable,
+    public List<DiaryResponseDto> diaryList(@PageableDefault Pageable pageable,
                                             @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return diaryService.findDiaryList(pageable, memberDetails.getMember());
     }
 
     @GetMapping("/public")
-    public PageCustom<DiaryResponseDto> diaryPublicList(@PageableDefault(size = 5) Pageable pageable) {
+    public PageCustom<DiaryResponseDto> diaryPublicList(@PageableDefault Pageable pageable) {
         return diaryService.findPublicDiaryList(pageable);
     }
 
     @GetMapping("/private")
-    public List<DiaryResponseDto> diaryPrivateList(@PageableDefault(size = 5) Pageable pageable,
+    public List<DiaryResponseDto> diaryPrivateList(@PageableDefault Pageable pageable,
                                                    @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return diaryService.findPrivateDiaryList(pageable, memberDetails.getMember());
     }
 
     @GetMapping("/invite")
-    public PageCustom<DiaryResponseDto> diaryInvitedList(@PageableDefault(size = 5) Pageable pageable,
+    public PageCustom<DiaryResponseDto> diaryInvitedList(@PageableDefault Pageable pageable,
                                                          @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
         return diaryService.findInvitedDiaryList(pageable, memberDetails.getMember());
     }
