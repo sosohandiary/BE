@@ -76,6 +76,10 @@ public class FriendService {
         Member friendId = memberRepository.findById(friendAccept.getMember().getId()).orElseThrow(
                 () -> new ApiException(NOT_FOUND_USER)
         );
+        boolean isDuplicated = friendRepository.existsByFriendIdAndMemberIdAndStatus(id, memberId.getId(), ACCEPTED);
+        if (isDuplicated) {
+            throw new ApiException(DUPLICATED_REQUEST);
+        }
 
         friendAccept.updateFriendStatus(ACCEPTED);
 
