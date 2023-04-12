@@ -58,7 +58,8 @@ public class FriendService {
 
         for (Friend friend : friendList) {
             friendResponseDtoList.add(FriendResponseDto
-                    .of(friend.getId(), friend.getMember().getNickname(), friend.getFriend().getNickname(), friend.getMember().getProfileImageUrl()));
+                    .of(friend.getId(), friend.getMember().getNickname(), friend.getFriend().getNickname(),
+                            friend.getMember().getProfileImageUrl(), friend.isAlarm()));
         }
         return friendResponseDtoList;
     }
@@ -94,7 +95,8 @@ public class FriendService {
 
         for (Friend friend : friendList) {
             friendResponseDtoList.add(FriendResponseDto
-                    .of(friend.getId(), friend.getMember().getNickname(), friend.getFriend().getNickname(), friend.getFriend().getProfileImageUrl()));
+                    .of(friend.getId(), friend.getMember().getNickname(), friend.getFriend().getNickname(),
+                            friend.getFriend().getProfileImageUrl(), friend.isAlarm()));
         }
         return friendResponseDtoList;
     }
@@ -124,7 +126,6 @@ public class FriendService {
         );
 
         if (!friend.getFriend().getId().equals(member.getId())) {
-            System.out.println("getFriendId = " + friend.getFriend().getId());
             throw new ApiException(NOT_MATCH_AUTHORIZATION);
         }
 
