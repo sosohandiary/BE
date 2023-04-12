@@ -81,9 +81,9 @@ public class MemberService {
     }
 
     @Transactional
-    public List<MemberResponseDto> getMembersWithFriendStatus(String name, Member member) {
+    public List<MemberResponseDto> getMembersWithFriendStatus(String nickname, Member member) {
 
-        List<Member> memberList = memberRepository.findByNameContaining(name);
+        List<Member> memberList = memberRepository.findByNicknameContaining(nickname);
 
         List<MemberResponseDto> responseDtoList = new ArrayList<>();
 

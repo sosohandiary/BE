@@ -46,9 +46,9 @@ public class MemberController {
 
     @ResponseBody
     @GetMapping("/search")
-    public List<MemberResponseDto> searchMember(@RequestParam("name") String name,
+    public List<MemberResponseDto> searchMember(@RequestParam("nickname") String nickname,
                                                 @AuthenticationPrincipal MemberDetailsImpl memberDetails) {
-        return memberService.getMembersWithFriendStatus(name, memberDetails.getMember());
+        return memberService.getMembersWithFriendStatus(nickname, memberDetails.getMember());
     }
 
 }
