@@ -94,7 +94,7 @@ public class DiaryDetailService {
             }
         }
 
-        return DiaryDetailResponseDto.of(diaryDetail, diary, toMemberId,
+        return DiaryDetailResponseDto.of(diaryDetail, diary, diaryDetail.getMember().getId(), toMemberId,
                 likesRepository.countByDiaryDetailId(detailId),
                 commentRepository.countCommentsByDiaryDetailId(detailId),
                 likesRepository.existsByDiaryDetailIdAndMemberId(detailId, member.getId()));

@@ -13,6 +13,7 @@ import java.util.List;
 public class DiaryDetailResponseDto {
 
     private Long id;
+    private Long authorId;
     private String customJson;
     private String diaryTitle;
     private String nickname;
@@ -28,8 +29,9 @@ public class DiaryDetailResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, List<Long> toMemberId, int likeCount, int commentCount, boolean likeStatus) {
+    private DiaryDetailResponseDto(DiaryDetail diaryDetail, Diary diary, Long authorId, List<Long> toMemberId, int likeCount, int commentCount, boolean likeStatus) {
         id = diaryDetail.getId();
+        this.authorId =  authorId;
         customJson = diaryDetail.getCustomJson();
         diaryTitle = diary.getTitle();
         nickname = diaryDetail.getMember().getNickname();
@@ -44,11 +46,12 @@ public class DiaryDetailResponseDto {
 
     }
 
-    public static DiaryDetailResponseDto of(DiaryDetail diaryDetail, Diary diary, List<Long> toMemberId,
+    public static DiaryDetailResponseDto of(DiaryDetail diaryDetail, Diary diary, Long authorId, List<Long> toMemberId,
                                             int likeCount, int commentCount, boolean likeStatus) {
         return DiaryDetailResponseDto.builder()
                 .diaryDetail(diaryDetail)
                 .diary(diary)
+                .authorId(authorId)
                 .toMemberId(toMemberId)
                 .likeCount(likeCount)
                 .commentCount(commentCount)
