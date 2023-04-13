@@ -1,13 +1,16 @@
 package com.hanghae.sosohandiary.domain.diary.service;
 
+import com.hanghae.sosohandiary.domain.comment.repository.CommentRepository;
 import com.hanghae.sosohandiary.domain.diary.dto.DiaryRequestDto;
 import com.hanghae.sosohandiary.domain.diary.dto.DiaryResponseDto;
 import com.hanghae.sosohandiary.domain.diary.entity.Diary;
 import com.hanghae.sosohandiary.domain.diary.entity.DiaryCondition;
 import com.hanghae.sosohandiary.domain.diary.repository.DiaryRepository;
+import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
 import com.hanghae.sosohandiary.domain.diarydetail.repository.DiaryDetailRepository;
 import com.hanghae.sosohandiary.domain.invite.entity.Invite;
 import com.hanghae.sosohandiary.domain.invite.repository.InviteRepository;
+import com.hanghae.sosohandiary.domain.like.repository.LikesRepository;
 import com.hanghae.sosohandiary.domain.member.entity.Member;
 import com.hanghae.sosohandiary.exception.ApiException;
 import com.hanghae.sosohandiary.utils.MessageDto;
@@ -37,6 +40,8 @@ import static com.hanghae.sosohandiary.exception.ErrorHandling.NOT_MATCH_AUTHORI
 @Transactional(readOnly = true)
 public class DiaryService {
 
+    private final CommentRepository commentRepository;
+    private final LikesRepository likesRepository;
     private final DiaryDetailRepository diaryDetailRepository;
     private final DiaryRepository diaryRepository;
     private final InviteRepository inviteRepository;
@@ -168,7 +173,7 @@ public class DiaryService {
     }
 
     @Transactional
-    public MessageDto removeDiary(Long id, Member member) throws IOException {
+    public MessageDto removeDiary(Long id, Member member) {
 
         Diary diary = getDiary(id);
 
@@ -181,11 +186,15 @@ public class DiaryService {
             String filename = uploadPath.substring(50);
             s3Service.deleteFile(filename);
         }
-
+        List<DiaryDetail> diaryDetailList = diaryDetailRepository.findAllByDiaryId(id);
+        for (DiaryDetail diaryDetail : diaryDetailList) {
+            likesRepository.deleteAllByDiaryDetailId(diaryDetail.getId());
+            commentRepository.deleteAllByDiaryDetailId(diaryDetail.getId());
+        }
         diaryDetailRepository.deleteAllByDiaryId(id);
         diaryRepository.deleteById(id);
 
-        return MessageDto.of("다이어리 삭제 완료", HttpStatus.OK);
+        return MessageDto.of("다이어리 속지 삭제 완료", HttpStatus.OK);
     }
 
     private Diary getDiary(Long id) {
