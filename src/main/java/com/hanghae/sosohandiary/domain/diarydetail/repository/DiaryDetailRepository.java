@@ -1,8 +1,6 @@
 package com.hanghae.sosohandiary.domain.diarydetail.repository;
 
 import com.hanghae.sosohandiary.domain.diarydetail.entity.DiaryDetail;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -14,7 +12,7 @@ public interface DiaryDetailRepository extends JpaRepository<DiaryDetail, Long> 
 
     Optional<DiaryDetail> findByDiaryIdAndId(Long diaryId, Long id);
 
-    Page<DiaryDetail> findAllByDiaryIdOrderByCreatedAtAsc(Pageable pageable, Long id);
+    List<DiaryDetail> findAllByDiaryIdOrderByCreatedAtAsc(Long id);
 
     List<DiaryDetail> findAllByMemberId(Long id);
 

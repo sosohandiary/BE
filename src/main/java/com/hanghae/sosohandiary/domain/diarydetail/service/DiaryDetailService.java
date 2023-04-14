@@ -55,19 +55,19 @@ public class DiaryDetailService {
         return DiaryDetailResponseDto.of(diaryDetail, diary);
     }
 
-    public PageCustom<DiaryDetailResponseDto> findListDetail(Long id, Pageable pageable) {
+    public List<DiaryDetailResponseDto> findListDetail(Long id) {
 
         Diary diary = diaryRepository.findById(id).orElseThrow(
                 () -> new ApiException(NOT_FOUND_DIARY)
         );
-        Page<DiaryDetailResponseDto> diaryDetailResponseDtoPage = diaryDetailRepository.findAllByDiaryIdOrderByCreatedAtAsc(pageable, id)
-                .map((DiaryDetail diaryDetail) -> DiaryDetailResponseDto.of(diaryDetail, diary,
-                        likesRepository.countByDiaryDetailId(diaryDetail.getId()),
-                        commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId())));
+        List<DiaryDetail> diaryDetailList = diaryDetailRepository.findAllByDiaryIdOrderByCreatedAtAsc(id);
+        List<DiaryDetailResponseDto> diaryDetailResponseDtoList = new ArrayList<>();
+        for (DiaryDetail diaryDetail : diaryDetailList) {
+            diaryDetailResponseDtoList.add(DiaryDetailResponseDto.of(diaryDetail, diary,
+                    likesRepository.countByDiaryDetailId(diaryDetail.getId()), commentRepository.countCommentsByDiaryDetailId(diaryDetail.getId())));
+        }
 
-        return new PageCustom<>(diaryDetailResponseDtoPage.getContent(),
-                diaryDetailResponseDtoPage.getPageable(),
-                diaryDetailResponseDtoPage.getTotalElements());
+        return diaryDetailResponseDtoList;
     }
 
     public DiaryDetailResponseDto findDetail(Long diaryId, Long detailId, Member member) {

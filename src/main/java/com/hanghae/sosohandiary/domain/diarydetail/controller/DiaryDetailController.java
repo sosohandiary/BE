@@ -12,6 +12,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/diary/{diary-id}/detail")
 @RequiredArgsConstructor
@@ -27,9 +29,8 @@ public class DiaryDetailController {
     }
 
     @GetMapping
-    public PageCustom<DiaryDetailResponseDto> findDetailList(@PathVariable("diary-id") Long id,
-                                                             @PageableDefault(size = 5) Pageable pageable) {
-        return diaryDetailService.findListDetail(id, pageable);
+    public List<DiaryDetailResponseDto> findDetailList(@PathVariable("diary-id") Long id) {
+        return diaryDetailService.findListDetail(id);
     }
 
     @GetMapping("/{detail-id}")
