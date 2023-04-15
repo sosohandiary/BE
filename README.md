@@ -48,3 +48,15 @@ https://us-diary.vercel.app/login
 이에 반해 existsBy 메서드는 해당 검색 조건을 만족하는 엔티티가 존재하는지 여부를 boolean 타입으로 반환하기 때문에, 검색 결과가 null이 되지 않는다.
 
 **문제 해결** :  boolean existsByFriendIdAndMemberIdAndStatus(Long friendId, Long memberId, StatusFriend Status); 로 변경
+# 팀원 정보 및 팀 노션
+| 이름 | 주특기 | 개발블로그 |
+| --- | --- |
+| 황원준 |백엔드| https://velog.io/@potenter11 |
+| 강혜광 |백엔드| https://khgstart.tistory.com |
+| 함동진 |백엔드| https://eastjin.tistory.com/ |
+| 최승호 |프론트엔드| https://a-potato.tistory.com/ |
+| 곽세령 |프론트엔드| https://kuromi-dev.tistory.com/ |
+| 이주애 |프론트엔드| https://www.notion.so/juae-world-8bf6f88c53544eb5a5656e2527749f35 |
+| 한지윤 |프론트엔드| velog.io/@icedlatte |
+| 김채연 |디자이너|  |
+
