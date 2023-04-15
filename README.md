@@ -49,8 +49,9 @@ https://us-diary.vercel.app/login
 
 **문제 해결** :  boolean existsByFriendIdAndMemberIdAndStatus(Long friendId, Long memberId, StatusFriend Status); 로 변경
 # 팀원 정보 및 팀 노션
+
 | 이름 | 주특기 | 개발블로그 |
-| --- | --- |
+| --- | --- | --- |
 | 황원준 |백엔드| https://velog.io/@potenter11 |
 | 강혜광 |백엔드| https://khgstart.tistory.com |
 | 함동진 |백엔드| https://eastjin.tistory.com/ |
