@@ -10,6 +10,15 @@ https://us-diary.vercel.app/login
 ![US 아키텍처](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d0c65400-6f07-4f49-9961-b5d02363443a/Untitled.png)
 
 ### 아키텍쳐 도입 배경
+**pring Boot :** 국내에서는 백엔드 언어로 Java 사용이 많이 사용되고 있고, 웹 프로그램을 쉽고 빠르게 만들 수 있도록 도와주는 프레임워크  
+
+**Spring Data Jpa :** 객체 지향 프로그래밍의 장점을 활용하면서도 데이터베이스와의 연동 작업을 간편하게 처리할 수 있게 하기 위해 도입.
+
+**NGINX :** 오픈소스로서 certbot을 이용하여 해당 도메인에 대한 인증서가 발급해(.pem 파일) Https로 보안을 강화.
+
+**MySql :** 무료 오픈 소스로서 도메인 주도 개발에 있어서 RDBMS를 필요하다고 생각이 들고 그 중 가장 접하기 쉽고 익숙하다고 판단
+
+**AWS S3 :**
 
 # Cord Tools
  <img src="https://img.shields.io/badge/Spring-green?style=for-the-badge&logo=Spring&logoColor=#6DB33F"> <img src="https://img.shields.io/badge/Spring Boot-green?style=for-the-badge&logo=Spring Boot&logoColor=#6DB33F"> <img src="https://img.shields.io/badge/Spring Security-green?style=for-the-badge&logo=Spring Security&logoColor=#6DB33F">
@@ -50,14 +59,14 @@ https://us-diary.vercel.app/login
 **문제 해결** :  boolean existsByFriendIdAndMemberIdAndStatus(Long friendId, Long memberId, StatusFriend Status); 로 변경
 # 팀원 정보 및 팀 노션
 
-| 이름 | 주특기 | 개발블로그 |
-| --- | --- | --- |
-| 황원준 |백엔드| https://velog.io/@potenter11 |
-| 강혜광 |백엔드| https://khgstart.tistory.com |
-| 함동진 |백엔드| https://eastjin.tistory.com/ |
-| 최승호 |프론트엔드| https://a-potato.tistory.com/ |
-| 곽세령 |프론트엔드| https://kuromi-dev.tistory.com/ |
-| 이주애 |프론트엔드| https://www.notion.so/juae-world-8bf6f88c53544eb5a5656e2527749f35 |
-| 한지윤 |프론트엔드| https://velog.io/@icedlatte |
+| 이름 | 주특기 | 개발블로그 | 깃허브 |
+| --- | --- | --- | --- |
+| 황원준 |백엔드| https://velog.io/@potenter11 | https://github.com/1juuun |
+| 강혜광 |백엔드| https://khgstart.tistory.com | https://github.com/kingaser |
+| 함동진 |백엔드| https://eastjin.tistory.com/ | https://github.com/eastjin |
+| 최승호 |프론트엔드| https://a-potato.tistory.com/ | https://github.com/boompeak |
+| 곽세령 |프론트엔드| https://kuromi-dev.tistory.com/ | https://github.com/seryoungk |
+| 이주애 |프론트엔드| https://www.notion.so/juae-world-8bf6f88c53544eb5a5656e2527749f35 | https://github.com/leejuae1020 |
+| 한지윤 |프론트엔드| https://velog.io/@icedlatte | https://github.com/JellyKingdom |
 | 김채연 |디자이너|  |
 
