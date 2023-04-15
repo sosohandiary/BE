@@ -22,8 +22,6 @@ https://us-diary.vercel.app/login
 
 **AWS S3 :** 합리적인 비용과 AWS의 보안성, EC2 서버와 연동이 쉬움 등의 장점으로 도입.
 
-**AWS S3 :**
-
 # Cord Tools
  <img src="https://img.shields.io/badge/Spring-green?style=for-the-badge&logo=Spring&logoColor=#6DB33F"> <img src="https://img.shields.io/badge/Spring Boot-green?style=for-the-badge&logo=Spring Boot&logoColor=#6DB33F"> <img src="https://img.shields.io/badge/Spring Security-green?style=for-the-badge&logo=Spring Security&logoColor=#6DB33F">
 <br/>
