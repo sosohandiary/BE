@@ -58,6 +58,6 @@ https://us-diary.vercel.app/login
 | 최승호 |프론트엔드| https://a-potato.tistory.com/ |
 | 곽세령 |프론트엔드| https://kuromi-dev.tistory.com/ |
 | 이주애 |프론트엔드| https://www.notion.so/juae-world-8bf6f88c53544eb5a5656e2527749f35 |
-| 한지윤 |프론트엔드| velog.io/@icedlatte |
+| 한지윤 |프론트엔드| https://velog.io/@icedlatte |
 | 김채연 |디자이너|  |
 
