@@ -59,7 +59,7 @@ https://us-diary.vercel.app/login
 이에 반해 existsBy 메서드는 해당 검색 조건을 만족하는 엔티티가 존재하는지 여부를 boolean 타입으로 반환하기 때문에, 검색 결과가 null이 되지 않는다.
 
 **문제 해결** :  boolean existsByFriendIdAndMemberIdAndStatus(Long friendId, Long memberId, StatusFriend Status); 로 변경
-# 팀원 정보 및 팀 노션
+# 팀원 정보 및 개발 블로그 주소
 
 | 이름 | 주특기 | 개발블로그 | 깃허브 |
 | --- | --- | --- | --- |
