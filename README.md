@@ -7,6 +7,10 @@
 - 다이어리를 공유할 친구는 최대 8명까지 초대 가능
 - 그리기 기능이 있어 자신만의 감성으로 꾸미기 가능
 
+### 👉 주요 기능
+| **다이어리 유형 구분** | **친구 초대** | **다이어리 꾸미기** |
+| :---: | :---: | :---: |
+| <img src ="https://user-images.githubusercontent.com/122272525/232973469-75665e2e-bc51-4aec-8ca7-8e266244a828.gif" col="4" /> | <img src ="https://user-images.githubusercontent.com/122272525/232975637-d069e728-5f9a-4175-b5f0-9c4dd6a83e48.gif" col="4" /> | <img src ="https://user-images.githubusercontent.com/122272525/232975769-8a2bbc40-3fce-47e3-ab1d-a1ed8dc26f08.gif" col="4" /> |
 
 **US를 방문해 보세요!** : https://us-diary.vercel.app/login
 
@@ -79,7 +83,7 @@
 ## 👫 팀원 정보 및 개발 블로그 주소
 
 | 이름 | 주특기 | 개발블로그 / 깃허브 |
-| --- | --- | --- |
+| :---: | :---: | :---: |
 | 황원준 |백엔드| https://velog.io/@potenter11 / https://github.com/1juuun |
 | 강혜광 |백엔드| https://khgstart.tistory.com / https://github.com/kingaser |
 | 함동진 |백엔드| https://eastjin.tistory.com / https://github.com/eastjin |
