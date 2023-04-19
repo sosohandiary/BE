@@ -16,7 +16,7 @@ env:
   PROJECT_NAME: sosohandiary
   BUCKET_NAME: mydiarycodedeploy
   CODE_DEPLOY_APP_NAME: sosohandiary-codeDeploy
-  DEPLOYMENT_GROUP_NAME: sosohandiary-codeDeploy    
+  DEPLOYMENT_GROUP_NAME: sosohandiary-codeDeploy,ver.1    
 
 permissions:
   contents: read
