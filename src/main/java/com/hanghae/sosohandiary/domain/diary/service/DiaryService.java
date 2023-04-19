@@ -19,6 +19,7 @@ import com.hanghae.sosohandiary.utils.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -115,26 +116,17 @@ public class DiaryService {
     }
 
     public PageCustom<DiaryResponseDto> findInvitedDiaryList(Pageable pageable, Member member) {
-
         List<Invite> inviteList = inviteRepository.findAllByToMemberId(member.getId());
-
-        Page<DiaryResponseDto> diaryResponseDtoPage = null;
+        List<DiaryResponseDto> diaryResponseDtoList = new ArrayList<>();
 
         for (Invite invite : inviteList) {
-            diaryResponseDtoPage = diaryRepository
-                    .findAllByIdOrderByModifiedAtDesc(pageable, invite.getDiary().getId())
-                    .map((Diary diary) -> new DiaryResponseDto(diary, diary.getMember()));
+            diaryRepository.findAllByIdOrderByModifiedAtDesc(pageable, invite.getDiary().getId())
+                    .map((Diary diary) -> new DiaryResponseDto(diary, diary.getMember()))
+                    .forEach(diaryResponseDtoList::add);
         }
 
-        try {
-            return new PageCustom<>(diaryResponseDtoPage.getContent(),
-                    diaryResponseDtoPage.getPageable(),
-                    diaryResponseDtoPage.getTotalElements());
-        } catch (NullPointerException e) {
-            e.getMessage();
-        }
-
-        return null;
+        Page<DiaryResponseDto> diaryResponseDtoPage = new PageImpl<>(diaryResponseDtoList, pageable, diaryResponseDtoList.size());
+        return new PageCustom<>(diaryResponseDtoPage.getContent(), diaryResponseDtoPage.getPageable(), diaryResponseDtoPage.getTotalElements());
     }
 
     @Transactional
