@@ -82,14 +82,14 @@
 
 ## 👫 팀원 정보 및 개발 블로그 주소
 
-| 이름 | 주특기 | 개발블로그 / 깃허브 |
-| :---: | :---: | :---: |
-| 황원준 |백엔드| https://velog.io/@potenter11 / https://github.com/1juuun |
-| 강혜광 |백엔드| https://khgstart.tistory.com / https://github.com/kingaser |
-| 함동진 |백엔드| https://eastjin.tistory.com / https://github.com/eastjin |
-| 최승호 |프론트엔드| https://a-potato.tistory.com / https://github.com/boompeak |
-| 곽세령 |프론트엔드| https://kuromi-dev.tistory.com / https://github.com/seryoungk |
-| 이주애 |프론트엔드| https://www.notion.so/juae-world-8bf6f88c53544eb5a5656e2527749f35 / https://github.com/leejuae1020 |
-| 한지윤 |프론트엔드| https://velog.io/@icedlatte / https://github.com/JellyKingdom |
-| 김채연 |디자이너|  |
+| 주특기 | 이름 | 개발블로그 / 깃허브 |
+|:---:| :---: | :---: |
+| BE | 황원준 |https://velog.io/@potenter11 / https://github.com/1juuun |
+| BE | 강혜광 |https://khgstart.tistory.com / https://github.com/kingaser |
+| BE | 함동진 |https://eastjin.tistory.com / https://github.com/eastjin |
+| FE | 최승호 |https://a-potato.tistory.com / https://github.com/boompeak |
+| FE | 곽세령 |https://kuromi-dev.tistory.com / https://github.com/seryoungk |
+| FE | 이주애 |https://www.notion.so/juae-world-8bf6f88c53544eb5a5656e2527749f35 / https://github.com/leejuae1020 |
+| FE | 한지윤 |https://velog.io/@icedlatte / https://github.com/JellyKingdom |
+| DE | 김채연 | |
 
