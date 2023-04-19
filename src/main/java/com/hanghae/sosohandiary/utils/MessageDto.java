@@ -10,6 +10,7 @@ public class MessageDto {
     private String msg;
     private int statusCode;
 
+
     @Builder
     private MessageDto(String msg, HttpStatus statusCode) {
         this.msg = msg;
@@ -22,5 +23,6 @@ public class MessageDto {
                 .statusCode(status)
                 .build();
     }
+
 
 }

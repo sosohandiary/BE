@@ -15,11 +15,13 @@ public class GlobalExceptionHandling {
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
     public ResponseEntity<MessageDto> methodValidException(MethodArgumentNotValidException e) {
+
         MessageDto responseDto = makeErrorResponse(e.getBindingResult());
         return ResponseEntity.badRequest().body(responseDto);
     }
 
     private MessageDto makeErrorResponse(BindingResult bindingResult) {
+
         String message = "";
         if (bindingResult.hasErrors()) {
             message = bindingResult.getAllErrors().get(0).getDefaultMessage();
@@ -29,9 +31,9 @@ public class GlobalExceptionHandling {
 
     @ExceptionHandler(value = {ApiException.class})
     protected ResponseEntity<ErrorResponse> handleCustomException(ApiException e) {
+
         log.error("handleDataException throw Exception : {}", e.getErrorHandling());
         return ErrorResponse.toResponseEntity(e.getErrorHandling());
     }
-
 
 }

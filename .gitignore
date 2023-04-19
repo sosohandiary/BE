@@ -5,6 +5,11 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+application.yml
+application-common.yml
+application-db.yml
+9D48E34A0DC4DB7D0E9CB1F4C7292296.txt
+
 ### STS ###
 .apt_generated
 .classpath
