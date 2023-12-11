@@ -85,7 +85,7 @@
 | 주특기 | 이름 | 개발블로그 / 깃허브 |
 |:---:| :---: | :---: |
 | BE | 황원준 |https://velog.io/@potenter11 / https://github.com/1juuun |
-| BE | 강혜광 |https://khgstart.tistory.com / https://github.com/kingaser |
+| BE | 강혜광 |https://www.notion.so/java-spring-jpa-study/0d8e097dc39b461eabc30905a6f4fb5f?v=c99e67357f6342d1a37af5693d2f7f79 / https://github.com/kingaser |
 | BE | 함동진 |https://eastjin.tistory.com / https://github.com/eastjin |
 | FE | 최승호 |https://a-potato.tistory.com / https://github.com/boompeak |
 | FE | 곽세령 |https://kuromi-dev.tistory.com / https://github.com/seryoungk |
